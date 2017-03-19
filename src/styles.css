@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body, app-root, md-sidenav-container, .mat-toolbar-row, .mat-toolbar-layout  {margin: 0; height: 100%; width: 100%; overflow: hidden;}
+
+md-sidenav-container, md-sidenav-container div, md-sidenav, .mat-sidenav-focus-trap, mat-sidenav-focus-trap div {overflow: hidden;}
+
+.menu_button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.center {
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.md-sidenav-items:first-child {
+  margin-top: 1em;
+}
+
+.content-wrapper {
+  height: 100%;
+}
+
+
+.footer {
+  position: absolute;
+  height: 125px;
+  width: 100%;
+  bottom: 0px;
+
+  background-color: ghostwhite;
+
+}
+
+.footer .flex-container {
+  overflow: visible;
+  height: 50%;
+}
+.footer .flex-container div {
+  overflow: visible;
+  height: 100%;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.facebook {  }
+.instagram {  }
+.icon {
+  color: black;
+}

@@ -1,0 +1,5 @@
+
+  <div class="login_box">
+    <button md-button *ngIf="loginStatus==false" (click)="login()">Login</button>
+    <button md-button *ngIf="loginStatus==true" (click)="logout()">Logout</button>
+  </div>
