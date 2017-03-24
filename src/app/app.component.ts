@@ -2,8 +2,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import { LoginService } from './services/login-service';
 import { Subscription } from "rxjs";
 import {ProductService} from "./services/product.service";
-import {ActivatedRoute} from "@angular/router";
 import {Product} from './interfaces/product';
+
+import 'rxjs/operator/finally';
 
 
 @Component({
@@ -18,21 +19,15 @@ export class AppComponent implements OnInit, OnDestroy {
   loginSubscription:Subscription;
   productSubscription:Subscription;
 
-  constructor(private loginService: LoginService, private productService: ProductService, private route: ActivatedRoute) {
+  constructor(private loginService: LoginService) {
   }
-
-  getProduct(productId: number) : void {
-    this.productSubscription = this.route.params.subscribe(params => {
-      this.productService.getProduct(productId).subscribe(p => this.product = p);
-    });
-  }
-
   ngOnInit() : void {
     this.loginSubscription = this.loginService.loginStatus$.subscribe(loginStatus => this.loginStatus = loginStatus);
   };
 
   ngOnDestroy() : void {
       this.loginSubscription.unsubscribe();
+      this.productSubscription.unsubscribe();
   };
 
 

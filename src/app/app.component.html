@@ -5,7 +5,10 @@
   <div class="flex-item spacer" fxFlex></div>
 </md-toolbar>
 <div class="menu_button"><button md-button (click)="sidenav.toggle()"><md-icon>menu</md-icon></button></div>
-<md-sidenav-container >
+<app-search></app-search>
+
+
+<md-sidenav-container>
 
   <md-sidenav #sidenav opened="true">
     <div class="flex-container md-sidenav-items"
@@ -14,7 +17,6 @@
       <a routerLink="/home" routerLinkActive="active"><div><button md-button >Home</button></div></a>
       <a routerLink="/about" routerLinkActive="active"><div><button md-button >About Us</button></div></a>
       <app-login></app-login>
-      <button md-button (click)="getProduct(1)">API Test</button>
     </div>
   </md-sidenav>
 
@@ -35,8 +37,8 @@
          fxLayoutAlign.xs="start">
       <div class="flex-item center" fxFlex fxShow="false" fxShow.gt-sm>Left Footer</div>
       <div class="flex-item center" fxFlex="80%"  fxFlex.xs="100%">
-        <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer"><i class="mdi mdi-36px mdi-facebook-box facebook icon"></i></a>
-        <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer"><i class="mdi mdi-36px mdi-instagram instagram icon"></i></a>
+        <a href="https://www.facebook.com/chiefsretro/" target="_blank" rel="noopener noreferrer"><i class="mdi mdi-36px mdi-facebook-box facebook icon"></i></a>
+        <a href="https://www.instagram.com/chiefsretro/" target="_blank" rel="noopener noreferrer"><i class="mdi mdi-36px mdi-instagram instagram icon"></i></a>
       </div>
       <div class="flex-item center" fxFlex fxShow="false" fxShow.gt-sm>Right Footer</div>
     </div>

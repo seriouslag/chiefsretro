@@ -1,0 +1,10 @@
+<md-input-container>
+  <input id="search" mdInput search (change)="change()" (input)="search()" placeholder="Search" [(ngModel)]="terms">
+</md-input-container>
+<div class="searchlist">
+  <div *ngFor="let product of products; let i = index" >
+    <button md-button (click)="click(products[i])">
+      {{products[i].productName}}
+    </button>
+  </div>
+</div>

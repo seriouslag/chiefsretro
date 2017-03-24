@@ -1,0 +1,29 @@
+
+
+<div class="flex-container"
+     fxLayout="row"
+     fxLayout.xs="column"
+     fxLayoutAlign="center center"
+     fxLayoutAlign.xs="start">
+
+  <div class="flex-item content" fxFlex fxFlex.xs="100%">
+    This is the main content body of a product page we'll have pictures and stuff
+    <div *ngIf="product">
+      <div>Product Name: {{product.productName}}</div>
+      <div>Product Description: {{product.productDescription}}</div>
+      <div *ngIf="product.productId"><img class="defaultImage" src="/src/assets/sku{{product.productId}}/1.jpg" /></div>
+      <div class="options">
+        <div *ngFor="let productOption of product.productOptions; let i = index">
+          <div><b>Option {{i+1}}</b>: {{product.productOptions[i].productColor}} : ${{product.productOptions[i].productPrice}}</div>
+          <div>In Stock: {{product.productOptions[i].productQuantity}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-item" fxFlex="10%" fxShow="false" fxShow.gt-sm> This will not show on mobile portrait mode</div>
+
+
+</div>
+
+

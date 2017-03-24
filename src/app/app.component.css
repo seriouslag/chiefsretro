@@ -1,3 +1,11 @@
 md-sidenav {
   width: 10em;
 }
+
+app-search {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+
+  z-index: 10;
+}
