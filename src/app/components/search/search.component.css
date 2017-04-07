@@ -1,10 +1,31 @@
+.app-search {
+
+}
 
 button {
-  background-color: lightgray;
   width: 100%;
 }
 
+md-input-container {
+  font-size: .7em;
+  position: relative;
+  top: 10px;
+}
+
+div.mat-input-table {
+  margin: 0;
+}
+
+input {
+  width: 100%;
+}
+
+
 .searchlist {
   background-color: lightgray;
-  width: 100%;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  z-index: 11;
+  width: 140px;
 }

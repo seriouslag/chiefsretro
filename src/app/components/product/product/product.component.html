@@ -1,0 +1,22 @@
+<div class="flex-container app-scroll"
+     fxLayout="column"
+     fxLayoutAlign="space-around center">
+
+  <div class="flex-item"></div>
+
+  <div class="flex-item" fxFlex fxFllex.xs="100%">
+    <div *ngIf="product.productId">
+      <img class="defaultImage" src="/src/assets/sku{{product.productId}}/1.jpg"/>
+    </div>
+    <div>Product Name: {{product.productName}}</div>
+    <div>Product Description: {{product.productDescription}}</div>
+    <div class="options">
+      <div *ngFor="let productOption of product.productOptions;">
+        <app-product-options [productOption]="productOption" [selectedProductOption]="selectedProductOption"
+                             (change)="changeSelectedProductOption($event)"></app-product-options>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-item"></div>
+</div>

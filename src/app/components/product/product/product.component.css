@@ -1,0 +1,12 @@
+.app-scroll {
+  overflow-y: scroll;
+}
+
+.defaultImage {
+  width: 400px;
+}
+
+.flex-container {
+  height: 100%;
+}
+

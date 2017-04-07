@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ProductService} from "../../services/product.service";
-import { Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 import {Product} from "../../interfaces/product";
 
 @Component({
@@ -9,9 +9,10 @@ import {Product} from "../../interfaces/product";
   styleUrls: ['./search.component.css'],
   providers: [ProductService]
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, OnDestroy {
 
-  terms: string = "";
+
+  terms: string;
   products: Product[];
   waiting;
   productsSubscription: Subscription;
@@ -21,27 +22,24 @@ export class SearchComponent implements OnInit {
 
   }
 
-  /*
-  TODO
-    maybe add a <datalist> for the imput instead
-   https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist
-   */
-
-
   ngOnInit() {}
+
+  ngOnDestroy(): void {
+    this.productsSubscription.unsubscribe();
+  }
 
   click(product: Product) {
     this.productService.goToProductPage(product);
   }
 
   search() {
+    clearTimeout(this.waiting);
     this.waiting = setTimeout(() => {
+
       if (checkTerms(this.terms)) {
-        this.productsSubscription = this.productService.productsContainsName(this.terms.trim())
+        //maybe clean up search terms. take out double spaces, etc
+        this.productsSubscription = this.productService.getProductsContainingName(this.terms.trim())
           .finally(() => {
-            if (!this.terms) {
-              //this.products = null;
-            }
             console.log("finished request");
           })
           .subscribe(products => {
@@ -50,7 +48,7 @@ export class SearchComponent implements OnInit {
       } else {
         this.products = null;
       }
-    }, 200);
+    }, 350);
   }
 
   change() {
@@ -64,8 +62,15 @@ export class SearchComponent implements OnInit {
 
 
 function checkTerms(terms) {
-  if(terms)  {
-    if(terms.indexOf("\\") !== 0) {
+  //if terms has input
+  if (terms.trim()) {
+
+
+    //if terms has a backslash in it
+    if (terms.match("[#\\\/\<\>\|\*\(\)\;\:]")) {
+      //invalid search terms
+      //add a component
+    } else {
       return true;
     }
   }

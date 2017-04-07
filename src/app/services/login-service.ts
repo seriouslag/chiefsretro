@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs";
+import {Injectable} from "@angular/core";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 @Injectable()
 export class LoginService {
-
-  //look into behaviorSubjects
 
   // Observable item source
   private _loginStatusSource = new BehaviorSubject<boolean>(false);

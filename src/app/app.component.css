@@ -2,10 +2,37 @@ md-sidenav {
   width: 10em;
 }
 
-app-search {
-  position: absolute;
-  right: 10px;
-  top: 10px;
+md-toolbar {
+  height: 50px;
+}
 
+
+app-search {
   z-index: 10;
+}
+
+.app-wrapper {
+  height: 100%;
+}
+
+.footer {
+  height: 50px;
+  width: 100%;
+  bottom: 0;
+
+  background-color: ghostwhite;
+
+}
+
+.footer .flex-container {
+  overflow: visible;
+}
+
+.footer .flex-container div {
+  overflow: visible;
+  height: 100%;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
 }
