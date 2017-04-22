@@ -1,22 +1,53 @@
-<div class="flex-container app-scroll"
-     fxLayout="column"
+<div class="app-scroll"
+     fxLayout="row"
      fxLayoutAlign="space-around center">
 
-  <div class="flex-item"></div>
+  <div *ngIf="product!=null" fxFlex.lt-md="100%" fxFlex.gt-sm="75%">
+    <md-card>
+      <md-card-title>{{product.productName}}</md-card-title>
+      <md-card-content>
+        <div class="center">
+          <img class="defaultImage" src="/src/assets/sku{{product.productId}}/1.jpg"/>
+        </div>
+      </md-card-content>
+    </md-card>
 
-  <div class="flex-item" fxFlex fxFllex.xs="100%">
-    <div *ngIf="product.productId">
-      <img class="defaultImage" src="/src/assets/sku{{product.productId}}/1.jpg"/>
+    <md-card>
+      <md-card-subtitle>Product Description</md-card-subtitle>
+      <md-card-content>
+        {{product.productDescription}}
+      </md-card-content>
+    </md-card>
+
+    <div class="options" *ngIf="product.productOptions.length>0">
+      <md-card>
+        <md-card-subtitle>Options</md-card-subtitle>
+        <md-card-content>
+          <md-tab-group (selectChange)="selected($event)">
+            <md-tab *ngFor="let productOption of product.productOptions;" label="{{productOption.productColor}}">
+              <br>
+              <div>{{productOption.productColor}} : ${{productOption.productPrice}}</div>
+              <div>In Stock: {{productOption.productQuantity}}</div>
+            </md-tab>
+          </md-tab-group>
+        </md-card-content>
+        <md-card-actions>
+          <button md-button md-tooltip='Add To Cart' color="accent" tooltip-position="above" [mdTooltipShowDelay]="500"
+                  (click)="toastService.toast('Added ' + selectedProductOption.productColor + ' ' + product.productName + ' To Cart', 'OK', 1000);">
+            Add {{selectedProductOption.productColor}} {{product.productName}} To Cart
+          </button>
+          <button md-button md-tooltip="Share" color="accent" tooltip-position="above" [mdTooltipShowDelay]="500"
+                  (click)="toastService.toast('Shared', 'OK', 1000);">Share
+          </button>
+        </md-card-actions>
+      </md-card>
     </div>
-    <div>Product Name: {{product.productName}}</div>
-    <div>Product Description: {{product.productDescription}}</div>
-    <div class="options">
-      <div *ngFor="let productOption of product.productOptions;">
-        <app-product-options [productOption]="productOption" [selectedProductOption]="selectedProductOption"
-                             (change)="changeSelectedProductOption($event)"></app-product-options>
-      </div>
-    </div>
+
+    <button md-fab fxHide fxShow.lt-md color="primary" class="addcircle"
+            md-tooltip="Add To Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
+            (click)="toastService.toast('Added '+ selectedProductOption.productColor + ' ' + product.productName + ' To Cart', 'OK', 1000);">
+      <md-icon>add</md-icon>
+    </button>
   </div>
 
-  <div class="flex-item"></div>
 </div>

@@ -1,1 +1,8 @@
+
 <app-product *ngIf="product" [product]="product"></app-product>
+<div fxFlexFill class="center" *ngIf="!product">
+  <md-spinner *ngIf="failed==false"></md-spinner>
+  <div *ngIf="failed">
+    No product found
+  </div>
+</div>

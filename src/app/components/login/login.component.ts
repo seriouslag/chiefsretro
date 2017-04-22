@@ -1,6 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import { LoginService } from '../../services/login-service';
-import { Subscription } from "rxjs/Subscription";
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {LoginService} from "../../services/login-service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-login',
@@ -11,28 +11,28 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(private loginService: LoginService) {}
   loginStatus:boolean;
+  loginStatusText: string = "Login";
   subscription:Subscription;
 
-
-  login() {
-    //request login with server on return true then
-    this.loginService.changeLoginStatus(true);
-    //else display an error
-  };
-
-  logout() {
-    //request logout with the server on return true then
-    this.loginService.changeLoginStatus(false);
-    // else clear local login token
-  };
+  changeLoginStat(): void {
+    this.loginService.changeLoginStatus(!this.loginStatus);
+  }
 
 
   ngOnInit() {
-    this.subscription = this.loginService.loginStatus$.subscribe(loginStatus => this.loginStatus = loginStatus);
+    this.subscription = this.loginService.loginStatus$.subscribe(loginStatus => {
+      this.loginStatus = loginStatus;
+      if (this.loginStatus) {
+        this.loginStatusText = "Logout";
+      } else {
+        this.loginStatusText = "Login";
+      }
+    });
   };
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
   };
-
 }

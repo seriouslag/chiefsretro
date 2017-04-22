@@ -1,23 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
 
 html, body {
   margin: 0;
   height: 100%;
   width: 100%;
-}
-
-md-sidenav-container {
-  overflow: hidden;
+  overflow-y: hidden;
+  color: whitesmoke;
 }
 
 .mat-toolbar-layout, .mat-toolbar-row {
   width: 100%;
   height: 100%;
   margin: 0;
-  overflow: visible;
 }
 
 .center {
+  width: 100%;
+  text-align: center;
   justify-content: center;
   align-content: center;
   align-items: center;
@@ -35,5 +35,5 @@ md-sidenav-container {
 .facebook {  }
 .instagram {  }
 .icon {
-  color: black;
+  color: whitesmoke;
 }

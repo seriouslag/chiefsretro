@@ -3,7 +3,35 @@ import {NgModule} from "@angular/core";
 
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
-import {MaterialModule} from "@angular/material";
+import {
+  MdAutocompleteModule,
+  MdButtonModule,
+  MdButtonToggleModule,
+  MdCardModule,
+  MdCheckboxModule,
+  MdChipsModule,
+  MdCoreModule,
+  MdDialogModule,
+  MdIconModule,
+  MdInputModule,
+  MdLineModule,
+  MdListModule,
+  MdMenuModule,
+  MdOptionModule,
+  MdProgressBarModule,
+  MdProgressSpinnerModule,
+  MdRadioModule,
+  MdRippleModule,
+  MdSelectionModule,
+  MdSelectModule,
+  MdSidenavModule,
+  MdSliderModule,
+  MdSlideToggleModule,
+  MdSnackBarModule,
+  MdTabsModule,
+  MdToolbarModule,
+  MdTooltipModule
+} from "@angular/material";
 import {FlexLayoutModule} from "@angular/flex-layout";
 
 import "hammerjs";
@@ -16,8 +44,11 @@ import {ProductTemplateComponent} from "./pages/product-template/product-templat
 import {routing} from "./app.route";
 import {SearchComponent} from "./components/search/search.component";
 import {CommonModule} from "@angular/common";
-import {OptionsComponent} from "./components/product/product-options/product-options.component";
 import {ProductComponent} from "./components/product/product/product.component";
+import {FooterComponent} from "./components/footer/footer.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {SidenavComponent} from "./components/sidenav/sidenav.component";
+import {AutosearchComponent} from "./components/autosearch/autosearch.component";
 
 @NgModule({
   declarations: [
@@ -27,15 +58,22 @@ import {ProductComponent} from "./components/product/product/product.component";
     LoginComponent,
     ProductTemplateComponent,
     SearchComponent,
-    OptionsComponent,
     ProductComponent,
+    FooterComponent,
+    SidenavComponent,
+    AutosearchComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     CommonModule,
     HttpModule,
-    MaterialModule,
+    MdButtonModule, MdMenuModule, MdToolbarModule, MdInputModule, MdSidenavModule, MdIconModule, MdTabsModule,
+    MdChipsModule, MdTooltipModule, MdCardModule, MdCheckboxModule, MdCoreModule, MdDialogModule,
+    MdOptionModule, MdLineModule, MdListModule, MdProgressBarModule, MdProgressSpinnerModule, MdAutocompleteModule,
+    MdButtonToggleModule, MdRadioModule, MdRippleModule, MdSelectionModule, MdSelectModule, MdSliderModule,
+    MdSlideToggleModule, MdSnackBarModule,
     routing,
     FlexLayoutModule,
 

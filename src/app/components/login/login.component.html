@@ -1,5 +1,4 @@
-
-  <div class="login_box">
-    <button md-button *ngIf="loginStatus==false" (click)="login()">Login</button>
-    <button md-button *ngIf="loginStatus==true" (click)="logout()">Logout</button>
-  </div>
+<button md-button md-tooltip="Logout" [mdTooltipShowDelay]="500" color="primary" (click)="changeLoginStat()">
+  <md-icon>power_settings_new</md-icon>
+  {{loginStatusText}}
+</button>

@@ -3,29 +3,39 @@ import {Headers, Http, Response} from "@angular/http";
 import {Observable} from "rxjs/Rx";
 import {Product} from "../interfaces/Product";
 import {Router} from "@angular/router";
+import {ToastService} from "./toast.service";
 
 @Injectable()
 export class ProductService {
   private productUrl: string = '/api/product?productId=';
   private searchUrl: string = '/api/all?productName=';
 
-  constructor(private http: Http, private router: Router) { }
+  constructor(private http: Http, private router: Router, private toastService: ToastService) {
+  }
 
-  goToProductPage(product: Product) {
+  goToProductPage(product: Product): void {
     this.router.navigate(['/product', 'sku' + product.productId]);
   }
 
   getProductByProductId(productId: number) : Observable<Product> {
-    const product$ = this.http
+    let product = this.http
       .get(this.productUrl + productId, {headers: this.getHeaders()})
-      .map(response => {
-        return response.json() as Product | {};
+      .map(response => response.json() as Product | {})
+      .catch((err) => {
+        this.toastService.toast("Product not found", "OK", 2000);
+        return this.handleError(err)
       });
 
-    return product$;
+    return product;
   }
 
-  //default site search
+
+  //autocomplete searchbox
+  populateSearchList(productName: string): Promise<Product[]> {
+    return this.http.get(this.searchUrl + productName).map(this.extractData).catch(this.handleError).toPromise();
+  }
+
+  //default site search;
   getProductsContainingName(productName: string): Observable<Product[]> {
    return this.http.get(this.searchUrl + productName).map(this.extractData).catch(this.handleError);
  }

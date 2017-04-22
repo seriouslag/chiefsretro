@@ -1,12 +1,14 @@
 import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {Product} from "../../../interfaces/product";
 import {ProductOption} from "../../../interfaces/product-option";
+import {MdTabChangeEvent} from "@angular/material";
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']
 })
+
 export class ProductComponent implements OnInit, OnChanges {
 
 
@@ -16,10 +18,6 @@ export class ProductComponent implements OnInit, OnChanges {
   selectedProductOption: ProductOption;
 
   constructor() {
-  }
-
-  changeSelectedProductOption(changeEvent) {
-    this.selectedProductOption = changeEvent;
   }
 
   ngOnInit() {
@@ -32,6 +30,11 @@ export class ProductComponent implements OnInit, OnChanges {
         this.selectedProductOption = this.product.productOptions[0];
       }
     }
+  }
+
+
+  selected(event: MdTabChangeEvent): void {
+    this.selectedProductOption = this.product.productOptions[event.index];
   }
 
 }

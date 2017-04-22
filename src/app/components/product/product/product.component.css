@@ -1,12 +1,12 @@
-.app-scroll {
-  overflow-y: scroll;
-}
+
 
 .defaultImage {
-  width: 400px;
+  max-width: 400px;
+  max-height: 400px
 }
 
-.flex-container {
-  height: 100%;
+.addcircle {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
 }
-

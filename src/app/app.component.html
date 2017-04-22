@@ -1,76 +1,56 @@
-<div class="flex-container app-wrapper" fxLayout="column">
+<div class="app-wrapper ">
 
-  <div class="flex-item" flex="nogrow">
-    <md-toolbar class="flex-container"
-                fxLayout="row"
-                fxLayoutAlign="space-around center">
-      <div class="menu_button flex-item" flex="nogrow">
-        <button md-button (click)="sidenav.toggle()">
+  <md-toolbar>
+    <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
+      <div class="menu_button" fxHide fxShow.lt-md>
+        <button md-icon-button (click)="mobilesidenav.toggle()">
           <md-icon>menu</md-icon>
         </button>
       </div>
-      <div class="flex-item center" fxFlex><a routerLink="/home" routerLinkActive="active">CHIEFSRETRO</a></div>
-      <div class="flex-item" flex="nogrow">
-        <app-search></app-search>
+      <div fxFlex><a routerLink="/home" routerLinkActive="active">CHIEFSRETRO</a></div>
+      <div fxShow fxHide.lt-md>
+        <app-autosearch></app-autosearch>
       </div>
-    </md-toolbar>
+      <button fxHide fxShow.lt-md md-icon-button *ngIf="isSearch==false" (click)="isSearch = !isSearch">
+        <md-icon>search</md-icon>
+      </button>
+    </div>
+    <md-toolbar-row *ngIf="isSearch==true" fxHide fxShow.lt-md>
+      <app-autosearch></app-autosearch>
+      <button fxHide fxShow.lt-md md-icon-button (click)="isSearch = !isSearch">
+        <md-icon>cancel</md-icon>
+      </button>
+    </md-toolbar-row>
 
-  </div>
 
-  <md-sidenav-container class="flex-item" fxFlex="grow">
+  </md-toolbar>
 
-    <md-sidenav #sidenav opened="true">
-      <div class="flex-container md-sidenav-items"
-           fxLayout="column"
-           fxLayoutAlign="center center">
-        <a routerLink="/home" routerLinkActive="active">
-          <div>
-            <button md-button>Home</button>
-          </div>
-        </a>
-        <a routerLink="/about" routerLinkActive="active">
-          <div>
-            <button md-button>About Us</button>
-          </div>
-        </a>
-        <app-login></app-login>
-      </div>
+
+  <md-sidenav-container fxFlex>
+
+    <md-sidenav #mobilesidenav fxHide fxShow.lt-md>
+      <app-sidenav></app-sidenav>
     </md-sidenav>
 
-    <div class="flex-container" fxLayout="column" fxLayoutAlign="center center">
-      <div class="flex-item" fxFlex="auto">
-        <div class="flex-container content-wrapper"
-             fxLayout="row">
-          <div class="flex-item center" fxFlex="10%" fxShow="false" fxShow.gt-sm></div>
-          <div class="flex-item" fxFlex>
-            <router-outlet></router-outlet>
-          </div>
-          <div class="flex-item center" fxFlex="10%" fxShow="false" fxShow.gt-sm></div>
-        </div>
+    <div fxLayout="row" fxFlexFill>
+
+
+      <div fxShow fxHide.lt-md id="sidenav">
+        <app-sidenav></app-sidenav>
       </div>
 
-      <div class="footer" fxFlex="50px">
-        <div class="footer">
-          <div class="flex-container"
-               fxLayout="row"
-               fxLayout.xs="row"
-               fxLayoutAlign="center center"
-               fxLayoutAlign.xs="start">
-            <div class="flex-item center" fxFlex fxShow="false" fxShow.gt-sm>Left Footer</div>
-            <div class="flex-item center" fxFlex="80%" fxFlex.xs="100%">
-              <a href="https://www.facebook.com/chiefsretro/" target="_blank" rel="noopener noreferrer"><i
-                class="mdi mdi-36px mdi-facebook-box facebook icon"></i></a>
-              <a href="https://www.instagram.com/chiefsretro/" target="_blank" rel="noopener noreferrer"><i
-                class="mdi mdi-36px mdi-instagram instagram icon"></i></a>
-            </div>
-            <div class="flex-item center" fxFlex fxShow="false" fxShow.gt-sm>Right Footer</div>
-          </div>
+      <div fxFlex fxLayout="column" class="scroll-overlay">
 
+        <div fxFlex>
+          <router-outlet></router-outlet>
+        </div>
+
+        <div>
+          <app-footer></app-footer>
         </div>
       </div>
     </div>
 
   </md-sidenav-container>
-
 
 </div>
