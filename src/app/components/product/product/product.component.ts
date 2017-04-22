@@ -21,6 +21,7 @@ export class ProductComponent implements OnInit, OnChanges {
   constructor(private toastService: ToastService) {
   }
 
+
   ngOnInit() {
   }
 
@@ -36,6 +37,10 @@ export class ProductComponent implements OnInit, OnChanges {
 
   selected(event: MdTabChangeEvent): void {
     this.selectedProductOption = this.product.productOptions[event.index];
+  }
+
+  showToast(message: string, button: string, time: number): void {
+    this.toastService.toast(message, button, time);
   }
 
 }
