@@ -2,6 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core"
 import {Product} from "../../../interfaces/product";
 import {ProductOption} from "../../../interfaces/product-option";
 import {MdTabChangeEvent} from "@angular/material";
+import {ToastService} from "../../../services/toast.service";
 
 @Component({
   selector: 'app-product',
@@ -17,7 +18,7 @@ export class ProductComponent implements OnInit, OnChanges {
 
   selectedProductOption: ProductOption;
 
-  constructor() {
+  constructor(private toastService: ToastService) {
   }
 
   ngOnInit() {
