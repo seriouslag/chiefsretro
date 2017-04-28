@@ -9,8 +9,7 @@
   <md-option *ngFor="let product of products;" [value]="product.productName" (click)="click(product)"
              (onSelectionChange)="click(product)" onselect="click(product)" (onSelect)="click(product)">
     <div class="options_container">
-      <span class="options_img_container"><img class="defaultThumbImage"
-                                               src="/src/assets/sku{{product.productId}}/1.jpg"/></span>
+      <span class="options_img_container"><app-thumb-image [product]="product"></app-thumb-image></span>
       <span class="options_text_container">{{product.productName}}</span>
     </div>
   </md-option>

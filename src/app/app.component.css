@@ -25,3 +25,7 @@ app-search {
 .mat-sidenav-container {
   color: whitesmoke;
 }
+
+.scrollbar-container {
+  border: 0;
+}

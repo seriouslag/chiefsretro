@@ -51,6 +51,8 @@ import {SidenavComponent} from "./components/sidenav/sidenav.component";
 import {AutosearchComponent} from "./components/autosearch/autosearch.component";
 import {BottomnavComponent} from "./components/mobile/bottomnav/bottomnav.component";
 import {AllComponent} from "./pages/all/all.component";
+import {ThumbImageComponent} from "./components/images/thumb-image/thumb-image.component";
+import {ProductImagesComponent} from "./components/images/product-images/product-images.component";
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import {AllComponent} from "./pages/all/all.component";
     AutosearchComponent,
     BottomnavComponent,
     AllComponent,
+    ThumbImageComponent,
+    ProductImagesComponent,
   ],
   imports: [
     BrowserModule,

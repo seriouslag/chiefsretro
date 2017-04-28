@@ -1,5 +1,3 @@
-
-
 .defaultImage {
   max-width: 400px;
   max-height: 400px
@@ -11,3 +9,6 @@
   bottom: 55px;
 }
 
+.productCardContainer md-card {
+  margin: 10px 0;
+}

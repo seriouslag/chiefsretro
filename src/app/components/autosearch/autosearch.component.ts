@@ -13,7 +13,6 @@ export class AutosearchComponent implements OnInit, OnDestroy {
   products: Product[];
   productsSubscription: Subscription;
 
-
   constructor(protected productService: ProductService) {
   }
 
