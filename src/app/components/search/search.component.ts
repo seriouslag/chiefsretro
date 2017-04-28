@@ -60,11 +60,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 }
 
-
 function checkTerms(terms) {
   //if terms has input
   if (terms.trim()) {
-
 
     //if terms has a backslash in it
     if (terms.match("[#\\\/\<\>\|\*\(\)\;\:]")) {

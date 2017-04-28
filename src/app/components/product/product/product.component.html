@@ -12,9 +12,9 @@
                               [selectedProductOptionNumber]="selectedProductOptionNumber"></app-product-images>
         </div>
       </md-card-content>
-      <md-card-actions *ngIf="product.productOptions.length>0">
+      <md-card-actions *ngIf="product.productOptions.length>0 && selectedProductOption.productOptionImages.length">
         <button md-button (click)="previousImage()" *ngIf="index!=0">Previous</button>
-        <span>  Pic {{1+index}} out of {{selectedProductOption.productOptionImages.length}}</span>
+        <span>  Picture {{1+index}} out of {{selectedProductOption.productOptionImages.length}}</span>
         <button md-button (click)="nextImage()" *ngIf="index!=selectedProductOption.productOptionImages.length-1">Next
         </button>
 

@@ -30,6 +30,7 @@ export class ProductComponent implements OnInit, OnChanges {
     for (let propName in changes) {
       if (propName == "product") {
         this.selectedProductOption = this.product.productOptions[0];
+        this.index = 0;
       }
     }
   }

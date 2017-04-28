@@ -12,6 +12,8 @@ export class AutosearchComponent implements OnInit, OnDestroy {
 
   products: Product[];
   productsSubscription: Subscription;
+  waiting: any;
+  waitTime: number = 300;
 
   constructor(protected productService: ProductService) {
   }
@@ -35,7 +37,7 @@ export class AutosearchComponent implements OnInit, OnDestroy {
       //if term has a backslash in it
       if (term.match("[#\\\\\/\<\>\|\*\(\)\;\:]")) {
         //invalid search term
-        //add a component
+        //add a component?
       } else {
         return true;
       }
@@ -43,14 +45,31 @@ export class AutosearchComponent implements OnInit, OnDestroy {
     return false;
   }
 
+  search(term: string) {
+    this.productService.defaultSearch(term).then(products => this.products = products);
+  }
+
   autosearch(event, term: string) {
-    if (event.keyCode != 13 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
-      if (this.checkTerm(term)) {
-        this.productService.defaultSearch(term).then(products => this.products = products);
+
+    if (event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40 && event.keyCode != 16
+      && event.keyCode != 9 && event.keyCode != 17 && event.keyCode != 18 && event.keyCode != 19 && event.keyCode != 20) {
+      clearTimeout(this.waiting);
+      if (this.waiting) {
+        this.waiting = setTimeout(() => {
+
+          if (this.checkTerm(term)) {
+            this.search(term);
+          }
+
+        }, this.waitTime);
+      } else {
+        if (this.checkTerm(term)) {
+          this.search(term);
+        } else {
+          //???
+          this.products = null;
+        }
       }
     }
-
   }
 }
-
-

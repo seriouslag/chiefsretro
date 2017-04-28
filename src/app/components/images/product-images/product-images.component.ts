@@ -58,15 +58,22 @@ export class ProductImagesComponent implements OnInit, OnChanges {
   }
 
   setupImages(productOption: ProductOption, productOptionNumber: number): void {
-    for (let productOptionImages of productOption.productOptionImages) {
-      if (!this.imagesUrl[productOptionNumber]) {
-        this.imagesUrl[productOptionNumber] = [] as string[];
+    if (productOption.productOptionImages.length) {
+      for (let productOptionImages of productOption.productOptionImages) {
+        if (!this.imagesUrl[productOptionNumber]) {
+          this.imagesUrl[productOptionNumber] = [] as string[];
+        }
+        if (productOptionImages.productOptionImageLocation) {
+          this.imagesUrl[productOptionNumber].push(productOptionImages.productOptionImageLocation);
+        } else {
+          this.imagesUrl[productOptionNumber].push('/src/assets/sku' + this.product.productId + '/' + productOptionImages.productOptionImageOrder + '.jpg');
+        }
       }
-      if (productOptionImages.productOptionImageLocation) {
-        this.imagesUrl[productOptionNumber].push(productOptionImages.productOptionImageLocation);
-      } else {
-        this.imagesUrl[productOptionNumber].push('/src/assets/sku' + this.product.productId + '/' + productOptionImages.productOptionImageOrder + '.jpg');
-      }
+    } else {
+      this.imagesUrl[0] = [] as string[];
+      this.imagesUrl[0].push("src/assets/imageError.jpg");
+      this.imageIndex = 0;
+      this.selectedProductOptionNumber = 0;
     }
   }
 
