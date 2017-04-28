@@ -70,8 +70,8 @@ export class ProductImagesComponent implements OnInit, OnChanges {
         }
       }
     } else {
-      this.imagesUrl[0] = [] as string[];
-      this.imagesUrl[0].push("src/assets/imageError.jpg");
+      this.imagesUrl[productOptionNumber] = [] as string[];
+      this.imagesUrl[productOptionNumber].push("src/assets/imageError.jpg");
       this.imageIndex = 0;
       this.selectedProductOptionNumber = 0;
     }
