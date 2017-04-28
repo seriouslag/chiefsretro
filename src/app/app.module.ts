@@ -49,6 +49,8 @@ import {FooterComponent} from "./components/footer/footer.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SidenavComponent} from "./components/sidenav/sidenav.component";
 import {AutosearchComponent} from "./components/autosearch/autosearch.component";
+import {BottomnavComponent} from "./components/mobile/bottomnav/bottomnav.component";
+import {AllComponent} from "./pages/all/all.component";
 
 @NgModule({
   declarations: [
@@ -62,6 +64,8 @@ import {AutosearchComponent} from "./components/autosearch/autosearch.component"
     FooterComponent,
     SidenavComponent,
     AutosearchComponent,
+    BottomnavComponent,
+    AllComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,10 @@
+:host(app-bottomnav) {
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.bNavSpace {
+  padding: .5em 0;
+}

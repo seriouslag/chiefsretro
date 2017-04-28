@@ -7,9 +7,17 @@
       <md-card-title>{{product.productName}}</md-card-title>
       <md-card-content>
         <div class="center">
-          <img class="defaultImage" src="/src/assets/sku{{product.productId}}/1.jpg"/>
+          <img class="defaultImage" *ngIf="imagesUrl[selectedProductOptionNumber]"
+               [src]="imagesUrl[selectedProductOptionNumber][index]"/>
+          <img class="defaultImage" *ngIf="!imagesUrl[selectedProductOptionNumber]" [src]="imageError"/>
         </div>
       </md-card-content>
+      <md-card-actions *ngIf="imagesUrl[selectedProductOptionNumber]">
+        <button md-button (click)="previousImage()">Previous</button>
+        <span>Pic {{1+index}} out of {{imagesUrl[selectedProductOptionNumber].length}}</span>
+        <button md-button (click)="nextImage()">Next</button>
+
+      </md-card-actions>
     </md-card>
 
     <md-card>
@@ -41,13 +49,12 @@
           </button>
         </md-card-actions>
       </md-card>
+      <button md-fab fxHide fxShow.lt-md color="primary" class="addcircle"
+              md-tooltip="Add To Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
+              (click)="showToast('Added '+ selectedProductOption.productColor + ' ' + product.productName + ' To Cart', 'OK', 1000);">
+        <md-icon>add</md-icon>
+      </button>
     </div>
 
-    <button md-fab fxHide fxShow.lt-md color="primary" class="addcircle"
-            md-tooltip="Add To Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
-            (click)="showToast('Added '+ selectedProductOption.productColor + ' ' + product.productName + ' To Cart', 'OK', 1000);">
-      <md-icon>add</md-icon>
-    </button>
   </div>
-
 </div>

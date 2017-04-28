@@ -2,7 +2,8 @@
 
   <md-toolbar>
     <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
-      <div class="menu_button" fxHide fxShow.lt-md>
+      <!--for mobile sidenav only show if requested-->
+      <div class="menu_button" fxHide fxShow.lt-md *ngIf="showSideNav">
         <button md-icon-button (click)="mobilesidenav.toggle()">
           <md-icon>menu</md-icon>
         </button>
@@ -28,29 +29,32 @@
 
   <md-sidenav-container fxFlex>
 
-    <md-sidenav #mobilesidenav fxHide fxShow.lt-md>
+    <!--mobile sidenav only show if requested-->
+    <md-sidenav #mobilesidenav fxHide fxShow.lt-md *ngIf="showSideNav">
       <app-sidenav></app-sidenav>
     </md-sidenav>
 
-    <div fxLayout="row" fxFlexFill>
+    <div fxLayout="row" fxFlexFill class="scrollbar-container">
 
-
+      <!--desktop sidenav-->
       <div fxShow fxHide.lt-md id="sidenav">
         <app-sidenav></app-sidenav>
       </div>
 
-      <div fxFlex fxLayout="column" class="scroll-overlay">
+      <div fxFlex fxLayout="column" class="scroll-overlay inner">
 
         <div fxFlex>
           <router-outlet></router-outlet>
         </div>
-
-        <div>
-          <app-footer></app-footer>
-        </div>
+        <!--desktop footer-->
+        <app-footer fxHide fxShow.gt-sm></app-footer>
+        <div class="mobileNavSpacer"></div>
+        <app-bottomnav fxHide fxShow.lt-md *ngIf="showSideNav==false"></app-bottomnav>
       </div>
     </div>
+    <!--bottom nav for mobile; only show if not showing sidenav-->
 
   </md-sidenav-container>
+
 
 </div>

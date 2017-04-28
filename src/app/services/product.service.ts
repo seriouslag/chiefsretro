@@ -8,7 +8,8 @@ import {ToastService} from "./toast.service";
 @Injectable()
 export class ProductService {
   private productUrl: string = '/api/product?productId=';
-  private searchUrl: string = '/api/all?productName=';
+  private searchUrl: string = '/api/search?productName=';
+  private allUrl: string = '/api/all';
 
   constructor(private http: Http, private router: Router, private toastService: ToastService) {
   }
@@ -29,13 +30,16 @@ export class ProductService {
     return product;
   }
 
+  public getAllProducts(): Observable<Product[]> {
+    return this.http.get(this.allUrl).map(this.extractData).catch(this.handleError);
+  }
 
   //autocomplete searchbox
-  populateSearchList(productName: string): Promise<Product[]> {
+  defaultSearch(productName: string): Promise<Product[]> {
     return this.http.get(this.searchUrl + productName).map(this.extractData).catch(this.handleError).toPromise();
   }
 
-  //default site search;
+  //oldSearch
   getProductsContainingName(productName: string): Observable<Product[]> {
    return this.http.get(this.searchUrl + productName).map(this.extractData).catch(this.handleError);
  }

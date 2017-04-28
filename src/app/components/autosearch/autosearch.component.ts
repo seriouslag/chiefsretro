@@ -47,7 +47,7 @@ export class AutosearchComponent implements OnInit, OnDestroy {
   autosearch(event, term: string) {
     if (event.keyCode != 13 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
       if (this.checkTerm(term)) {
-        this.productService.populateSearchList(term).then(products => this.products = products);
+        this.productService.defaultSearch(term).then(products => this.products = products);
       }
     }
 

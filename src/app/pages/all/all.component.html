@@ -1,0 +1,22 @@
+<div fxLayoutWrap fxLayout="row" fxLayoutAlign="space-around center" *ngIf="products">
+  <a md-button *ngFor="let product of products" routerLink="/product/sku{{product.productId}}"
+     routerLinkActive="active">
+    <a id="{{product.productId}}"></a>
+    <a id="{{product.productName.replace(' ', '%20')}}"></a>
+    <md-card>
+      <md-card-subtitle>{{product.productName}}</md-card-subtitle>
+      <md-card-content *ngIf="product.productOptions.length>0">
+        <div class="center" *ngIf="product.productOptions[0].productOptionImages.length>0">
+          <img class="card-image-small"
+               src="/src/assets/sku{{product.productId}}/{{product.productOptions[0].productOptionImages[0].productOptionImageOrder}}.jpg"/>
+        </div>
+      </md-card-content>
+    </md-card>
+  </a>
+</div>
+<div fxFlexFill class="center" *ngIf="!products">
+  <md-spinner *ngIf="failed==false && waiting==true"></md-spinner>
+  <div *ngIf="failed">
+    No product found
+  </div>
+</div>

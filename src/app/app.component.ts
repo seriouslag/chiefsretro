@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {LoginService} from "./services/login-service";
+import {LoginService} from "./services/login.service";
 import {Subscription} from "rxjs";
 import {ProductService} from "./services/product.service";
 import {ToastService} from "./services/toast.service";
@@ -22,6 +22,8 @@ export class AppComponent implements OnInit, OnDestroy {
   productSubscription:Subscription;
 
   isSearch: boolean = false;
+
+  showSideNav: boolean = false;
 
   constructor(private loginService: LoginService, private toast: MdSnackBar) {
   }

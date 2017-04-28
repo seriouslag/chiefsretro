@@ -1,5 +1,5 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {LoginService} from "../../services/login-service";
+import {Component, Input, OnDestroy, OnInit} from "@angular/core";
+import {LoginService} from "../../services/login.service";
 import {Subscription} from "rxjs/Subscription";
 
 @Component({
@@ -13,6 +13,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginStatus:boolean;
   loginStatusText: string = "Login";
   subscription:Subscription;
+
+  @Input()
+  showText: boolean;
 
   changeLoginStat(): void {
     this.loginService.changeLoginStatus(!this.loginStatus);

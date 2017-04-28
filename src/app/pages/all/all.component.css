@@ -1,0 +1,8 @@
+.card-image-small {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+md-card {
+  margin: 15px;
+}

@@ -1,0 +1,18 @@
+<div
+  fxLayout="row"
+  fxLayoutAlign="space-around stretch"
+  class="appDark">
+
+  <a md-button color="primary" routerLink="/home" routerLinkActive="active" class="bNavSpace">
+    <md-icon>home</md-icon>
+  </a>
+  <a md-button color="primary" routerLink="/about" routerLinkActive="active" class="bNavSpace">
+    <md-icon>whatshot</md-icon>
+  </a>
+  <a md-button color="primary" class="bNavSpace">
+    <md-icon>shopping_cart</md-icon>
+  </a>
+  <div class="bNavSpace">
+    <app-login [showText]="false"></app-login>
+  </div>
+</div>
