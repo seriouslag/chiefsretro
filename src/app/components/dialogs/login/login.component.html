@@ -1,0 +1,8 @@
+<h1 md-dialog-title>Login</h1>
+<div md-dialog-content>Choose your way to login:</div>
+<button md-button md-tooltip="Login" [mdTooltipShowDelay]="500" color="primary" (click)="defaultLogin()">
+  <md-icon>power_settings_new</md-icon>
+  <span *ngIf="showLoginText">Login</span>
+</button>
+<button md-button class="g-signin2" (click)="googleLogin()">Google Sign In</button>
+<button md-button (click)="cancel()">Cancel</button>

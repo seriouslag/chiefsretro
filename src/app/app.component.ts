@@ -7,17 +7,19 @@ import {Product} from "./interfaces/product";
 
 import "rxjs/operator/finally";
 import {MdSnackBar} from "@angular/material";
+import {DialogService} from "./services/dialog.service";
 
 
 @Component({
   selector: 'app-chiefsretro',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [LoginService, ProductService, ToastService],
+  providers: [LoginService, ProductService, ToastService, DialogService],
 })
 export class AppComponent implements OnInit, OnDestroy {
   product: Product;
   loginStatus: boolean;
+  loginStatusText: string = "Login";
   loginSubscription:Subscription;
   productSubscription:Subscription;
 
@@ -28,8 +30,19 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private loginService: LoginService, private toast: MdSnackBar) {
   }
   ngOnInit() : void {
-    this.loginSubscription = this.loginService.loginStatus$.subscribe(loginStatus => this.loginStatus = loginStatus);
+    this.loginSubscription = this.loginService.loginStatus$.subscribe(loginStatus => {
+      this.loginStatus = loginStatus;
+      if (this.loginStatus) {
+        this.loginStatusText = "Logout";
+      } else {
+        this.loginStatusText = "Login";
+      }
+    });
   };
+
+  changeLoginStatus(): void {
+    this.loginService.changeLoginStatus(!this.loginStatus);
+  }
 
   ngOnDestroy() : void {
     if (this.loginSubscription) {

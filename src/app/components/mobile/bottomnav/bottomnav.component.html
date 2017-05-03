@@ -12,7 +12,8 @@
   <a md-button color="primary" class="bNavSpace">
     <md-icon>shopping_cart</md-icon>
   </a>
-  <div class="bNavSpace">
-    <app-login [showText]="false"></app-login>
-  </div>
+  <a md-button md-tooltip="Logout" class="bNavSpace" [mdTooltipShowDelay]="500" color="primary"
+     (click)="changeLoginStatus()">
+    <md-icon>power_settings_new</md-icon>
+  </a>
 </div>

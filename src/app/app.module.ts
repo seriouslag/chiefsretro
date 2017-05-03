@@ -39,7 +39,7 @@ import "hammerjs";
 import {AppComponent} from "./app.component";
 import {HomeTemplateComponent} from "./pages/home-template/home-template.component";
 import {AboutComponent} from "./pages/about/about.component";
-import {LoginComponent} from "./components/login/login.component";
+import {LoginComponent} from "./components/dialogs/login/login.component";
 import {ProductTemplateComponent} from "./pages/product-template/product-template.component";
 import {routing} from "./app.route";
 import {SearchComponent} from "./components/search/search.component";
@@ -53,6 +53,7 @@ import {BottomnavComponent} from "./components/mobile/bottomnav/bottomnav.compon
 import {AllComponent} from "./pages/all/all.component";
 import {ThumbImageComponent} from "./components/images/thumb-image/thumb-image.component";
 import {ProductImagesComponent} from "./components/images/product-images/product-images.component";
+import {LogoutComponent} from "./components/dialogs/logout/logout.component";
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {ProductImagesComponent} from "./components/images/product-images/product
     AllComponent,
     ThumbImageComponent,
     ProductImagesComponent,
+    LogoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,6 +89,7 @@ import {ProductImagesComponent} from "./components/images/product-images/product
 
   ],
   providers: [],
+  entryComponents: [LoginComponent, LogoutComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

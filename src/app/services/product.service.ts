@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {Headers, Http, Response} from "@angular/http";
 import {Observable} from "rxjs/Rx";
-import {Product} from "../interfaces/Product";
+import {Product} from "../interfaces/product";
 import {Router} from "@angular/router";
 import {ToastService} from "./toast.service";
 
