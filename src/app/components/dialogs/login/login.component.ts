@@ -29,8 +29,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   googleLogin(): void {
     this.action = true;
     this.loginDialog.close('google');
-
   }
+
+  fbLogin(): void {
+    this.action = true;
+    this.loginDialog.close('fb');
+  }
+
 
   defaultLogin(): void {
     this.action = true;
