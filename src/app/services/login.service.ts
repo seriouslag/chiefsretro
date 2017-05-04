@@ -26,7 +26,7 @@ export class LoginService {
   isSignedInWithFb = this._isSignedInWithFb.asObservable();
   isFbInit: boolean = false;
 
-  user: any;
+  user: any = {};
   fbuser: any;
   guser: any;
 
@@ -41,9 +41,8 @@ export class LoginService {
         if (loginResult == "google") {
           this.googleLogin();
         } else if (loginResult == "default") {
-          //my login api
+          //login api
           this.loginSuccess('default');
-
         } else if (loginResult == 'fb') {
           this.fbLogin();
         } else {
@@ -66,13 +65,14 @@ export class LoginService {
 
   private fbInit() {
     FB.init({
-      appId: '859537694185547',
+      //seriouslag.com
+      appId: '859605290845454',
+      //localhost appId: '859537694185547',
       cookie: true,
       xfbml: true,
       version: 'v2.9'
     });
     FB.AppEvents.logPageView();
-
     this.isFbInit = true;
   }
 
@@ -107,9 +107,8 @@ export class LoginService {
 
   private getFbProfileFromFbLoginResponse(response: any): void {
     //get user profile from response
-
     FB.api("/" + response.authResponse.userID, (user) => {
-      this.fbuser = user;
+      this.user.fb = user;
       this.loginSuccess('fb');
     });
   }
@@ -123,8 +122,8 @@ export class LoginService {
       }).then((auth2) => {
         this.auth2 = auth2;
         this.auth2.signIn().then(() => {
-          this.guser = this.auth2.currentUser.get();
-          if (this.guser.isSignedIn()) {
+          this.user.google = this.auth2.currentUser.get();
+          if (this.user.google.isSignedIn()) {
             this.loginSuccess('google');
           } else {
             this.loginFailed();
@@ -158,22 +157,21 @@ export class LoginService {
       if (this._isSignedInWithGoogle.getValue()) {
         this.auth2.signOut().then(() => {
           this._isSignedInWithGoogle.next(false);
-          /*
-           TODO reset user
-           */
-          //this.logOut();
         }, (error) => {
-          console.log(error)
+          console.log('Google logout error: ', error)
           //could not logout of google ?
         });
       }
 
-      if (this._isSignedInWithFb.getValue) {
+      if (this._isSignedInWithFb.getValue()) {
         FB.logout((response) => {
           //logged out of FB
           this._isSignedInWithFb.next(false);
         });
       }
+
+      this.resetUser();
+
       this._loginStatusSource.next(false);
       this.toastService.toast(this.message, 'OK', 1000);
     });
@@ -184,14 +182,26 @@ export class LoginService {
     this.ngZone.run(() => {
       if (entry == 'fb') {
         this._isSignedInWithFb.next(true);
-        this.message = "Logged in as " + this.fbuser.name;
+        this.message = "Logged in as " + this.user.fb.name;
       } else if (entry == 'google') {
         this._isSignedInWithGoogle.next(true);
-        this.message = "Logged in as " + this.guser.getBasicProfile().getName();
+        this.message = "Logged in as " + this.user.google.getBasicProfile().getName();
       }
       this._loginStatusSource.next(true);
       this.toastService.toast(this.message, 'OK', 1000);
     });
+  }
+
+  private resetUser(): void {
+    this.user = {
+      name: 'Guest',
+      image: '',
+      email: ''
+    }
+  }
+
+  private createUser(): void {
+
   }
 
   constructor(private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone) {
