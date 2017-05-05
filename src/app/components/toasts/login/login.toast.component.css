@@ -1,0 +1,12 @@
+.profileImg {
+  max-height: 20px;
+  max-width: 20px;
+}
+
+.floatLeft {
+  float: left;
+}
+
+.floatRight {
+  float: right;
+}
