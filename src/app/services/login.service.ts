@@ -53,7 +53,7 @@ export class LoginService {
             } else if (loginResult == 'fb' && this._isSignedInWithFb.getValue() == false) {
               this.fbLogin();
             } else if (loginResult == 'force') {
-
+              //do nothing
             } else {
               this.loginCanceled();
             }
@@ -95,12 +95,7 @@ export class LoginService {
     this.loadSdkAsync(
       () => {
         if (FB != null) {
-          //have to set cookie and status to false else it will auto log in even if they previously logged out
           FB.init({
-            //seriouslag.com
-            //appId: '859605290845454',
-            //localhost
-            //appId: '859537694185547',
             appId: appId,
             status: true,
             cookie: true,
@@ -126,9 +121,8 @@ export class LoginService {
   }
 
   private loadSdkAsync(callback: () => void) {
-    //window.fbAsyncInit = () => this.ngZone.run(callback);
     // Load the Facebook SDK asynchronously
-    this.ngZone.run(() => {
+    /*this.ngZone.run(() => {
       const s = "script";
       const id = "facebook-jssdk";
       let js, fjs = document.getElementsByTagName(s)[0];
@@ -137,18 +131,21 @@ export class LoginService {
       js.id = id;
       js.src = "//connect.facebook.net/en_US/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
-    });
-    if (FB != null) {
-      this.ngZone.run(callback);
-    } else {
-      if (this.retry < 5) {
-        console.log('FB retry');
-        setTimeout(() => {
-          this.fbInit();
-          this.retry++;
-        }, 500);
+     callback();
+     });*/
+    this.ngZone.run(() => {
+      if (FB != null) {
+        callback;
+      } else {
+        if (this.retry < 5) {
+          console.log('FB retry');
+          setTimeout(() => {
+            this.fbInit();
+            this.retry++;
+          }, 500);
+        }
       }
-    }
+    });
   }
 
   public fbLogin() {
@@ -209,6 +206,7 @@ export class LoginService {
               this.isGoogleInit = true;
               //if user was previously signed in via google, sign them in again
               if (this.auth2.isSignedIn.get() == true) {
+
                 this.googleLogin();
               }
             });
@@ -281,6 +279,7 @@ export class LoginService {
     this.ngZone.run(() => {
       if (this._isSignedInWithGoogle.getValue()) {
         this.auth2.signOut().then(() => {
+          console.log('Logged out with Google');
           this._isSignedInWithGoogle.next(false);
         }, (error) => {
           console.log('Google logout error: ', error)
@@ -292,9 +291,7 @@ export class LoginService {
         FB.logout((response) => {
           //logged out of FB
           this._isSignedInWithFb.next(false);
-          FB.getLoginStatus((response) => {
-            console.log(response)
-          });
+          console.log('Logged out with facebook', response)
         });
       }
 
@@ -305,7 +302,9 @@ export class LoginService {
   }
 
   private loginSuccess(entry: string): void {
-    this.loginDialog.close('force');
+    if (this.loginDialog) {
+      this.loginDialog.close('force');
+    }
     this.message = "Logged in";
     this.ngZone.run(() => {
 

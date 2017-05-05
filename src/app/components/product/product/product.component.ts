@@ -3,6 +3,7 @@ import {Product} from "../../../interfaces/product";
 import {ProductOption} from "../../../interfaces/product-option";
 import {MdTabChangeEvent} from "@angular/material";
 import {ToastService} from "../../../services/toast.service";
+import {AnalyticsService} from "../../../services/analytics.service";
 
 @Component({
   selector: 'app-product',
@@ -21,7 +22,7 @@ export class ProductComponent implements OnInit, OnChanges {
 
   imgPreload: HTMLImageElement[] = [];
 
-  constructor(private toastService: ToastService) {
+  constructor(private toastService: ToastService, private analyticsService: AnalyticsService) {
   }
 
   ngOnInit() {
@@ -33,12 +34,14 @@ export class ProductComponent implements OnInit, OnChanges {
       if (propName == "product") {
         this.selectedProductOption = this.product.productOptions[0];
         this.index = 0;
-        this.preload();
+        this.imagePreload();
       }
     }
   }
 
-  preload(): void {
+  imagePreload(): void {
+    //reset
+    this.imgPreload = [];
     for (let productOption of this.product.productOptions) {
       for (let productOptionImage of productOption.productOptionImages) {
         if (productOptionImage.productOptionImageLocation) {
@@ -49,7 +52,7 @@ export class ProductComponent implements OnInit, OnChanges {
           let img = new Image();
           img.src = '/src/assets/sku' + this.product.productId + '/' + productOptionImage.productOptionImageOrder + '.jpg';
           img.addEventListener('error', () => {
-            console.log('yo');
+            this.analyticsService.gaEmitEvent('image', 'error', 'sku' + this.product.productId.toString());
             img.src = '/src/assets/imageError.jpg';
           });
           this.imgPreload.push(img);
