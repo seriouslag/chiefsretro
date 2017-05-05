@@ -19,6 +19,8 @@ export class ProductComponent implements OnInit, OnChanges {
   selectedProductOptionNumber: number = 0;
   selectedProductOption: ProductOption;
 
+  imgPreload: HTMLImageElement[] = [];
+
   constructor(private toastService: ToastService) {
   }
 
@@ -31,6 +33,27 @@ export class ProductComponent implements OnInit, OnChanges {
       if (propName == "product") {
         this.selectedProductOption = this.product.productOptions[0];
         this.index = 0;
+        this.preload();
+      }
+    }
+  }
+
+  preload(): void {
+    for (let productOption of this.product.productOptions) {
+      for (let productOptionImage of productOption.productOptionImages) {
+        if (productOptionImage.productOptionImageLocation) {
+          let img = new Image();
+          img.src = productOptionImage.productOptionImageLocation;
+          this.imgPreload.push(img);
+        } else {
+          let img = new Image();
+          img.src = '/src/assets/sku' + this.product.productId + '/' + productOptionImage.productOptionImageOrder + '.jpg';
+          img.addEventListener('error', () => {
+            console.log('yo');
+            img.src = '/src/assets/imageError.jpg';
+          });
+          this.imgPreload.push(img);
+        }
       }
     }
   }

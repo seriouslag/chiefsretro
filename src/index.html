@@ -10,19 +10,19 @@
   <!-- Google API -->
   <script src="https://apis.google.com/js/platform.js" async defer></script>
 
-  <!--FB API -->
+  <!-- Google Analytics -->
   <script>
-    (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) {
-        return;
-      }
-      js = d.createElement(s);
-      js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    window.ga = window.ga || function () {
+        (ga.q = ga.q || []).push(arguments)
+      };
+    ga.l = +new Date;
+    ga('create', 'UA-XXXXX-Y', 'auto');
   </script>
+  <script async src='https://www.google-analytics.com/analytics.js'></script>
+  <!-- End Google Analytics -->
+
+  <!--FB API -->
+  <script src="https:////connect.facebook.net/en_US/sdk.js" async defer></script>
 
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 

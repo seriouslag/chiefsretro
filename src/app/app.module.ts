@@ -54,6 +54,7 @@ import {AllComponent} from "./pages/all/all.component";
 import {ThumbImageComponent} from "./components/images/thumb-image/thumb-image.component";
 import {ProductImagesComponent} from "./components/images/product-images/product-images.component";
 import {LogoutComponent} from "./components/dialogs/logout/logout.component";
+import {LoginToastComponent} from "./components/toasts/login/login.toast.component";
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import {LogoutComponent} from "./components/dialogs/logout/logout.component";
     ThumbImageComponent,
     ProductImagesComponent,
     LogoutComponent,
+    LoginToastComponent
   ],
   imports: [
     BrowserModule,
@@ -85,11 +87,11 @@ import {LogoutComponent} from "./components/dialogs/logout/logout.component";
     MdButtonToggleModule, MdRadioModule, MdRippleModule, MdSelectionModule, MdSelectModule, MdSliderModule,
     MdSlideToggleModule, MdSnackBarModule,
     routing,
-    FlexLayoutModule,
+    FlexLayoutModule
 
   ],
   providers: [],
-  entryComponents: [LoginComponent, LogoutComponent],
+  entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {
