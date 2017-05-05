@@ -2,7 +2,7 @@
   <span *ngIf="profileUrl" class="profileImg" fxFlex="nogrow">
     <img src="{{profileUrl}}" class="profileImg">
   </span>
-  <span fxFlex></span>
+  <span fxFlex *ngIf="profileUrl"></span>
 
   <span fxFlex="nogrow">
     {{loginMessage}}

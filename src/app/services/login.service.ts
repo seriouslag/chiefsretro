@@ -1,5 +1,5 @@
 import {Injectable, NgZone} from "@angular/core";
-import {MdDialogConfig} from "@angular/material";
+import {MdDialogConfig, MdDialogRef} from "@angular/material";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 import {ToastService} from "./toast.service";
@@ -7,12 +7,9 @@ import {DialogService} from "./dialog.service";
 
 import {LoginComponent} from "../components/dialogs/login/login.component";
 import {LogoutComponent} from "../components/dialogs/logout/logout.component";
-import {isUndefined} from "util";
 
 declare const gapi: any;
 declare const FB: any;
-
-
 
 @Injectable()
 export class LoginService {
@@ -27,13 +24,13 @@ export class LoginService {
   isSignedInWithFb$ = this._isSignedInWithFb.asObservable();
 
   private message: string;
-  private isFbInit: boolean = false;
-  private isGoogleInit: boolean = false;
+  private loginDialog: MdDialogRef<any>;
 
+  isFbInit: boolean = false;
+  isGoogleInit: boolean = false;
   user: any = {};
   retry: number = 0;
-
-  private auth2: any;
+  auth2: any;
 
   private init(): void {
     this.googleInit();
@@ -42,21 +39,26 @@ export class LoginService {
 
   public changeLoginStatus(boolean) {
     if (boolean) {
-      let loginDialog = this.dialogService.openDialog(LoginComponent, new MdDialogConfig());
-      loginDialog.componentInstance.showLoginText = true;
-      loginDialog.afterClosed().subscribe(loginResult => {
-        if (this._loginStatusSource.getValue() == false) {
-          if (loginResult == "google") {
-            this.googleLogin();
-          } else if (loginResult == "default") {
-            //login api
-            this.loginSuccess('default');
-          } else if (loginResult == 'fb') {
-            this.fbLogin();
-          } else {
-            this.loginCanceled();
+      this.loginDialog = this.dialogService.openDialog(LoginComponent, new MdDialogConfig());
+      this.loginDialog.componentInstance.showLoginText = true;
+      this.loginDialog.componentInstance.loginService = this;
+      this.loginDialog.afterClosed().subscribe(loginResult => {
+        setTimeout(() => {
+          if (this._loginStatusSource.getValue() == false) {
+            if (loginResult == "google" && this._isSignedInWithGoogle.getValue() == false) {
+              this.googleLogin();
+            } else if (loginResult == "default" && this._loginStatusSource.getValue() == false) {
+              //login api backend
+              this.loginSuccess('default');
+            } else if (loginResult == 'fb' && this._isSignedInWithFb.getValue() == false) {
+              this.fbLogin();
+            } else if (loginResult == 'force') {
+
+            } else {
+              this.loginCanceled();
+            }
           }
-        }
+        }, 150);
       });
     } else {
       //do log out;
@@ -92,7 +94,7 @@ export class LoginService {
 
     this.loadSdkAsync(
       () => {
-        if (isUndefined(FB) == false) {
+        if (FB != null) {
           //have to set cookie and status to false else it will auto log in even if they previously logged out
           FB.init({
             //seriouslag.com
@@ -129,17 +131,18 @@ export class LoginService {
     this.ngZone.run(() => {
       const s = "script";
       const id = "facebook-jssdk";
-      var js, fjs = document.getElementsByTagName(s)[0];
+      let js, fjs = document.getElementsByTagName(s)[0];
       if (document.getElementById(id)) return;
       js = document.createElement(s);
       js.id = id;
       js.src = "//connect.facebook.net/en_US/sdk.js";
       fjs.parentNode.insertBefore(js, fjs);
     });
-    if (isUndefined(FB) == false) {
+    if (FB != null) {
       this.ngZone.run(callback);
     } else {
       if (this.retry < 5) {
+        console.log('FB retry');
         setTimeout(() => {
           this.fbInit();
           this.retry++;
@@ -148,12 +151,10 @@ export class LoginService {
     }
   }
 
-  private fbLogin() {
-    console.log('fbLogin', FB, this.isFbInit);
+  public fbLogin() {
     if (this.isFbInit == false) {
       this.fbInit();
     } else {
-
       FB.getLoginStatus((response) => {
         console.log('should be good togo', response.status);
         if (response.status === "not_authorized") {
@@ -193,7 +194,7 @@ export class LoginService {
 
   private googleInit(): void {
     this.ngZone.run(() => {
-        if (isUndefined(gapi) == false) {
+      if (gapi != null) {
           gapi.load('auth2', () => {
             gapi.auth2.init({
               client_id: '917853947579-aukq6soleijkjemi7ln3usavpg7l7nb1.apps.googleusercontent.com',
@@ -204,6 +205,7 @@ export class LoginService {
               auth2.isSignedIn.listen((val) => {
                 console.log('Signin state changed to ', val);
               });
+              console.log('google is init');
               this.isGoogleInit = true;
               //if user was previously signed in via google, sign them in again
               if (this.auth2.isSignedIn.get() == true) {
@@ -213,33 +215,49 @@ export class LoginService {
           });
         } else {
           //gapi is undefined
-          if (this.retry < 5) {
+        console.log('retry');
+        if (this.retry < 15) {
             setTimeout(() => {
               this.googleInit();
               this.retry++;
-            }, 500);
+            }, 200);
           }
         }
       }
     );
   }
 
-  private googleLogin() {
-    if (this.isGoogleInit == false) {
-      this.googleInit();
-    } else {
-
-      this.auth2.signIn().then(() => {
+  public googleLogin() {
+    this.ngZone.run(() => {
+      if (this.auth2 != null && this.auth2.currentUser) {
         this.user.google = this.auth2.currentUser.get();
         if (this.user.google.isSignedIn()) {
           this.loginSuccess('google');
-        } else {
-          this.loginFailed();
         }
-      }, (error) => {
-        this.loginFailed();
-      });
-    }
+      } else {
+        if (this.isGoogleInit == false) {
+          this.googleInit();
+        } else {
+          this.auth2.signIn().then(() => {
+            this.user.google = this.auth2.currentUser.get();
+            if (this.user.google.isSignedIn()) {
+              this.loginSuccess('google');
+            } else {
+              this.loginFailed();
+            }
+          }, (error) => {
+            this.loginFailed();
+          });
+        }
+      }
+    });
+  }
+
+  public attachGoogleSignin(element: any) {
+    console.log('test');
+    this.auth2.attachClickHandler(element, {}, () => {
+      this.googleLogin()
+    }, {})
   }
 
   private loginCanceled() {
@@ -281,33 +299,30 @@ export class LoginService {
       }
 
       this.resetUser();
-
       this._loginStatusSource.next(false);
       this.toastService.toast(this.message, 'OK', 1000);
     });
   }
 
   private loginSuccess(entry: string): void {
+    this.loginDialog.close('force');
     this.message = "Logged in";
     this.ngZone.run(() => {
+
       if (entry == 'fb') {
-
-
         this.user.email = this.user.fb.email;
         this.user.fname = this.user.fb.first_name;
         this.user.lname = this.user.fb.last_name;
         this.user.img = this.user.fb.img;
         this.user.gender = this.user.fb.gender;
-
         this._isSignedInWithFb.next(true);
         this.message = "Logged in as " + this.user.fb.name;
-      } else if (entry == 'google') {
 
+      } else if (entry == 'google') {
         this.user.email = this.user.google.getBasicProfile().getEmail();
         this.user.fname = this.user.google.getBasicProfile().getGivenName();
         this.user.lname = this.user.google.getBasicProfile().getFamilyName();
         this.user.img = this.user.google.getBasicProfile().getImageUrl();
-
         this._isSignedInWithGoogle.next(true);
         this.message = "Logged in as " + this.user.google.getBasicProfile().getName();
       }
