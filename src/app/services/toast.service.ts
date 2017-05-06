@@ -8,21 +8,24 @@ export class ToastService {
   constructor(private snackbar: MdSnackBar) {
   }
 
-  toast(text: string, button: string, length: number) {
+  toast(text: string, button?: string, duration?: number) {
+    if (!button) {
+      button = 'OK';
+    }
+    if (!duration) {
+      duration = 1000;
+    }
     this.snackbar.open(text, button, {
-      duration: length,
+      duration: duration,
     })
   }
 
-  loginToast(profileUrl: string, message: string, length: number) {
+  loginToast(profileUrl: string, message: string, duration: number) {
     let login = this.snackbar.openFromComponent(LoginToastComponent, {
-      duration: length,
+      duration: duration,
     });
 
     login.instance.profileUrl = profileUrl;
     login.instance.loginMessage = message;
   }
-
-
-
 }

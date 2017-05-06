@@ -4,6 +4,7 @@ import {ProductOption} from "../../../interfaces/product-option";
 import {MdTabChangeEvent} from "@angular/material";
 import {ToastService} from "../../../services/toast.service";
 import {AnalyticsService} from "../../../services/analytics.service";
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-product',
@@ -22,7 +23,7 @@ export class ProductComponent implements OnInit, OnChanges {
 
   imgPreload: HTMLImageElement[] = [];
 
-  constructor(private toastService: ToastService, private analyticsService: AnalyticsService) {
+  constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private userService: UserService) {
   }
 
   ngOnInit() {
@@ -36,6 +37,16 @@ export class ProductComponent implements OnInit, OnChanges {
         this.index = 0;
         this.imagePreload();
       }
+    }
+  }
+
+  private addToCart(product: Product, productOption: ProductOption, quantity: number) {
+    let check = this.userService.addToCart(product, productOption, quantity);
+    console.log();
+    if (check == true) {
+      this.showToast('Added ' + this.selectedProductOption.productColor + ' ' + product.productName + ' To Cart');
+    } else {
+      this.showToast('Failed to add this product to your cart');
     }
   }
 
@@ -80,7 +91,7 @@ export class ProductComponent implements OnInit, OnChanges {
     }
   }
 
-  showToast(message: string, button: string, time: number): void {
-    this.toastService.toast(message, button, time);
+  showToast(message: string): void {
+    this.toastService.toast(message, 'OK', 1000);
   }
 }

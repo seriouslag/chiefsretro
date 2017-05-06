@@ -42,17 +42,17 @@
         </md-card-content>
         <md-card-actions>
           <button md-button md-tooltip='Add To Cart' color="accent" tooltip-position="above" [mdTooltipShowDelay]="500"
-                  (click)="showToast('Added ' + selectedProductOption.productColor + ' ' + product.productName + ' To Cart', 'OK', 1000);">
+                  (click)="addToCart(product, selectedProductOption, 1)">
             Add {{selectedProductOption.productColor}} {{product.productName}} To Cart
           </button>
           <button md-button md-tooltip="Share" color="accent" tooltip-position="above" [mdTooltipShowDelay]="500"
-                  (click)="showToast('Shared', 'OK', 1000);">Share
+                  (click)="showToast('Shared');">Share
           </button>
         </md-card-actions>
       </md-card>
       <button md-fab fxHide fxShow.lt-md color="primary" class="addcircle"
               md-tooltip="Add To Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
-              (click)="showToast('Added '+ selectedProductOption.productColor + ' ' + product.productName + ' To Cart', 'OK', 1000);">
+              (click)="addToCart(product, selectedProductOption, 1)">
         <md-icon>add_shopping_cart</md-icon>
       </button>
     </div>

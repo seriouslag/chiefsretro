@@ -1,0 +1,19 @@
+<md-card class="floatingCartContainer">
+  <md-card-content>
+    <div>Cart:</div>
+    <div fxLayout="column" fxLayoutGap=".5em">
+      <div *ngFor="let cartItem of user.cartItems">
+        <a md-button routerLink="/product/sku{{cartItem.product.productId}}" fxFlex>
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <span><app-thumb-image [product]="cartItem.product"></app-thumb-image></span><span>{{cartItem.productOption.productColor}} {{cartItem.product.productName}}</span>
+            <span>x{{cartItem.quantity}}</span> @ <span>${{cartItem.productOption.productPrice}}</span>
+          </div>
+        </a>
+      </div>
+
+    </div>
+    <div *ngIf="user.cartItems.length == 0">
+      No Items In Cart.
+    </div>
+  </md-card-content>
+</md-card>

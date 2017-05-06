@@ -2,6 +2,7 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Subscription} from "rxjs/Subscription";
 
 import {LoginService} from "../../services/login.service";
+import {RetroService} from "../../services/retro.service";
 
 @Component({
   selector: 'app-sidenav',
@@ -13,12 +14,15 @@ export class SidenavComponent implements OnInit, OnDestroy {
   loginStatusText: string = "Login";
   loginSubscription: Subscription;
 
-
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: LoginService, private retroService: RetroService) {
   }
 
   private changeLoginStatus(): void {
     this.loginService.changeLoginStatus(!this.loginStatus);
+  }
+
+  private toggleCart() {
+    this.retroService.toggleCart();
   }
 
   ngOnInit() {

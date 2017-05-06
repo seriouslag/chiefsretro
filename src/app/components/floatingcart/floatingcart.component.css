@@ -1,0 +1,98 @@
+:host(app-floatingcart) {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 20;
+  -webkit-animation: down 1s 1; /* Safari 4.0 - 8.0 */
+  animation: down 1s 1;
+  transform: translateX(-50%);
+}
+
+.floatingCartContainer {
+  width: 250px;
+  max-height: 650px;
+}
+
+@-webkit-keyframes down {
+  0% {
+    top: -1000px;
+  }
+  80% {
+    top: 0;
+  }
+  95% {
+    top: -10px;
+  }
+  100% {
+    top: 1px;
+  }
+}
+
+@keyframes down {
+  0% {
+    top: -1000px;
+  }
+  80% {
+    top: 0;
+  }
+  90% {
+    top: -5px;
+  }
+  100% {
+    top: 1px;
+  }
+}
+
+@-webkit-keyframes up {
+  0% {
+    top: 1px;
+  }
+  100% {
+    top: -1000px;
+  }
+}
+
+@keyframes up {
+  0% {
+    top: 1px;
+  }
+  100% {
+    top: -1000px;
+  }
+}
+
+@-webkit-keyframes down1 {
+  from {
+    top: -1000px;
+  }
+  to {
+    top: 0px;
+  }
+}
+
+@keyframes down1 {
+  from {
+    top: -1000px;
+  }
+  to {
+    top: 0px;
+  }
+}
+
+@-webkit-keyframes up {
+  from {
+    top: 0px;
+  }
+  to {
+    top: -1000px;
+  }
+}
+
+@keyframes up {
+  from {
+    top: -0px;
+  }
+  to {
+    top: -1000px;
+  }
+}

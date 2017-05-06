@@ -55,6 +55,14 @@ import {ThumbImageComponent} from "./components/images/thumb-image/thumb-image.c
 import {ProductImagesComponent} from "./components/images/product-images/product-images.component";
 import {LogoutComponent} from "./components/dialogs/logout/logout.component";
 import {LoginToastComponent} from "./components/toasts/login/login.toast.component";
+import {LoginService} from "./services/login.service";
+import {UserService} from "./services/user.service";
+import {ProductService} from "./services/product.service";
+import {ToastService} from "./services/toast.service";
+import {DialogService} from "./services/dialog.service";
+import {AnalyticsService} from "./services/analytics.service";
+import {FloatingcartComponent} from "./components/floatingcart/floatingcart.component";
+import {RetroService} from "./services/retro.service";
 
 @NgModule({
   declarations: [
@@ -73,7 +81,8 @@ import {LoginToastComponent} from "./components/toasts/login/login.toast.compone
     ThumbImageComponent,
     ProductImagesComponent,
     LogoutComponent,
-    LoginToastComponent
+    LoginToastComponent,
+    FloatingcartComponent
   ],
   imports: [
     BrowserModule,
@@ -90,7 +99,7 @@ import {LoginToastComponent} from "./components/toasts/login/login.toast.compone
     FlexLayoutModule
 
   ],
-  providers: [],
+  providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService],
   entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent],
   bootstrap: [AppComponent]
 })

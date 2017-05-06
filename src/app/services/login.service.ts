@@ -7,6 +7,9 @@ import {DialogService} from "./dialog.service";
 
 import {LoginComponent} from "../components/dialogs/login/login.component";
 import {LogoutComponent} from "../components/dialogs/logout/logout.component";
+import {UserService} from "./user.service";
+import {Subscription} from "rxjs/Subscription";
+import {User} from "../interfaces/user";
 
 declare const gapi: any;
 declare const FB: any;
@@ -25,16 +28,24 @@ export class LoginService {
 
   private message: string;
   private loginDialog: MdDialogRef<any>;
+  private userSubscription: Subscription;
 
   isFbInit: boolean = false;
   isGoogleInit: boolean = false;
-  user: any = {};
+  user: User;
   retry: number = 0;
   auth2: any;
 
   private init(): void {
+    this.userSubscription = this.userService.getUser().subscribe(user => {
+      this.user = user;
+      console.log(user);
+    });
+
+    this.userService.resetUser();
     this.googleInit();
     this.fbInit();
+
   }
 
   public changeLoginStatus(boolean) {
@@ -178,8 +189,11 @@ export class LoginService {
     if (response.status === "connected") {
       FB.api("/" + response.authResponse.userID, (user) => {
         this.user.fb = user;
+        this.userService.updateUser(this.user);
+
         FB.api("/" + response.authResponse.userID + "/picture?height=40&width=40&redirect=0", (picture) => {
           this.user.fb.img = picture.data.url;
+          this.userService.updateUser(this.user);
           this.loginSuccess('fb');
         });
       });
@@ -228,7 +242,9 @@ export class LoginService {
   public googleLogin() {
     this.ngZone.run(() => {
       if (this.auth2 != null && this.auth2.currentUser) {
+        console.log(this.user);
         this.user.google = this.auth2.currentUser.get();
+        this.userService.updateUser(this.user);
         if (this.user.google.isSignedIn()) {
           this.loginSuccess('google');
         }
@@ -238,6 +254,7 @@ export class LoginService {
         } else {
           this.auth2.signIn().then(() => {
             this.user.google = this.auth2.currentUser.get();
+            this.userService.updateUser(this.user);
             if (this.user.google.isSignedIn()) {
               this.loginSuccess('google');
             } else {
@@ -295,7 +312,7 @@ export class LoginService {
         });
       }
 
-      this.resetUser();
+      this.userService.resetUser();
       this._loginStatusSource.next(false);
       this.toastService.toast(this.message, 'OK', 1000);
     });
@@ -313,7 +330,8 @@ export class LoginService {
         this.user.fname = this.user.fb.first_name;
         this.user.lname = this.user.fb.last_name;
         this.user.img = this.user.fb.img;
-        this.user.gender = this.user.fb.gender;
+        //this.user.gender = this.user.fb.gender;
+        this.userService.updateUser(this.user);
         this._isSignedInWithFb.next(true);
         this.message = "Logged in as " + this.user.fb.name;
 
@@ -322,6 +340,7 @@ export class LoginService {
         this.user.fname = this.user.google.getBasicProfile().getGivenName();
         this.user.lname = this.user.google.getBasicProfile().getFamilyName();
         this.user.img = this.user.google.getBasicProfile().getImageUrl();
+        this.userService.updateUser(this.user);
         this._isSignedInWithGoogle.next(true);
         this.message = "Logged in as " + this.user.google.getBasicProfile().getName();
       }
@@ -330,15 +349,9 @@ export class LoginService {
     });
   }
 
-  private resetUser(): void {
-    this.user = {
-      name: 'Guest',
-      img: '',
-      email: ''
-    }
-  }
 
-  constructor(private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone) {
+  constructor(private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone, private userService: UserService) {
+
     this.init();
   }
 
