@@ -3,10 +3,7 @@
 
 <div fxLayout.lt-md="row" fxLayout.gt-sm="column">
   <div>
-    <button md-button md-tooltip="Login" [mdTooltipShowDelay]="500" (click)="defaultLogin()">
-      <md-icon>power_settings_new</md-icon>
-      <span *ngIf="showLoginText"> Login</span>
-    </button>
+
     <button md-button md-tooltip="Google Login" [mdTooltipShowDelay]="500" id="my-signin2" (click)="googleLogin()">
       <i class="mdi mdi-18px mdi-google google icon"></i> <span> Sign In</span>
     </button>

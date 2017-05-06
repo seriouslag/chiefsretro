@@ -1,6 +1,7 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Subscription} from "rxjs/Subscription";
 import {LoginService} from "../../../services/login.service";
+import {RetroService} from "../../../services/retro.service";
 
 @Component({
   selector: 'app-bottomnav',
@@ -12,7 +13,7 @@ export class BottomnavComponent implements OnInit, OnDestroy {
   loginStatusText: string = "Login";
   loginSubscription: Subscription;
 
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: LoginService, private retroService: RetroService) {
   }
 
   ngOnInit() {
@@ -26,6 +27,10 @@ export class BottomnavComponent implements OnInit, OnDestroy {
     });
   }
 
+  private toggleCart() {
+    this.retroService.toggleCart();
+  }
+
   changeLoginStatus(): void {
     this.loginService.changeLoginStatus(!this.loginStatus);
   }
@@ -33,7 +38,6 @@ export class BottomnavComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.loginSubscription) {
       this.loginSubscription.unsubscribe();
-
     }
   }
 }
