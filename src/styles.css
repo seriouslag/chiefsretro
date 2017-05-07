@@ -42,6 +42,10 @@ html, body {
   background-color: #212121;
 }
 
+.appBackgroundLight {
+  background-color: #303030;
+}
+
 /*internet explorer scrollbalken*/
 body {
   scrollbar-base-color: #C0C0C0;

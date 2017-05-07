@@ -1,13 +1,14 @@
 <md-input-container>
-  <input id="search" mdInput search (change)="change()" (input)="search()" placeholder="Search" [(ngModel)]="terms">
+  <input id="search" mdInput search (change)="change()" (input)="search()" autocomplete="false" placeholder="Search"
+         [(ngModel)]="terms">
+
+
 </md-input-container>
-<div class="searchlist">
-  <div *ngFor="let product of products; let i = index">
-    <button md-button (click)="click(products[i])">
-      <div class="flex-container"
-           fxLayoutAlign="space-between center">
-        <div class="flex-item" fxFlex>{{products[i].productName}}</div>
-      </div>
-    </button>
-  </div>
+<div class="searchlist" fxLayout="column" fxLayoutGap="5px">
+  <button md-button (click)="click(products[i])" *ngFor="let product of products; let i = index">
+    <div class="options_container" fxLayout="row">
+      <span class="options_img_container"><app-thumb-image [product]="product"></app-thumb-image></span>
+      <span class="options_text_container">{{product.productName}}</span>
+    </div>
+  </button>
 </div>

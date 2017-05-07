@@ -6,14 +6,13 @@ app-search {
 }
 
 .app-wrapper {
-  display: flex;
-  flex-flow: column;
   height: 100%;
   margin: 0;
 }
 
 .scroll-overlay {
   overflow-x: hidden;
+  width: 100%;
 }
 
 #sidenav {
@@ -29,3 +28,5 @@ app-search {
 .scrollbar-container {
   border: 0;
 }
+
+

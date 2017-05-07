@@ -1,6 +1,6 @@
-<div class="app-wrapper ">
+<div class="app-wrapper" fxLayout="column">
 
-  <md-toolbar>
+  <md-toolbar fxFlex="nogrow">
     <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
       <!--for mobile sidenav only show if requested-->
       <div class="menu_button" fxHide fxShow.lt-md *ngIf="showSideNav">
@@ -11,6 +11,7 @@
       <div fxFlex><a routerLink="/home" routerLinkActive="active">CHIEFSRETRO</a></div>
       <div fxShow fxHide.lt-md>
         <app-autosearch></app-autosearch>
+
       </div>
       <button fxHide fxShow.lt-md md-icon-button *ngIf="isSearch==false" (click)="isSearch = !isSearch">
         <md-icon>search</md-icon>
@@ -26,36 +27,25 @@
     <app-floatingcart *ngIf="showCart"></app-floatingcart>
   </md-toolbar>
 
-
-  <md-sidenav-container fxFlex>
-
-    <!--mobile sidenav only show if requested-->
-    <md-sidenav #mobilesidenav fxHide fxShow.lt-md *ngIf="showSideNav">
-      <app-sidenav></app-sidenav>
-    </md-sidenav>
-
-    <div fxLayout="row" fxFlexFill class="scrollbar-container">
+  <div fxFlex class="appBackgroundLight">
+    <div fxLayout="row" fxFlex>
 
       <!--desktop sidenav-->
       <div fxShow fxHide.lt-md id="sidenav">
         <app-sidenav></app-sidenav>
       </div>
 
-      <div fxFlex fxLayout="column" class="scroll-overlay inner">
+      <div fxLayout="column" class="scroll-overlay inner">
 
         <div fxFlex>
           <router-outlet></router-outlet>
         </div>
         <!--desktop footer-->
-        <app-footer fxHide fxShow.gt-sm></app-footer>
-        <div class="mobileNavSpacer"></div>
-        <app-bottomnav fxHide fxShow.lt-md></app-bottomnav>
+        <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
+        <app-bottomnav fxFlex="nogrow" fxHide fxShow.lt-md></app-bottomnav>
       </div>
     </div>
-    <!--bottom nav for mobile; only show if not showing sidenav-->
-
-  </md-sidenav-container>
-
+  </div>
 
 </div>
 

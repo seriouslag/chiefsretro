@@ -82,7 +82,7 @@ import {RetroService} from "./services/retro.service";
     ProductImagesComponent,
     LogoutComponent,
     LoginToastComponent,
-    FloatingcartComponent
+    FloatingcartComponent,
   ],
   imports: [
     BrowserModule,

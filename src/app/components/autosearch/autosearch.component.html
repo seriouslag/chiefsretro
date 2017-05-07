@@ -1,16 +1,18 @@
 <md-input-container>
-  <input id="search" mdInput autocomplete="products" md-tooltip="I Can Help!" [mdTooltipShowDelay]="500"
-         [mdAutocomplete]="auto" type="search"
-         (keyup)="autosearch($event,term.value, term.getAttribute('aria-activedescendant'))" #term>
+  <input id="search" mdInput [mdAutocomplete]="auto" #term
+         (keyup)="autosearch($event,term.value, term.getAttribute('aria-activedescendant'))"
+  >
   <md-placeholder><span>Search </span> <span class="mdi mdi-16px mdi-magnify"></span></md-placeholder>
-
 </md-input-container>
+
+
 <md-autocomplete #auto="mdAutocomplete">
   <md-option *ngFor="let product of products;" [value]="product.productName" (click)="click(product)"
              (onSelectionChange)="click(product)" onselect="click(product)" (onSelect)="click(product)">
-    <div class="options_container">
-      <span class="options_img_container"><app-thumb-image [product]="product"></app-thumb-image></span>
-      <span class="options_text_container">{{product.productName}}</span>
+    <div fxLayout="row">
+      <app-thumb-image [product]="product"></app-thumb-image>
+      <div fxFlex></div>
+      <div>{{product.productName}}</div>
     </div>
   </md-option>
 </md-autocomplete>
