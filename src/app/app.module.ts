@@ -63,6 +63,7 @@ import {DialogService} from "./services/dialog.service";
 import {AnalyticsService} from "./services/analytics.service";
 import {FloatingcartComponent} from "./components/floatingcart/floatingcart.component";
 import {RetroService} from "./services/retro.service";
+import {CancelComponent} from "./components/dialogs/cancel/cancel.component";
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import {RetroService} from "./services/retro.service";
     LogoutComponent,
     LoginToastComponent,
     FloatingcartComponent,
+    CancelComponent,
   ],
   imports: [
     BrowserModule,
@@ -100,7 +102,7 @@ import {RetroService} from "./services/retro.service";
 
   ],
   providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService],
-  entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent],
+  entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent, CancelComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

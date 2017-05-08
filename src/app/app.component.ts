@@ -6,6 +6,8 @@ import {AnalyticsService} from "./services/analytics.service";
 import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "./services/retro.service";
 import {animate, group, style, transition, trigger} from "@angular/animations";
+import {LoginService} from "./services/login.service";
+import {UserService} from "./services/user.service";
 
 @Component({
   selector: 'app-chiefsretro',
@@ -48,14 +50,17 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
 export class AppComponent implements OnInit, OnDestroy {
 
   isSearch: boolean = false;
-  showSideNav: boolean = false;
   showCart: boolean = false;
 
   routerSubscription: Subscription;
   retroSubscription: Subscription;
 
-  constructor(public router: Router, analyticsService: AnalyticsService, retroService: RetroService) {
-    this.retroSubscription = retroService._showCart.subscribe(showCart => {
+  constructor(public router: Router, analyticsService: AnalyticsService, retroService: RetroService, private userService: UserService, private loginService: LoginService) {
+    this.userService.init().then(() => {
+      this.loginService.init();
+    }).catch(() => console.log('failed to call login service'));
+
+    this.retroSubscription = retroService.showCart.subscribe(showCart => {
       this.showCart = showCart;
     });
 
@@ -66,8 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() : void {
-
+  ngOnInit(): void {
   };
 
   ngOnDestroy() : void {

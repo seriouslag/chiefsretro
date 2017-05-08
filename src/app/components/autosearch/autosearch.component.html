@@ -2,7 +2,7 @@
   <input id="search" mdInput [mdAutocomplete]="auto" #term
          (keyup)="autosearch($event,term.value, term.getAttribute('aria-activedescendant'))"
   >
-  <md-placeholder><span>Search </span> <span class="mdi mdi-16px mdi-magnify"></span></md-placeholder>
+  <md-placeholder><i class="mdi mdi-16px mdi-magnify"></i><span> Search</span></md-placeholder>
 </md-input-container>
 
 

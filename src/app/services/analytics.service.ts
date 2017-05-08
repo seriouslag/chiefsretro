@@ -22,7 +22,6 @@ export class AnalyticsService {
   public gaEmitPageView(url: string): void {
     ga('set', 'page', url);
     ga('send', 'pageview');
-    console.log('sending analytics');
   }
 
 }

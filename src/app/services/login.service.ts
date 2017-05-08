@@ -36,13 +36,12 @@ export class LoginService {
   retry: number = 0;
   auth2: any;
 
-  private init(): void {
+  public init(): void {
     this.userSubscription = this.userService.getUser().subscribe(user => {
       this.user = user;
-      console.log(user);
     });
 
-    this.userService.resetUser();
+
     this.googleInit();
     this.fbInit();
 
@@ -120,10 +119,14 @@ export class LoginService {
           FB.getLoginStatus(
             ((response) => {
               if (response && response.status === "connected") {
-                console.log('going to auto login', this.isFbInit);
-                this.fbLogin();
+                //auto log in
+                if (this.user.fb) {
+                  //auto log in?
+                } else {
+                  this.fbLogin();
+                }
+
               }
-              console.log('init', response);
             }));
         } else {
           //FB is undefined
@@ -146,7 +149,7 @@ export class LoginService {
      });*/
     this.ngZone.run(() => {
       if (FB != null) {
-        callback;
+        callback();
       } else {
         if (this.retry < 5) {
           console.log('FB retry');
@@ -164,7 +167,6 @@ export class LoginService {
       this.fbInit();
     } else {
       FB.getLoginStatus((response) => {
-        console.log('should be good togo', response.status);
         if (response.status === "not_authorized") {
           FB.login((response) => {
             this.getFbProfileFromFbLoginResponse(response)
@@ -216,18 +218,26 @@ export class LoginService {
               auth2.isSignedIn.listen((val) => {
                 console.log('Signin state changed to ', val);
               });
-              console.log('google is init');
               this.isGoogleInit = true;
               //if user was previously signed in via google, sign them in again
               if (this.auth2.isSignedIn.get() == true) {
+                if (this.user.google) {
+                  if (this.auth2) {
+                    if (this.auth2.currentUser.get()) {
+                      this.silentLogin();
+                      console.log('goog already logged in previously?');
+                    }
+                  }
+                } else {
+                  this.googleLogin();
+                }
 
-                this.googleLogin();
               }
             });
           });
         } else {
           //gapi is undefined
-        console.log('retry');
+        console.log('google retry');
         if (this.retry < 15) {
             setTimeout(() => {
               this.googleInit();
@@ -242,7 +252,6 @@ export class LoginService {
   public googleLogin() {
     this.ngZone.run(() => {
       if (this.auth2 != null && this.auth2.currentUser) {
-        console.log(this.user);
         this.user.google = this.auth2.currentUser.get();
         this.userService.updateUser(this.user);
         if (this.user.google.isSignedIn()) {
@@ -269,7 +278,6 @@ export class LoginService {
   }
 
   public attachGoogleSignin(element: any) {
-    console.log('test');
     this.auth2.attachClickHandler(element, {}, () => {
       this.googleLogin()
     }, {})
@@ -308,7 +316,9 @@ export class LoginService {
         FB.logout((response) => {
           //logged out of FB
           this._isSignedInWithFb.next(false);
-          console.log('Logged out with facebook', response)
+          console.log('Logged out with facebook', response);
+        }, (error) => {
+          console.log('Could not guarantee successful logout of facebook', error);
         });
       }
 
@@ -316,6 +326,13 @@ export class LoginService {
       this._loginStatusSource.next(false);
       this.toastService.toast(this.message, 'OK', 1000);
     });
+  }
+
+  private silentLogin(): void {
+    if (this.loginDialog) {
+      this.loginDialog.close('force');
+    }
+    this._loginStatusSource.next(true);
   }
 
   private loginSuccess(entry: string): void {
@@ -351,8 +368,6 @@ export class LoginService {
 
 
   constructor(private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone, private userService: UserService) {
-
-    this.init();
   }
 
 }

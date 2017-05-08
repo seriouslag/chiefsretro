@@ -5,19 +5,37 @@ import {Observable} from "rxjs/Observable";
 import {Product} from "../interfaces/product";
 import {CartItem} from "../interfaces/cart-item";
 import {ProductOption} from "../interfaces/product-option";
+import {MdDialogRef} from "@angular/material";
+import {DialogService} from "./dialog.service";
+import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
 
 @Injectable()
 export class UserService {
   private _user = new BehaviorSubject<User>(this.createUser(null, '', 'Guest', '', null, null));
   private user = this._user.asObservable();
 
+  private cartDialog: MdDialogRef<any>;
+
   getUser(): Observable<User> {
     return this.user;
   }
 
   updateUser(user: User): boolean {
-    this._user.next(user);
+    this.ngZone.run(() => {
+      this._user.next(user);
+      this.saveUserToLocalstorage();
+    });
     return true;
+  }
+
+  private saveUserToLocalstorage() {
+    let user = this._user.getValue();
+
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  private getUserFromLocalStorage(): User {
+    return JSON.parse(localStorage.getItem('user'));
   }
 
   addToCart(product: Product, productOption: ProductOption, quantity: number): boolean {
@@ -49,20 +67,27 @@ export class UserService {
     let user = this._user.getValue();
     let index = 0;
 
-    console.log('removing ' + productOption.productColor);
 
     for (let cartItem of user.cartItems) {
-      console.log(cartItem.product.productId == product.productId && cartItem.productOption.productOptionId == productOption.productOptionId);
       if (cartItem.product.productId == product.productId && cartItem.productOption.productOptionId == productOption.productOptionId) {
         if (cartItem.quantity == quantity) {
-          user.cartItems.splice(index, quantity);
+          this.cartDialog = this.dialogService.openDialog(CancelComponent, {});
+          this.cartDialog.componentInstance.customText = "Remove from cart?";
+          let result = false;
+          let tempIndex = index;
+          this.cartDialog.afterClosed().subscribe(cartResult => {
+            //if the user wants to remove item then do so
+            if (cartResult) {
+              user.cartItems.splice(tempIndex, 1);
+            }
+            result = true;
+          });
         } else {
           user.cartItems[index].quantity -= quantity;
         }
       }
       index++;
     }
-
     return this.updateUser(user);
   }
 
@@ -104,7 +129,7 @@ export class UserService {
     /*
      TODO test ngzone to see if it is needed
      */
-    this.ngZone.run(() => {
+    // this.ngZone.run(() => {
 
       this.updateUser(this.createUserFromUser(
         <User>{
@@ -117,10 +142,19 @@ export class UserService {
           cartItems: [] as CartItem[]
         }
       ));
-    });
+    // });
   }
 
-  constructor(private ngZone: NgZone) {
+  //use a promise so we can call init login after we check localstorahge,
+  public init(): Promise<any> {
+    let user = this.getUserFromLocalStorage();
+    if (user) {
+      this.updateUser(user);
+    }
+    return new Promise((resolve) => resolve(true));
+  }
+
+  constructor(private ngZone: NgZone, private dialogService: DialogService) {
   }
 
 }

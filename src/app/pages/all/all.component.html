@@ -1,4 +1,5 @@
-<div fxLayoutWrap fxLayout="row" fxLayoutAlign="space-around center" *ngIf="products">
+<div>
+  <div fxLayoutWrap fxLayout="row" fxLayoutAlign="space-around center" *ngIf="products" [@enterleave]>
   <a md-button *ngFor="let product of products" routerLink="/product/sku{{product.productId}}"
      routerLinkActive="active">
     <a id="{{product.productId}}"></a>
@@ -19,4 +20,5 @@
   <div *ngIf="failed">
     No product found
   </div>
+</div>
 </div>

@@ -32,14 +32,16 @@ html, body {
   height: 100%;
 }
 
-.facebook {  }
-.instagram {  }
 .icon {
   color: whitesmoke;
 }
 
 .appDark {
   background-color: #212121;
+}
+
+.appMedium {
+  background-color: #424242;
 }
 
 .appBackgroundLight {

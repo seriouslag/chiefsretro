@@ -17,7 +17,8 @@
     <md-icon>shopping_cart</md-icon>
     Cart
   </button>
-  <button md-button md-tooltip="Logout" [mdTooltipShowDelay]="500" color="primary" (click)="changeLoginStatus()">
+  <button md-button md-tooltip="{{loginStatusText}}" [mdTooltipShowDelay]="500" color="primary"
+          (click)="changeLoginStatus()">
     <md-icon>power_settings_new</md-icon>
     <span>{{loginStatusText}}</span>
   </button>

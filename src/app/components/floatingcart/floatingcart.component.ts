@@ -13,13 +13,17 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
   animations: [
     trigger('openclose', [
       transition(':enter', [
-        style({transform: 'translateX(-100%)'}),
+        style({
+          transform: 'translateX(-100%)',
+          background: '#424242'
+        }),
         animate(350)
       ]),
       transition(':leave', [
         group([
           animate('0.2s ease', style({
-            transform: 'translateX(-100%)'
+            transform: 'translateX(-100%)',
+            background: '#424242',
           })),
           animate('0.5s 0.2s ease', style({
             opacity: 0
