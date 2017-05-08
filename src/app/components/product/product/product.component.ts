@@ -1,10 +1,12 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@angular/core";
 import {Product} from "../../../interfaces/product";
 import {ProductOption} from "../../../interfaces/product-option";
 import {MdTabChangeEvent} from "@angular/material";
 import {ToastService} from "../../../services/toast.service";
 import {AnalyticsService} from "../../../services/analytics.service";
 import {UserService} from "../../../services/user.service";
+import {User} from "../../../interfaces/user";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
   selector: 'app-product',
@@ -12,7 +14,7 @@ import {UserService} from "../../../services/user.service";
   styleUrls: ['./product.component.css']
 })
 
-export class ProductComponent implements OnInit, OnChanges {
+export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   product: Product;
@@ -23,7 +25,15 @@ export class ProductComponent implements OnInit, OnChanges {
 
   imgPreload: HTMLImageElement[] = [];
 
+  private user: User;
+  private userSubscription: Subscription;
+  private cartContainsSelectedProductOption: boolean = false;
+
   constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private userService: UserService) {
+    this.userSubscription = this.userService.getUser().subscribe((user) => {
+      this.user = user;
+      this.evalCart();
+    });
   }
 
   ngOnInit() {
@@ -40,13 +50,37 @@ export class ProductComponent implements OnInit, OnChanges {
     }
   }
 
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+  }
+
+  selected(event: MdTabChangeEvent): void {
+    this.selectedProductOption = this.product.productOptions[event.index];
+    this.selectedProductOptionNumber = event.index;
+    //reset index to set the selected image back to the first one
+    this.index = 0;
+
+    this.evalCart();
+  }
+
   private addToCart(product: Product, productOption: ProductOption, quantity: number) {
     let check = this.userService.addToCart(product, productOption, quantity);
-    console.log();
     if (check == true) {
       this.showToast('Added ' + this.selectedProductOption.productColor + ' ' + product.productName + ' To Cart');
     } else {
       this.showToast('Failed to add this product to your cart');
+    }
+  }
+
+  private evalCart(): void {
+    this.cartContainsSelectedProductOption = false;
+    for (let cartItem of this.user.cartItems) {
+      if (cartItem.productOption == this.selectedProductOption) {
+        this.cartContainsSelectedProductOption = true;
+        break;
+      }
     }
   }
 
@@ -72,11 +106,13 @@ export class ProductComponent implements OnInit, OnChanges {
     }
   }
 
-  selected(event: MdTabChangeEvent): void {
-    this.selectedProductOption = this.product.productOptions[event.index];
-    this.selectedProductOptionNumber = event.index;
-    //reset index to set the selected image back to the first one
-    this.index = 0;
+  private removeFromCart(product: Product, productOption: ProductOption, quantity: number) {
+    let check = this.userService.removeFromCart(product, productOption, quantity);
+    if (check == true) {
+      this.showToast('Removed ' + this.selectedProductOption.productColor + ' ' + this.product.productName + ' From Cart');
+    } else {
+      this.showToast('Failed to remove this product from your cart');
+    }
   }
 
   nextImage(): void {

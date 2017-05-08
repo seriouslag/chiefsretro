@@ -5,7 +5,6 @@ import {Observable} from "rxjs/Observable";
 import {Product} from "../interfaces/product";
 import {CartItem} from "../interfaces/cart-item";
 import {ProductOption} from "../interfaces/product-option";
-import {isUndefined} from "util";
 
 @Injectable()
 export class UserService {
@@ -16,24 +15,14 @@ export class UserService {
     return this.user;
   }
 
-  updateUser(user: User): Boolean {
+  updateUser(user: User): boolean {
     this._user.next(user);
     return true;
   }
 
-  addToCart(product: Product, productOption: ProductOption, quantity: number): Boolean {
+  addToCart(product: Product, productOption: ProductOption, quantity: number): boolean {
     let user = this._user.getValue();
-    let cartItem: CartItem = <CartItem>{
-      product: product,
-      productOption: productOption,
-      quantity: quantity,
-      dateAdded: Date.now()
-    };
 
-    //should be safe to remove this if
-    if (isUndefined(user.cartItems.length)) {
-      user.cartItems = [];
-    }
     let index = 0;
     let cartContainedItem = false;
     for (let cartItem of user.cartItems) {
@@ -43,16 +32,37 @@ export class UserService {
       }
       index++;
     }
+
     if (cartContainedItem == false) {
-      user.cartItems.push(cartItem as CartItem);
+      user.cartItems.push({
+        product: product,
+        productOption: productOption,
+        quantity: quantity,
+        dateAdded: Date.now()
+      } as CartItem);
     }
 
-    //if the cart already has a productOption of the same idea add the quantities else add the item
-    /*if(user.cartItems[productOption.productOptionId]) {
-     user.cartItems[productOption.productOptionId].quantity += quantity;
-     } else {
-     user.cartItems[productOption.productOptionId] = cartItem as CartItem;
-     }*/
+    return this.updateUser(user);
+  }
+
+  removeFromCart(product: Product, productOption: ProductOption, quantity: number): boolean {
+    let user = this._user.getValue();
+    let index = 0;
+
+    console.log('removing ' + productOption.productColor);
+
+    for (let cartItem of user.cartItems) {
+      console.log(cartItem.product.productId == product.productId && cartItem.productOption.productOptionId == productOption.productOptionId);
+      if (cartItem.product.productId == product.productId && cartItem.productOption.productOptionId == productOption.productOptionId) {
+        if (cartItem.quantity == quantity) {
+          user.cartItems.splice(index, quantity);
+        } else {
+          user.cartItems[index].quantity -= quantity;
+        }
+      }
+      index++;
+    }
+
     return this.updateUser(user);
   }
 

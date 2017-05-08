@@ -2,29 +2,22 @@
 
   <md-toolbar fxFlex="nogrow">
     <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
-      <!--for mobile sidenav only show if requested-->
-      <div class="menu_button" fxHide fxShow.lt-md *ngIf="showSideNav">
-        <button md-icon-button (click)="mobilesidenav.toggle()">
-          <md-icon>menu</md-icon>
-        </button>
-      </div>
       <div fxFlex><a routerLink="/home" routerLinkActive="active">CHIEFSRETRO</a></div>
       <div fxShow fxHide.lt-md>
         <app-autosearch></app-autosearch>
-
       </div>
       <button fxHide fxShow.lt-md md-icon-button *ngIf="isSearch==false" (click)="isSearch = !isSearch">
         <md-icon>search</md-icon>
       </button>
     </div>
-    <md-toolbar-row *ngIf="isSearch==true" fxHide fxShow.lt-md>
+    <md-toolbar-row *ngIf="isSearch==true" fxHide fxShow.lt-md [@toolbar]>
       <app-autosearch></app-autosearch>
       <button fxHide fxShow.lt-md md-icon-button (click)="isSearch = !isSearch">
         <md-icon>cancel</md-icon>
       </button>
     </md-toolbar-row>
 
-    <app-floatingcart *ngIf="showCart"></app-floatingcart>
+    <app-floatingcart *ngIf="showCart" [@openclose]></app-floatingcart>
   </md-toolbar>
 
   <div fxFlex class="appBackgroundLight">

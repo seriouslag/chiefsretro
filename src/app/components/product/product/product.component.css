@@ -3,13 +3,31 @@
   max-height: 400px
 }
 
-.addcircle {
-  position: absolute;
-  right: 30px;
-  bottom: 55px;
+.stickybuttons {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  bottom: 50px;
   z-index: 10;
+  pointer-events: none;
+  height: 64px;
+}
+
+.addcircle {
+  pointer-events: all;
+  float: right;
+  right: 15px;
+}
+
+.removecircle {
+  pointer-events: all;
+  float: left;
+  left: 15px;
 }
 
 .productCardContainer md-card {
   margin: 10px 0;
 }
+

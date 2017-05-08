@@ -50,7 +50,17 @@
           </button>
         </md-card-actions>
       </md-card>
-      <button md-fab fxHide fxShow.lt-md color="primary" class="addcircle"
+    </div>
+    <div class="stickybuttons" fxHide fxShow.lt-md>
+      <button md-fab color="primary" class="removecircle" *ngIf="cartContainsSelectedProductOption"
+              md-tooltip="Remove From Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
+              (click)="removeFromCart(product, selectedProductOption, 1)">
+        <md-icon>remove_shopping_cart</md-icon>
+      </button>
+      <div>
+
+      </div>
+      <button md-fab color="primary" class="addcircle"
               md-tooltip="Add To Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
               (click)="addToCart(product, selectedProductOption, 1)">
         <md-icon>add_shopping_cart</md-icon>
