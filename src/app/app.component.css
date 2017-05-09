@@ -32,4 +32,6 @@ md-sidenav {
 
 .router {
   padding: 15px;
+  z-index: 1;
+  background-color: #303030;
 }
