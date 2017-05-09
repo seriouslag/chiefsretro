@@ -1,9 +1,6 @@
 md-sidenav {
   width: 10em;
 }
-app-search {
-  z-index: 10;
-}
 
 .app-wrapper {
   height: 100%;
@@ -29,4 +26,10 @@ app-search {
   border: 0;
 }
 
+.small_button {
+  min-width: 1%;
+}
 
+.router {
+  padding: 15px;
+}

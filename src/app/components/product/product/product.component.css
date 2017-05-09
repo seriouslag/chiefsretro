@@ -31,3 +31,10 @@
   margin: 10px 0;
 }
 
+.imageButtons {
+  height: 30px;
+}
+
+.small_button {
+  min-width: 1%;
+}

@@ -1,14 +1,14 @@
 <h1 md-dialog-title>Login</h1>
-<div md-dialog-content>Choose your way to login:</div>
+<!--<div md-dialog-content>Choose your way to login:</div>-->
 
 <div fxLayout.lt-md="row" fxLayout.gt-sm="column">
   <div>
 
     <button md-button md-tooltip="Google Login" [mdTooltipShowDelay]="500" id="my-signin2" (click)="googleLogin()">
-      <i class="mdi mdi-18px mdi-google google icon"></i> <span> Sign In</span>
+      <span>Sign In with </span><i class="mdi mdi-18px mdi-google google icon"></i>
     </button>
     <button md-button md-tooltip="Facebook Login" [mdTooltipShowDelay]="500" (click)="fbLogin()">
-      <i class="mdi mdi-18px mdi-facebook-box facebook icon"></i> <span> Sign In</span>
+      <span>Sign In with </span><i class="mdi mdi-18px mdi-facebook-box facebook icon"></i>
     </button>
   </div>
   <button md-dialog-close md-button (click)="cancel()">Cancel</button>

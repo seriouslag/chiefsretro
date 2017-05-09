@@ -5,7 +5,6 @@ import {NavigationEnd, Router} from "@angular/router";
 import {AnalyticsService} from "./services/analytics.service";
 import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "./services/retro.service";
-import {animate, group, style, transition, trigger} from "@angular/animations";
 import {LoginService} from "./services/login.service";
 import {UserService} from "./services/user.service";
 
@@ -13,54 +12,22 @@ import {UserService} from "./services/user.service";
   selector: 'app-chiefsretro',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: [
-    trigger('openclose', [
-      transition(':enter', [
-        style({
-          top: '-50%',
-        }),
-        animate('1s ease-in-out', style({
-          top: 0,
-        }))
-      ]),
-      transition(':leave', [
-        style({
-          top: 0,
-        }),
-        animate('1s ease-in-out', style({
-          top: '-50%',
-        }))
-      ])
-    ]),
-    trigger('toolbar', [
-      transition(':enter', [
-        style({transform: 'translateY(-50%)'}),
-        animate('0.5s ease')
-      ]),
-      transition(':leave', [
-        group([
-          animate('0.25s ease', style({
-            transform: 'translateY(-50%)', position: 'inherit'
-          })),
-        ])
-      ])
-    ]),
-  ]
+  animations: []
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  isSearch: boolean = false;
+  showMobileSearch: boolean = false;
   showCart: boolean = false;
 
   routerSubscription: Subscription;
-  retroSubscription: Subscription;
+  showCartSubscription: Subscription;
 
-  constructor(public router: Router, analyticsService: AnalyticsService, retroService: RetroService, private userService: UserService, private loginService: LoginService) {
+  constructor(public router: Router, analyticsService: AnalyticsService, private retroService: RetroService, private userService: UserService, private loginService: LoginService) {
     this.userService.init().then(() => {
       this.loginService.init();
     }).catch(() => console.log('failed to call login service'));
 
-    this.retroSubscription = retroService.showCart.subscribe(showCart => {
+    this.showCartSubscription = retroService.showCart.subscribe(showCart => {
       this.showCart = showCart;
     });
 
@@ -78,7 +45,7 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
     }
-    if (this.retroSubscription) {
+    if (this.showCartSubscription) {
       this.routerSubscription.unsubscribe();
     }
   };

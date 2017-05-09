@@ -1,44 +1,25 @@
 <div class="app-wrapper" fxLayout="column">
 
-  <md-toolbar fxFlex="nogrow">
-    <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
-      <div fxFlex><a routerLink="/home" routerLinkActive="active">CHIEFSRETRO</a></div>
-      <div fxShow fxHide.lt-md>
-        <app-autosearch></app-autosearch>
-      </div>
-      <button fxHide fxShow.lt-md md-icon-button *ngIf="isSearch==false" (click)="isSearch = !isSearch">
-        <md-icon>search</md-icon>
-      </button>
+  <app-toolbar [showCart]="showCart"></app-toolbar>
+
+
+  <div fxFlex class="appBackgroundLight" fxLayout="row">
+
+    <!--desktop sidenav-->
+    <div fxShow fxHide.lt-md id="sidenav">
+      <app-sidenav></app-sidenav>
     </div>
-    <md-toolbar-row *ngIf="isSearch==true" fxHide fxShow.lt-md [@toolbar]>
-      <app-autosearch></app-autosearch>
-      <button fxHide fxShow.lt-md md-icon-button (click)="isSearch = !isSearch">
-        <md-icon>cancel</md-icon>
-      </button>
-    </md-toolbar-row>
 
-    <app-floatingcart *ngIf="showCart" [@openclose]></app-floatingcart>
-  </md-toolbar>
+    <div fxLayout="column" class="scroll-overlay inner">
+      <app-notificationbar></app-notificationbar>
+      <div fxFlex class="router">
 
-  <div fxFlex class="appBackgroundLight">
-    <div fxLayout="row" fxFlex>
-
-      <!--desktop sidenav-->
-      <div fxShow fxHide.lt-md id="sidenav">
-        <app-sidenav></app-sidenav>
+        <router-outlet></router-outlet>
       </div>
-
-      <div fxLayout="column" class="scroll-overlay inner">
-
-        <div fxFlex>
-          <router-outlet></router-outlet>
-        </div>
-        <!--desktop footer-->
-        <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
-        <app-bottomnav fxFlex="nogrow" fxHide fxShow.lt-md></app-bottomnav>
-      </div>
+      <!--desktop footer-->
+      <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
+      <app-bottomnav fxFlex="nogrow" fxHide fxShow.lt-md></app-bottomnav>
     </div>
   </div>
-
 </div>
 

@@ -29,6 +29,7 @@ export class BottomnavComponent implements OnInit, OnDestroy {
 
   private toggleCart() {
     this.retroService.toggleCart();
+    console.log('toggle')
   }
 
   changeLoginStatus(): void {

@@ -1,0 +1,15 @@
+:host(app-notificationbar) {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  top: 0;
+  background-color: dimgrey;
+  color: whitesmoke;
+}
+
+.row {
+  height: 30px;
+  font-size: .8em;
+}

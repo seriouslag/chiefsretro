@@ -15,7 +15,7 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
       transition(':enter', [
         style({
           transform: 'translateX(-100%)',
-          background: '#424242'
+          backgroundColor: '#424242'
         }),
         animate(350)
       ]),
@@ -23,7 +23,7 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
         group([
           animate('0.2s ease', style({
             transform: 'translateX(-100%)',
-            background: '#424242',
+            backgroundColor: '#424242',
           })),
           animate('0.5s 0.2s ease', style({
             opacity: 0

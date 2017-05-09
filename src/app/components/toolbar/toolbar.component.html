@@ -1,0 +1,18 @@
+<md-toolbar fxFlex="nogrow">
+  <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
+    <div fxFlex><a routerLink="/home" routerLinkActive="active">CHIEFSRETRO</a></div>
+    <div fxShow fxHide.lt-md>
+      <app-autosearch></app-autosearch>
+    </div>
+    <button fxHide fxShow.lt-md md-icon-button *ngIf="showMobileSearch==false" (click)="toggleMobileSearch()">
+      <md-icon>search</md-icon>
+    </button>
+  </div>
+  <md-toolbar-row *ngIf="showMobileSearch==true" fxHide fxShow.lt-md [@toolbar]>
+    <app-autosearch></app-autosearch>
+    <button fxHide fxShow.lt-md md-icon-button (click)="toggleMobileSearch()">
+      <md-icon>cancel</md-icon>
+    </button>
+  </md-toolbar-row>
+  <app-floatingcart *ngIf="showCart" [@openclose]></app-floatingcart>
+</md-toolbar>

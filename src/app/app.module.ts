@@ -64,6 +64,8 @@ import {AnalyticsService} from "./services/analytics.service";
 import {FloatingcartComponent} from "./components/floatingcart/floatingcart.component";
 import {RetroService} from "./services/retro.service";
 import {CancelComponent} from "./components/dialogs/cancel/cancel.component";
+import {NotificationbarComponent} from "./components/notificationbar/notificationbar.component";
+import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 
 @NgModule({
   declarations: [
@@ -85,6 +87,8 @@ import {CancelComponent} from "./components/dialogs/cancel/cancel.component";
     LoginToastComponent,
     FloatingcartComponent,
     CancelComponent,
+    NotificationbarComponent,
+    ToolbarComponent,
   ],
   imports: [
     BrowserModule,
