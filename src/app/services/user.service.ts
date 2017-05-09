@@ -7,6 +7,7 @@ import {ProductOption} from "../interfaces/product-option";
 import {MdDialogRef} from "@angular/material";
 import {DialogService} from "./dialog.service";
 import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
+import {ToastService} from "./toast.service";
 
 @Injectable()
 export class UserService {
@@ -14,9 +15,20 @@ export class UserService {
   public user = this._user.asObservable();
 
   private cartDialog: MdDialogRef<any>;
+  private toastLength = 1500;
 
   updateUser(user: User): boolean {
     this.ngZone.run(() => {
+      let index = 0;
+
+      //if cartItem quantity is zero them remove
+      for (let cartItem of user.cartItems) {
+        if (cartItem.quantity == 0) {
+          user.cartItems.splice(index, 1);
+        }
+      }
+
+
       this._user.next(user);
       this.saveUserToLocalstorage();
     });
@@ -40,8 +52,10 @@ export class UserService {
     let cartContainedItem = false;
     for (let cartItem of user.cartItems) {
       if (cartItem.productOption.productOptionId == productOption.productOptionId) {
+        this.toast('Added ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' To Cart');
         user.cartItems[index].quantity += quantity;
         cartContainedItem = true;
+        break;
       }
       index++;
     }
@@ -53,6 +67,7 @@ export class UserService {
         quantity: quantity,
         dateAdded: Date.now()
       } as CartItem);
+      this.toast('Added ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' To Cart');
     }
 
     return this.updateUser(user);
@@ -62,7 +77,6 @@ export class UserService {
     let user = this._user.getValue();
     let index = 0;
 
-
     for (let cartItem of user.cartItems) {
       if (cartItem.product.productId == product.productId && cartItem.productOption.productOptionId == productOption.productOptionId) {
         if (cartItem.quantity == quantity) {
@@ -70,16 +84,23 @@ export class UserService {
           this.cartDialog.componentInstance.customText = "Remove from cart?";
           let result = false;
           let tempIndex = index;
+
+
+          //this does not pause the function;
+          //the subscription is async so the function will return before the user
+          //can click a result. the subscription must call update user;
           this.cartDialog.afterClosed().subscribe(cartResult => {
             //if the user wants to remove item then do so
             if (cartResult) {
               user.cartItems.splice(tempIndex, 1);
               this.updateUser(user);
+              this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
             }
             result = true;
           });
         } else {
           user.cartItems[index].quantity -= quantity;
+          this.toast('Removed ' + quantity + ' ' + user.cartItems[index].productOption.productColor + ' ' + user.cartItems[index].product.productName + ' From Cart');
         }
       }
       index++;
@@ -89,24 +110,23 @@ export class UserService {
 
   createUser(id: number = null, email: string, fname: string,
              lname: string, femail: string = null, gemail: string = null, google?: any, fb?: any, img?: string) {
-    let user: User = <User>{
+
+    return {
       id: id,
       email: email,
       fname: fname,
       lname: lname,
       femail: femail,
       gemail: gemail,
-      google: null,
-      fb: null,
-      img: null,
+      google: google,
+      fb: fb,
+      img: img,
       cartItems: [] as CartItem[]
-    };
-
-    return user;
+    } as User;
   }
 
   createUserFromUser(user: User) {
-    let newUser: User = <User>{
+    return {
       id: user.id,
       email: user.email,
       fname: user.fname,
@@ -117,8 +137,7 @@ export class UserService {
       fb: user.fb,
       img: user.img,
       cartItems: user.cartItems
-    };
-    return newUser;
+    } as User;
   }
 
   resetUser(): void {
@@ -135,13 +154,20 @@ export class UserService {
           lname: "",
           femail: null,
           gemail: null,
-          cartItems: [] as CartItem[]
+          cartItems: [] as CartItem[],
+
+          google: null,
+          fb: null
         }
       ));
     // });
   }
 
-  //use a promise so we can call init login after we check localstorahge,
+  private toast(message: string): void {
+    this.toastService.toast(message, 'OK', this.toastLength);
+  }
+
+  //use a promise so we can call init login after we check localstorage,
   public init(): Promise<any> {
     let user = this.getUserFromLocalStorage();
     if (user) {
@@ -150,7 +176,7 @@ export class UserService {
     return new Promise((resolve) => resolve(true));
   }
 
-  constructor(private ngZone: NgZone, private dialogService: DialogService) {
+  constructor(private ngZone: NgZone, private dialogService: DialogService, private toastService: ToastService) {
   }
 
 }

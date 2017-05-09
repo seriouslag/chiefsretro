@@ -66,6 +66,8 @@ import {RetroService} from "./services/retro.service";
 import {CancelComponent} from "./components/dialogs/cancel/cancel.component";
 import {NotificationbarComponent} from "./components/notificationbar/notificationbar.component";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
+import {NotificationService} from "./services/notification.service";
+import {CheckoutComponent} from "./pages/checkout/checkout.component";
 
 @NgModule({
   declarations: [
@@ -89,6 +91,7 @@ import {ToolbarComponent} from "./components/toolbar/toolbar.component";
     CancelComponent,
     NotificationbarComponent,
     ToolbarComponent,
+    CheckoutComponent,
   ],
   imports: [
     BrowserModule,
@@ -105,7 +108,7 @@ import {ToolbarComponent} from "./components/toolbar/toolbar.component";
     FlexLayoutModule
 
   ],
-  providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService],
+  providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService],
   entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent, CancelComponent],
   bootstrap: [AppComponent]
 })

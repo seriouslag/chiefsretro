@@ -1,0 +1,22 @@
+Cart:
+<div>
+  <div *ngFor="let cartItem of user.cartItems; let i = index" fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="center center">
+      <div>{{cartItem.productOption.productColor}} {{cartItem.product.productName}}</div>
+      <app-thumb-image [product]="cartItem.product"></app-thumb-image>
+      <button md-button (click)="removeFromCart(i)" class="small_button">
+        <md-icon>remove</md-icon>
+      </button>
+      <div>{{cartItem.quantity}}</div>
+      <button md-button (click)="addToCart(i)" class="small_button">
+        <md-icon>add</md-icon>
+      </button>
+      <div fxFlex></div>
+    </div>
+
+  </div>
+  <div *ngIf="!user.cartItems.length">
+    Your cart is empty.
+  </div>
+  <button md-button (click)="updateCart()" *ngIf="user.cartItems.length">Update Cart</button>
+</div>

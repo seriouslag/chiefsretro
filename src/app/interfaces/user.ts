@@ -4,12 +4,12 @@ export interface User {
   email: string;
   fname: string;
   lname: string;
-  femail: string;
-  gemail: string;
-  img: string;
+  femail?: string;
+  gemail?: string;
+  img?: string;
 
-  google: any;
-  fb: any;
+  google?: any;
+  fb?: any;
 
   cartItems: CartItem[];
 

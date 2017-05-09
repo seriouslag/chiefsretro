@@ -22,7 +22,9 @@ export class SidenavComponent implements OnInit, OnDestroy {
   }
 
   private toggleCart() {
-    this.retroService.toggleCart();
+    if (location.pathname != '/checkout') {
+      this.retroService.toggleCart();
+    }
   }
 
   ngOnInit() {

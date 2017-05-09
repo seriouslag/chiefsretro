@@ -7,6 +7,7 @@ import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "./services/retro.service";
 import {LoginService} from "./services/login.service";
 import {UserService} from "./services/user.service";
+import {NotificationService} from "./services/notification.service";
 
 @Component({
   selector: 'app-chiefsretro',
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription;
   showCartSubscription: Subscription;
 
-  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private userService: UserService, private loginService: LoginService) {
+  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private userService: UserService, private loginService: LoginService, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
@@ -37,6 +38,8 @@ export class AppComponent implements OnInit, OnDestroy {
         this.analyticsService.gaEmitPageView(event.urlAfterRedirects);
       }
     });
+
+    this.notificationService.setMessage("Chiefsretro.com is in Alpha state and will be experiencing changes to functionality and appearance.");
   };
 
   ngOnDestroy() : void {

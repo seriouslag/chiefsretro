@@ -29,6 +29,7 @@ export class LoginService {
   private message: string;
   private loginDialog: MdDialogRef<any>;
   private userSubscription: Subscription;
+  private toastLength = 1500;
 
   isFbInit: boolean = false;
   isGoogleInit: boolean = false;
@@ -118,14 +119,13 @@ export class LoginService {
           //if user was previously signed in via facebook, sign them in again
           FB.getLoginStatus(
             ((response) => {
-              if (response && response.status === "connected") {
+              if (response.status === "connected") {
                 //auto log in
-                if (this.user.fb) {
-                  //auto log in?
-                } else {
+                if (localStorage.getItem('login') != 'false') {
                   this.fbLogin();
+                } else {
+                  console.log('here');
                 }
-
               }
             }));
         } else {
@@ -136,17 +136,6 @@ export class LoginService {
 
   private loadSdkAsync(callback: () => void) {
     // Load the Facebook SDK asynchronously
-    /*this.ngZone.run(() => {
-      const s = "script";
-      const id = "facebook-jssdk";
-      let js, fjs = document.getElementsByTagName(s)[0];
-      if (document.getElementById(id)) return;
-      js = document.createElement(s);
-      js.id = id;
-      js.src = "//connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-     callback();
-     });*/
     this.ngZone.run(() => {
       if (FB != null) {
         callback();
@@ -283,11 +272,15 @@ export class LoginService {
     }, {})
   }
 
+  private toast(message) {
+    this.toastService.toast(message, 'OK', this.toastLength);
+  }
+
   private loginCanceled() {
     this.message = "Login Canceled";
     this.ngZone.run(() => {
       this._loginStatusSource.next(false);
-      this.toastService.toast(this.message, 'OK', 1000);
+      this.toast(this.message);
     });
   }
 
@@ -295,7 +288,7 @@ export class LoginService {
     this.message = "Login Failed";
     this.ngZone.run(() => {
       this._loginStatusSource.next(false);
-      this.toastService.toast(this.message, 'OK', 1000);
+      this.toast(this.message);
     });
   }
 
@@ -323,8 +316,11 @@ export class LoginService {
       }
 
       this.userService.resetUser();
+
+      localStorage.setItem('login', 'false');
+
       this._loginStatusSource.next(false);
-      this.toastService.toast(this.message, 'OK', 1000);
+      this.toast(this.message);
     });
   }
 
@@ -343,6 +339,7 @@ export class LoginService {
     this.ngZone.run(() => {
 
       if (entry == 'fb') {
+        localStorage.setItem('login', 'true');
         this.user.email = this.user.fb.email;
         this.user.fname = this.user.fb.first_name;
         this.user.lname = this.user.fb.last_name;
@@ -362,7 +359,7 @@ export class LoginService {
         this.message = "Logged in as " + this.user.google.getBasicProfile().getName();
       }
       this._loginStatusSource.next(true);
-      this.toastService.loginToast(this.user.img, this.message, 1000);
+      this.toastService.loginToast(this.user.img, this.message, this.toastLength);
     });
   }
 

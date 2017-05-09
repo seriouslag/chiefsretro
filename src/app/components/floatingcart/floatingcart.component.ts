@@ -19,17 +19,6 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
         }),
         animate(350)
       ]),
-      transition(':leave', [
-        group([
-          animate('0.2s ease', style({
-            transform: 'translateX(-100%)',
-            backgroundColor: '#424242',
-          })),
-          animate('0.5s 0.2s ease', style({
-            opacity: 0
-          }))
-        ])
-      ])
     ]),
     trigger('closeopen', [
       transition(':enter', [

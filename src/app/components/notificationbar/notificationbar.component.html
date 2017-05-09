@@ -1,4 +1,11 @@
-<div fxLayout="row" fxLayoutAlign="center center" class="row">
-  {{message}}
-  Chiefsretro.com is in Alpha state and will be experiencing changes to functionality and appearance.
+<div fxLayout="row" fxLayoutAlign="space-between center" class="row"
+     *ngIf="notification?.show == true && notification?.message" [@openclose]>
+
+  <button md-icon-button>
+    <md-icon>info</md-icon>
+  </button>
+  <span flex>{{notification.message}}</span>
+  <button md-icon-button (click)="toggle()">
+    <md-icon>cancel</md-icon>
+  </button>
 </div>

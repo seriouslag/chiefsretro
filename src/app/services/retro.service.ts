@@ -16,26 +16,37 @@ export class RetroService {
   }
 
   private init(): void {
-    let showCart = localStorage.getItem('showCart');
-    let showMobileSearch = localStorage.getItem('showCart');
+    let showCart = sessionStorage.getItem('showCart');
+    let showMobileSearch = sessionStorage.getItem('showCart');
 
     if (showMobileSearch) {
       this._showMobileSearch.next(showMobileSearch == 'true');
     }
 
-    if (showCart) {
+    if (showCart && location.pathname != '/checkout') {
+      console.log(location.pathname);
       this._showCart.next(showCart == 'true')
     }
   }
 
   public toggleMobileSearch(): void {
     this._showMobileSearch.next(!this._showMobileSearch.getValue());
-    localStorage.setItem('showMobileCart', this._showMobileSearch.getValue().toString());
+    sessionStorage.setItem('showMobileCart', this._showMobileSearch.getValue().toString());
   }
 
-  toggleCart() {
+  public toggleCart(): void {
     this._showCart.next(!this._showCart.getValue());
-    localStorage.setItem('showCart', this._showCart.getValue().toString());
+    sessionStorage.setItem('showCart', this._showCart.getValue().toString());
+  }
+
+  public openCart(show: boolean): void {
+    this._showCart.next(show);
+    if (show) {
+      sessionStorage.setItem('showCart', 'true');
+    } else {
+      sessionStorage.setItem('showCart', 'false');
+    }
+
   }
 
 }

@@ -87,12 +87,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private addToCart(product: Product, productOption: ProductOption, quantity: number) {
-    let check = this.userService.addToCart(product, productOption, quantity);
-    if (check == true) {
-      this.showToast('Added ' + this.selectedProductOption.productColor + ' ' + product.productName + ' To Cart');
-    } else {
-      this.showToast('Failed to add this product to your cart');
-    }
+    this.userService.addToCart(product, productOption, quantity);
   }
 
   private evalCart(): void {
@@ -128,12 +123,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private removeFromCart(product: Product, productOption: ProductOption, quantity: number) {
-    let check = this.userService.removeFromCart(product, productOption, quantity);
-    if (check == true) {
-      this.showToast('Removed ' + this.selectedProductOption.productColor + ' ' + this.product.productName + ' From Cart');
-    } else {
-      this.showToast('Failed to remove this product from your cart');
-    }
+    this.userService.removeFromCart(product, productOption, quantity);
   }
 
   nextImage(): void {
