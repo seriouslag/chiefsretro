@@ -59,7 +59,7 @@ export class FloatingcartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.userSubscription = this.userService.getUser().subscribe((user) => {
+    this.userSubscription = this.userService.user.subscribe((user) => {
       this.user = user;
     });
   }

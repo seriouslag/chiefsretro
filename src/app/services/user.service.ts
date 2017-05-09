@@ -1,7 +1,6 @@
 import {Injectable, NgZone} from "@angular/core";
 import {User} from "../interfaces/user";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Observable} from "rxjs/Observable";
 import {Product} from "../interfaces/product";
 import {CartItem} from "../interfaces/cart-item";
 import {ProductOption} from "../interfaces/product-option";
@@ -12,13 +11,9 @@ import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
 @Injectable()
 export class UserService {
   private _user = new BehaviorSubject<User>(this.createUser(null, '', 'Guest', '', null, null));
-  private user = this._user.asObservable();
+  public user = this._user.asObservable();
 
   private cartDialog: MdDialogRef<any>;
-
-  getUser(): Observable<User> {
-    return this.user;
-  }
 
   updateUser(user: User): boolean {
     this.ngZone.run(() => {
@@ -79,6 +74,7 @@ export class UserService {
             //if the user wants to remove item then do so
             if (cartResult) {
               user.cartItems.splice(tempIndex, 1);
+              this.updateUser(user);
             }
             result = true;
           });

@@ -37,7 +37,7 @@ export class LoginService {
   auth2: any;
 
   public init(): void {
-    this.userSubscription = this.userService.getUser().subscribe(user => {
+    this.userSubscription = this.userService.user.subscribe(user => {
       this.user = user;
     });
 

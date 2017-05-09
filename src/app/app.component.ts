@@ -16,29 +16,27 @@ import {UserService} from "./services/user.service";
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  showMobileSearch: boolean = false;
   showCart: boolean = false;
-
   routerSubscription: Subscription;
   showCartSubscription: Subscription;
 
-  constructor(public router: Router, analyticsService: AnalyticsService, private retroService: RetroService, private userService: UserService, private loginService: LoginService) {
+  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private userService: UserService, private loginService: LoginService) {
+  }
+
+  ngOnInit(): void {
     this.userService.init().then(() => {
       this.loginService.init();
     }).catch(() => console.log('failed to call login service'));
 
-    this.showCartSubscription = retroService.showCart.subscribe(showCart => {
+    this.showCartSubscription = this.retroService.showCart.subscribe(showCart => {
       this.showCart = showCart;
     });
 
     this.routerSubscription = this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
-        analyticsService.gaEmitPageView(event.urlAfterRedirects);
+        this.analyticsService.gaEmitPageView(event.urlAfterRedirects);
       }
     });
-  }
-
-  ngOnInit(): void {
   };
 
   ngOnDestroy() : void {

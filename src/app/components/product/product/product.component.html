@@ -52,7 +52,7 @@
       </md-card>
     </div>
     <div class="stickybuttons" fxHide fxShow.lt-md>
-      <button md-fab color="primary" class="removecircle" *ngIf="cartContainsSelectedProductOption"
+      <button md-fab color="primary" class="removecircle" [@openclose] *ngIf="cartContainsSelectedProductOption"
               md-tooltip="Remove From Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
               (click)="removeFromCart(product, selectedProductOption, 1)">
         <md-icon>remove_shopping_cart</md-icon>
@@ -61,7 +61,7 @@
 
       </div>
       <button md-fab color="primary" class="addcircle"
-              md-tooltip="Add To Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
+              md-tooltip="Add To Cart" tooltip-position="above" [@openclose] [mdTooltipShowDelay]="500"
               (click)="addToCart(product, selectedProductOption, 1)">
         <md-icon>add_shopping_cart</md-icon>
       </button>

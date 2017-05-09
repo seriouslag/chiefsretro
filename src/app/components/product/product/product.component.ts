@@ -7,11 +7,32 @@ import {AnalyticsService} from "../../../services/analytics.service";
 import {UserService} from "../../../services/user.service";
 import {User} from "../../../interfaces/user";
 import {Subscription} from "rxjs/Subscription";
+import {animate, group, style, transition, trigger} from "@angular/animations";
 
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
-  styleUrls: ['./product.component.css']
+  styleUrls: ['./product.component.css'],
+  animations: [
+    trigger('openclose', [
+      transition(':enter', [
+        style({
+          transform: 'translateX(-100%)',
+        }),
+        animate(350)
+      ]),
+      transition(':leave', [
+        group([
+          animate('0.2s ease', style({
+            transform: 'translateX(-100%)',
+          })),
+          animate('0.5s 0.2s ease', style({
+            opacity: 0
+          }))
+        ])
+      ])
+    ]),
+  ]
 })
 
 export class ProductComponent implements OnInit, OnChanges, OnDestroy {
@@ -30,13 +51,13 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   private cartContainsSelectedProductOption: boolean = false;
 
   constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private userService: UserService) {
-    this.userSubscription = this.userService.getUser().subscribe((user) => {
-      this.user = user;
-      this.evalCart();
-    });
   }
 
   ngOnInit() {
+    this.userSubscription = this.userService.user.subscribe((user) => {
+      this.user = user;
+      this.evalCart();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -77,7 +98,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   private evalCart(): void {
     this.cartContainsSelectedProductOption = false;
     for (let cartItem of this.user.cartItems) {
-      if (cartItem.productOption == this.selectedProductOption) {
+      if (cartItem.productOption.productOptionId == this.selectedProductOption.productOptionId) {
         this.cartContainsSelectedProductOption = true;
         break;
       }

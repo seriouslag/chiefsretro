@@ -49,12 +49,13 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   private showMobileSearchSubscription: Subscription;
 
   constructor(private retroService: RetroService) {
-    this.showMobileSearchSubscription = retroService.showMobileSearch.subscribe(showMobileSearch => {
-      this.showMobileSearch = showMobileSearch;
-    });
+
   }
 
   ngOnInit(): void {
+    this.showMobileSearchSubscription = this.retroService.showMobileSearch.subscribe(showMobileSearch => {
+      this.showMobileSearch = showMobileSearch;
+    });
   }
 
   ngOnDestroy(): void {
