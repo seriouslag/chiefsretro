@@ -1,6 +1,9 @@
-<md-toolbar fxFlex="nogrow">
+<md-toolbar fxFlex="nogrow" color="primary">
   <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
-    <div fxFlex><a routerLink="/home" routerLinkActive="active">CHIEFSRETRO</a></div>
+    <a routerLink="/home" routerLinkActive="active">
+      <button md-button class="small_button">CHIEFSRETRO</button>
+    </a>
+    <div fxFlex></div>
     <div fxShow fxHide.lt-md>
       <app-autosearch></app-autosearch>
     </div>
@@ -15,4 +18,10 @@
     </button>
   </md-toolbar-row>
   <app-floatingcart *ngIf="showCart" [@cart]></app-floatingcart>
+
+  <!--<md-toolbar-row fxShow fxHide.lt-md>
+    <app-navbar></app-navbar>
+
+  </md-toolbar-row>-->
+
 </md-toolbar>

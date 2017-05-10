@@ -2,22 +2,22 @@
      fxLayoutAlign="space-between start">
 
   <a routerLink="/home" routerLinkActive="active">
-    <button md-button color="primary">
+    <button md-button color="accent">
       <md-icon>home</md-icon>
       Home
     </button>
   </a>
   <a routerLink="/about" routerLinkActive="active">
-    <button md-button color="primary">
+    <button md-button color="accent">
       <md-icon>whatshot</md-icon>
       About Us
     </button>
   </a>
-  <button md-button color="primary" (click)="toggleCart()">
+  <button md-button (click)="toggleCart()" color="accent">
     <md-icon>shopping_cart</md-icon>
     Cart
   </button>
-  <button md-button md-tooltip="{{loginStatusText}}" [mdTooltipShowDelay]="500" color="primary"
+  <button md-button md-tooltip="{{loginStatusText}}" [mdTooltipShowDelay]="500" color="accent"
           (click)="changeLoginStatus()">
     <md-icon>power_settings_new</md-icon>
     <span>{{loginStatusText}}</span>

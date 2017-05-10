@@ -124,7 +124,7 @@ export class LoginService {
                 if (localStorage.getItem('login') != 'false') {
                   this.fbLogin();
                 } else {
-                  console.log('here');
+                  //do not log in with facebook because they requested to be signed out.
                 }
               }
             }));
@@ -214,13 +214,12 @@ export class LoginService {
                   if (this.auth2) {
                     if (this.auth2.currentUser.get()) {
                       this.silentLogin();
-                      console.log('goog already logged in previously?');
+                      //console.log('goog already logged in previously?');
                     }
                   }
                 } else {
                   this.googleLogin();
                 }
-
               }
             });
           });

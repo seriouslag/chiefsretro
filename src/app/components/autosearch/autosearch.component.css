@@ -9,6 +9,10 @@ md-input-container {
   top: 10px;
 }
 
+md-placeholder {
+  color: whitesmoke;
+}
+
 .options_container {
   width: 100%;
 }

@@ -1,0 +1,11 @@
+:host(app-navbar) {
+  width: 100%;
+}
+
+:host(app-navbar) nav.mat-tab-links {
+  width: 100%;
+}
+
+.mat-tab-links {
+  width: 100%;
+}

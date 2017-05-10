@@ -1,9 +1,9 @@
 <h1 md-dialog-title>Confirm Logout</h1>
-<button md-button md-tooltip="Cancel" [mdTooltipShowDelay]="500" color="primary" (click)="cancelLogout()">
+<button md-button md-tooltip="Cancel" [mdTooltipShowDelay]="500" color="warn" (click)="cancelLogout()">
   <md-icon>close</md-icon>
   <span *ngIf="showLoginText">Cancel</span>
 </button>
-<button md-button md-tooltip="Logout" [mdTooltipShowDelay]="500" (click)="logout()">
+<button md-button md-tooltip="Logout" [mdTooltipShowDelay]="500" color="accent" (click)="logout()">
   <md-icon>check</md-icon>
   <span *ngIf="showLoginText">Logout</span>
 </button>

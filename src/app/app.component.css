@@ -1,3 +1,7 @@
+:host /deep/ a {
+  text-decoration: none;
+}
+
 md-sidenav {
   width: 10em;
 }
@@ -19,7 +23,6 @@ md-sidenav {
 }
 
 .mat-sidenav-container {
-  color: whitesmoke;
 }
 
 .scrollbar-container {
@@ -33,5 +36,17 @@ md-sidenav {
 .router {
   padding: 15px;
   z-index: 1;
-  background-color: #303030;
 }
+
+.mobilenav {
+  position: -webkit-sticky;
+  position: -moz-sticky;
+  position: -ms-sticky;
+  position: -o-sticky;
+  position: sticky;
+  bottom: 0;
+  z-index: 9;
+}
+
+
+

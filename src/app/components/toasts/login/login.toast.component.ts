@@ -1,7 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-login-toast',
   templateUrl: './login.toast.component.html',
   styleUrls: ['./login.toast.component.css'],
   providers: []

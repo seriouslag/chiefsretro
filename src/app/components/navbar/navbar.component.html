@@ -1,0 +1,26 @@
+<md-toolbar color="primary">
+  <nav md-tab-nav-bar fxFlexFill>
+    <a md-tab-link routerLink="/home" fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center"
+       fxLayoutGap="5px">
+      <md-icon>home</md-icon>
+      <span *ngIf="showText">Home</span>
+    </a>
+    <a md-tab-link routerLink="/about" fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center"
+       fxLayoutGap="5px">
+      <md-icon>whatshot</md-icon>
+      <span *ngIf="showText">About Us</span>
+    </a>
+
+    <a md-tab-link (click)="toggleCart()" fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center"
+       fxLayoutGap="5px">
+      <md-icon>shopping_cart</md-icon>
+      <span *ngIf="showText">Cart</span>
+    </a>
+    <a md-tab-link md-tooltip="{{loginStatusText}}" [mdTooltipShowDelay]="500"
+       fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px"
+       (click)="changeLoginStatus()">
+      <md-icon>power_settings_new</md-icon>
+      <span *ngIf="showText">{{loginStatusText}}</span>
+    </a>
+  </nav>
+</md-toolbar>

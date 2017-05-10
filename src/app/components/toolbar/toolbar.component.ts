@@ -40,16 +40,20 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
     ]),
   ]
 })
+
 export class ToolbarComponent implements OnInit, OnDestroy {
 
   @Input()
   showCart: boolean;
-
   private showMobileSearch: boolean;
   private showMobileSearchSubscription: Subscription;
 
   constructor(private retroService: RetroService) {
+  }
 
+
+  private toggleMobileSearch(): void {
+    this.retroService.toggleMobileSearch();
   }
 
   ngOnInit(): void {
@@ -59,11 +63,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.showMobileSearchSubscription.unsubscribe();
-  }
-
-  private toggleMobileSearch(): void {
-    this.retroService.toggleMobileSearch();
+    if (this.showMobileSearchSubscription) {
+      this.showMobileSearchSubscription.unsubscribe();
+    }
   }
 
 }

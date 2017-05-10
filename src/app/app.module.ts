@@ -68,6 +68,7 @@ import {NotificationbarComponent} from "./components/notificationbar/notificatio
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 import {NotificationService} from "./services/notification.service";
 import {CheckoutComponent} from "./pages/checkout/checkout.component";
+import {NavbarComponent} from "./components/navbar/navbar.component";
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import {CheckoutComponent} from "./pages/checkout/checkout.component";
     NotificationbarComponent,
     ToolbarComponent,
     CheckoutComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,

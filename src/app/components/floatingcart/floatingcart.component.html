@@ -1,8 +1,8 @@
 <md-card class="floatingCartContainer">
-  <md-card-subtitle fxLayout="row">
+  <md-card-subtitle fxLayout="row" fxLayoutAlign="center center">
     <div fxFlex="nogrow">Cart:</div>
     <span fxFlex></span>
-    <button md-raised-button routerLink="/checkout" class="small_button">Checkout</button>
+    <button md-button routerLink="/checkout" class="small_button">Checkout</button>
     <span fxFlex></span>
     <button md-button fxFlex="nogrow" (click)="toggleCart()" class="small_button">
       <md-icon>close</md-icon>
@@ -19,10 +19,8 @@
         </button>
 
         <a md-button routerLink="/product/sku{{cartItem.product.productId}}" fxFlex>
-          <div fxLayout="row" fxLayoutAlign="space-between none">
-            <div>
-              <app-thumb-image [product]="cartItem.product"></app-thumb-image>
-            </div>
+          <div fxLayout="row" fxLayoutAlign="space-between center">
+            <app-thumb-image [product]="cartItem.product"></app-thumb-image>
             <div fxFlex></div>
             <div>{{cartItem.productOption.productColor}} {{cartItem.product.productName}}</div>
             <div fxFlex></div>

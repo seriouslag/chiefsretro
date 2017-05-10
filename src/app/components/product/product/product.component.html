@@ -49,18 +49,18 @@
           </md-tab-group>
         </md-card-content>
         <md-card-actions>
-          <button md-button md-tooltip='Add To Cart' color="accent" tooltip-position="above" [mdTooltipShowDelay]="500"
+          <button md-button md-tooltip='Add To Cart' tooltip-position="above" [mdTooltipShowDelay]="500"
                   (click)="addToCart(product, selectedProductOption, 1)">
             Add {{selectedProductOption.productColor}} {{product.productName}} To Cart
           </button>
-          <button md-button md-tooltip="Share" color="accent" tooltip-position="above" [mdTooltipShowDelay]="500"
+          <button md-button md-tooltip="Share" tooltip-position="above" [mdTooltipShowDelay]="500"
                   (click)="showToast('Shared');">Share
           </button>
         </md-card-actions>
       </md-card>
     </div>
     <div class="stickybuttons" fxHide fxShow.lt-md>
-      <button md-fab color="primary" class="removecircle" [@openclose] *ngIf="cartContainsSelectedProductOption"
+      <button md-fab color="accent" class="removecircle" [@openclose] *ngIf="cartContainsSelectedProductOption"
               md-tooltip="Remove From Cart" tooltip-position="above" [mdTooltipShowDelay]="500"
               (click)="removeFromCart(product, selectedProductOption, 1)">
         <md-icon>remove_shopping_cart</md-icon>
@@ -68,7 +68,7 @@
       <div>
 
       </div>
-      <button md-fab color="primary" class="addcircle"
+      <button md-fab color="accent" class="addcircle"
               md-tooltip="Add To Cart" tooltip-position="above" [@openclose] [mdTooltipShowDelay]="500"
               (click)="addToCart(product, selectedProductOption, 1)">
         <md-icon>add_shopping_cart</md-icon>

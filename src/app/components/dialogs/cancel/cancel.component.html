@@ -1,10 +1,10 @@
 <h1 md-dialog-title *ngIf="!customText">Are you sure you want to do this?</h1>
 <h1 md-dialog-title *ngIf="customText">{{customText}}</h1>
-<button md-button md-tooltip="Cancel" [mdTooltipShowDelay]="500" color="primary" (click)="cancelCancel()">
+<button md-button md-tooltip="Cancel" [mdTooltipShowDelay]="500" color="primary" (click)="cancelCancel()" color="warn">
   <md-icon>close</md-icon>
   <span *ngIf="showLoginText">Cancel</span>
 </button>
-<button md-button md-tooltip="Confirm" [mdTooltipShowDelay]="500" (click)="confirmCancel()">
+<button md-button md-tooltip="Confirm" [mdTooltipShowDelay]="500" (click)="confirmCancel()" color="accent">
   <md-icon>check</md-icon>
   <span *ngIf="showLoginText">Confirm</span>
 </button>

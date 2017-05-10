@@ -9,7 +9,7 @@
   position: -ms-sticky;
   position: -o-sticky;
   position: sticky;
-  bottom: 50px;
+  bottom: 10px;
   z-index: 10;
   pointer-events: none;
   height: 64px;
@@ -21,10 +21,18 @@
   right: 15px;
 }
 
+.addcircle md-icon {
+  color: black;
+}
+
 .removecircle {
   pointer-events: all;
   float: left;
   left: 15px;
+}
+
+.removecircle md-icon {
+  color: black;
 }
 
 .productCardContainer md-card {

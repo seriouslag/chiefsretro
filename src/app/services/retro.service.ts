@@ -24,7 +24,6 @@ export class RetroService {
     }
 
     if (showCart && location.pathname != '/checkout') {
-      console.log(location.pathname);
       this._showCart.next(showCart == 'true')
     }
   }

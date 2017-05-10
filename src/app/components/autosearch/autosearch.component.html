@@ -1,4 +1,4 @@
-<md-input-container>
+<md-input-container color="accent">
   <!--<input id="search" mdInput [mdAutocomplete]="auto" #term
          (keyup)="autosearch($event,term.value)"
   >-->
@@ -13,7 +13,7 @@
   <md-option *ngFor="let product of products2 | async" [value]="product.productName" (click)="click(product)"
              [@openclose]
              (onSelectionChange)="click(product)" onselect="click(product)" (onSelect)="click(product)">
-    <div fxLayout="row">
+    <div fxLayout="row" fxLayoutAlign="center center">
       <app-thumb-image [product]="product"></app-thumb-image>
       <div fxFlex></div>
       <div>{{product.productName}}</div>

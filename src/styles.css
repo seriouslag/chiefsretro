@@ -1,5 +1,4 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/prebuilt-themes/pink-bluegrey.css';
 
 html, body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -7,8 +6,16 @@ html, body {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  color: whitesmoke;
 }
+
+:host /deep/ {
+  text-decoration: none;
+}
+
+a:-webkit-any-link {
+  color: inherit;
+}
+
 
 .mat-toolbar-layout, .mat-toolbar-row {
   width: 100%;
@@ -37,7 +44,7 @@ html, body {
   color: whitesmoke;
 }
 
-.appDark {
+/*.appDark {
   background-color: #212121;
 }
 
@@ -47,11 +54,14 @@ html, body {
 
 .appBackgroundLight {
   background-color: #303030;
+}*/
+
+.accent-backgroundColor {
+  background-color: #bb002f !important;
 }
 
 /*internet explorer scrollbalken*/
 body {
-  scrollbar-base-color: #C0C0C0;
   scrollbar-base-color: #C0C0C0;
   scrollbar-3dlight-color: #C0C0C0;
   scrollbar-highlight-color: #C0C0C0;
