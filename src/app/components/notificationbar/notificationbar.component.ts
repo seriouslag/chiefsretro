@@ -8,7 +8,7 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
   templateUrl: './notificationbar.component.html',
   styleUrls: ['./notificationbar.component.css'],
   animations: [
-    trigger('toolbar', [
+    trigger('openclose', [
       transition(':enter', [
         style({transform: 'translateY(-50%)'}),
         animate('0.5s ease')
