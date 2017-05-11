@@ -1,11 +1,19 @@
-<md-toolbar fxFlex="nogrow" color="primary">
-  <div fxLayout="row" fxFlexFill fxLayoutAlign="center center">
-    <a routerLink="/home" routerLinkActive="active">
-      <button md-button class="small_button">CHIEFSRETRO</button>
-    </a>
-    <div fxFlex></div>
-    <div fxShow fxHide.lt-md>
-      <app-autosearch></app-autosearch>
+<md-toolbar color="primary" [@toolbar]>
+  <div fxLayout="row" fxFlexFill fxLayoutAlign="start center">
+    <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+      <button md-icon-button (click)="toggleDesktopNavbar()" fxShow fxHide.lt-md>
+        <md-icon>menu</md-icon>
+      </button>
+    </div>
+    <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+      <a routerLink="/home" routerLinkActive="active">
+        <button md-button class="small_button">CHIEFSRETRO</button>
+      </a>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
+      <div fxShow fxHide.lt-md>
+        <app-autosearch></app-autosearch>
+      </div>
     </div>
     <button fxHide fxShow.lt-md md-icon-button *ngIf="showMobileSearch==false" (click)="toggleMobileSearch()">
       <md-icon>search</md-icon>
@@ -17,11 +25,10 @@
       <md-icon>cancel</md-icon>
     </button>
   </md-toolbar-row>
+  <md-toolbar-row fxHide fxShow.gt-sm *ngIf="showDesktopNavbar==true" [@toolbar]>
+    <app-navbar [showText]="true"></app-navbar>
+  </md-toolbar-row>
   <app-floatingcart *ngIf="showCart" [@cart]></app-floatingcart>
-
-  <!--<md-toolbar-row fxShow fxHide.lt-md>
-    <app-navbar></app-navbar>
-
-  </md-toolbar-row>-->
-
 </md-toolbar>
+
+

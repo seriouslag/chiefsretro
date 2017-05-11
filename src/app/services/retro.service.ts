@@ -11,6 +11,9 @@ export class RetroService {
   private _showMobileSearch = new BehaviorSubject<Boolean>(false);
   public showMobileSearch: Observable<boolean> = this._showMobileSearch.asObservable();
 
+  private _showDesktopNavbar = new BehaviorSubject<Boolean>(false);
+  public showDesktopNavbar: Observable<boolean> = this._showDesktopNavbar.asObservable();
+
   constructor() {
     this.init();
   }
@@ -18,13 +21,18 @@ export class RetroService {
   private init(): void {
     let showCart = sessionStorage.getItem('showCart');
     let showMobileSearch = sessionStorage.getItem('showCart');
+    let showDesktopNavbar = sessionStorage.getItem('navBar');
 
     if (showMobileSearch) {
       this._showMobileSearch.next(showMobileSearch == 'true');
     }
 
     if (showCart && location.pathname != '/checkout') {
-      this._showCart.next(showCart == 'true')
+      this._showCart.next(showCart == 'true');
+    }
+
+    if (showDesktopNavbar) {
+      this._showDesktopNavbar.next(showDesktopNavbar == 'true');
     }
   }
 
@@ -38,6 +46,12 @@ export class RetroService {
     sessionStorage.setItem('showCart', this._showCart.getValue().toString());
   }
 
+  public toggleDesktopNavbar(): void {
+    console.log('here');
+    this._showDesktopNavbar.next(!this._showDesktopNavbar.getValue());
+    sessionStorage.setItem('navBar', this._showDesktopNavbar.getValue().toString())
+  }
+
   public openCart(show: boolean): void {
     this._showCart.next(show);
     if (show) {
@@ -45,7 +59,5 @@ export class RetroService {
     } else {
       sessionStorage.setItem('showCart', 'false');
     }
-
   }
-
 }

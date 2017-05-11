@@ -2,35 +2,24 @@
 
   <app-toolbar [showCart]="showCart"></app-toolbar>
 
-
-
-  <div fxFlex class="appBackgroundLight" fxLayout="row">
-
-    <!--desktop sidenav
-    <div fxShow fxHide.lt-md id="sidenav">
-      <app-sidenav></app-sidenav>
-    </div>
-    -->
+  <div fxFlex fxLayout="row">
 
     <div fxLayout="column" class="scroll-overlay inner">
-      <!--desktop navbar-->
-      <app-navbar fxShow fxHide.lt-md [showText]="true"></app-navbar>
-
       <app-notificationbar></app-notificationbar>
-
-      <div fxFlex class="router app-scroll">
-        <router-outlet></router-outlet>
+      <div fxFlex class="app-scroll" fxLayout="column">
+        <div fxFlex class="router appBackgroundLight">
+          <router-outlet></router-outlet>
+        </div>
+        <!--desktop footer-->
+        <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
       </div>
-      <!--desktop footer-->
-      <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
-      <!--<app-bottomnav fxFlex="nogrow" fxHide fxShow.lt-md></app-bottomnav>-->
-
     </div>
 
   </div>
-  <div class="mobilenav" fxHide fxShow.lt-md fxFlex="nogrow">
-    <!--mobile navbar-->
+
+  <!--mobile navbar-->
+  <md-toolbar color="primary" class="mobilenav" fxHide fxShow.lt-md fxFlex="nogrow">
     <app-navbar [showText]="false"></app-navbar>
-  </div>
+  </md-toolbar>
 </div>
 

@@ -45,8 +45,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   @Input()
   showCart: boolean;
+
   private showMobileSearch: boolean;
+  private showDesktopNavbar: boolean;
   private showMobileSearchSubscription: Subscription;
+  private showDesktopNavbarSubscription: Subscription;
 
   constructor(private retroService: RetroService) {
   }
@@ -56,15 +59,26 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.retroService.toggleMobileSearch();
   }
 
+  private toggleDesktopNavbar(): void {
+    this.retroService.toggleDesktopNavbar();
+  }
+
   ngOnInit(): void {
     this.showMobileSearchSubscription = this.retroService.showMobileSearch.subscribe(showMobileSearch => {
       this.showMobileSearch = showMobileSearch;
+    });
+
+    this.showDesktopNavbarSubscription = this.retroService.showDesktopNavbar.subscribe(showDesktopNavbar => {
+      this.showDesktopNavbar = showDesktopNavbar;
     });
   }
 
   ngOnDestroy(): void {
     if (this.showMobileSearchSubscription) {
       this.showMobileSearchSubscription.unsubscribe();
+    }
+    if (this.showDesktopNavbarSubscription) {
+      this.showDesktopNavbarSubscription.unsubscribe();
     }
   }
 

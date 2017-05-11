@@ -9,3 +9,7 @@
 .mat-tab-links {
   width: 100%;
 }
+
+nav {
+  border: 0 !important;
+}

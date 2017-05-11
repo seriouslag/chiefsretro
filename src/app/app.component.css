@@ -48,5 +48,20 @@ md-sidenav {
   z-index: 9;
 }
 
+.confirm {
+  color: limegreen;
+}
 
+.cancel {
+  color: red;
+}
+
+.appBackgroundLight {
+  /*background: #fafafa url(../assets/texture/texture.jpg) no-repeat center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;*/
+  background-color: #e0e0e0;
+}
 
