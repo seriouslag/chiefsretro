@@ -59,6 +59,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     this.retroService.toggleMobileSearch();
   }
 
+
   private toggleDesktopNavbar(): void {
     this.retroService.toggleDesktopNavbar();
   }

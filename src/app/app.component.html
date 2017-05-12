@@ -2,21 +2,17 @@
 
   <app-toolbar [showCart]="showCart"></app-toolbar>
 
-  <div fxFlex fxLayout="row">
 
-    <div fxLayout="column" class="scroll-overlay inner">
-      <app-notificationbar></app-notificationbar>
-      <div fxFlex class="app-scroll" fxLayout="column">
-        <div fxFlex class="router appBackgroundLight">
-          <router-outlet></router-outlet>
-        </div>
-        <!--desktop footer-->
-        <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
+  <div fxLayout="column" class="scroll-overlay" fxFlex>
+    <app-notificationbar></app-notificationbar>
+    <div fxFlex class="app-scroll" fxLayout="column">
+      <div fxFlex class="router appBackgroundLight">
+        <router-outlet></router-outlet>
       </div>
+      <!--desktop footer-->
+      <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
     </div>
-
   </div>
-
   <!--mobile navbar-->
   <md-toolbar color="primary" class="mobilenav" fxHide fxShow.lt-md fxFlex="nogrow">
     <app-navbar [showText]="false"></app-navbar>

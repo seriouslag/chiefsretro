@@ -1,4 +1,5 @@
-import {BrowserModule} from "@angular/platform-browser";
+import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig} from "@angular/platform-browser";
+
 import {NgModule} from "@angular/core";
 
 import {FormsModule} from "@angular/forms";
@@ -70,6 +71,27 @@ import {NotificationService} from "./services/notification.service";
 import {CheckoutComponent} from "./pages/checkout/checkout.component";
 import {NavbarComponent} from "./components/navbar/navbar.component";
 
+
+import * as Hammer from "hammerjs";
+import {AngularFireModule} from "angularfire2";
+import {AngularFireAuth} from "angularfire2/auth";
+export class HammerConfig extends HammerGestureConfig {
+  overrides = <any> {
+    'pinch': {enable: false},
+    'rotate': {enable: false},
+    'pan': {enable: false},
+    'swipe': {direction: Hammer.DIRECTION_HORIZONTAL, enable: true, domEvents: true}
+  }
+}
+export const firebaseConfig = {
+  apiKey: "AIzaSyDAUp0tRd48ur-IRD4Bw4AJQ7OoslW355I",
+  authDomain: "chiefsretro-163916.firebaseapp.com",
+  databaseURL: "https://chiefsretro-163916.firebaseio.com",
+  projectId: "chiefsretro-163916",
+  storageBucket: "chiefsretro-163916.appspot.com",
+  messagingSenderId: "917853947579"
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -107,10 +129,13 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
     MdButtonToggleModule, MdRadioModule, MdRippleModule, MdSelectionModule, MdSelectModule, MdSliderModule,
     MdSlideToggleModule, MdSnackBarModule,
     routing,
-    FlexLayoutModule
-
+    FlexLayoutModule,
+    AngularFireModule.initializeApp(firebaseConfig)
   ],
-  providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService],
+  providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {
+    provide: HAMMER_GESTURE_CONFIG,
+    useClass: HammerConfig
+  }, AngularFireAuth],
   entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent, CancelComponent],
   bootstrap: [AppComponent]
 })

@@ -10,6 +10,7 @@ export interface User {
 
   google?: any;
   fb?: any;
+  firebase?: any;
 
   cartItems: CartItem[];
 

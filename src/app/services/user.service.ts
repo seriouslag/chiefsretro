@@ -8,10 +8,11 @@ import {MdDialogRef} from "@angular/material";
 import {DialogService} from "./dialog.service";
 import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
 import {ToastService} from "./toast.service";
+import {AngularFireAuth} from "angularfire2/auth";
 
 @Injectable()
 export class UserService {
-  private _user = new BehaviorSubject<User>(this.createUser(null, '', 'Guest', '', null, null));
+  private _user = new BehaviorSubject<User>(this.createUser(null, '', 'Guest', '', null, null, null, this.afAuth.authState, null, null));
   public user = this._user.asObservable();
 
   private cartDialog: MdDialogRef<any>;
@@ -109,7 +110,7 @@ export class UserService {
   }
 
   createUser(id: number = null, email: string, fname: string,
-             lname: string, femail: string = null, gemail: string = null, google?: any, fb?: any, img?: string) {
+             lname: string, femail: string = null, gemail: string = null, google?: any, firebase?: any, fb?: any, img?: string) {
 
     return {
       id: id,
@@ -119,6 +120,7 @@ export class UserService {
       femail: femail,
       gemail: gemail,
       google: google,
+      firebase: firebase,
       fb: fb,
       img: img,
       cartItems: [] as CartItem[]
@@ -135,6 +137,7 @@ export class UserService {
       gemail: user.gemail,
       google: user.google,
       fb: user.fb,
+      firebase: user.firebase,
       img: user.img,
       cartItems: user.cartItems
     } as User;
@@ -146,20 +149,7 @@ export class UserService {
      */
     // this.ngZone.run(() => {
 
-      this.updateUser(this.createUserFromUser(
-        <User>{
-          id: null,
-          email: null,
-          fname: "Guest",
-          lname: "",
-          femail: null,
-          gemail: null,
-          cartItems: [] as CartItem[],
-
-          google: null,
-          fb: null
-        }
-      ));
+    this.updateUser(null);
     // });
   }
 
@@ -176,7 +166,7 @@ export class UserService {
     return new Promise((resolve) => resolve(true));
   }
 
-  constructor(private ngZone: NgZone, private dialogService: DialogService, private toastService: ToastService) {
+  constructor(private ngZone: NgZone, private dialogService: DialogService, private toastService: ToastService, private afAuth: AngularFireAuth) {
   }
 
 }

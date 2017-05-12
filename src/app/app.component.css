@@ -36,6 +36,7 @@ md-sidenav {
 .router {
   padding: 15px;
   z-index: 1;
+  flex-basis: auto !important;
 }
 
 .mobilenav {

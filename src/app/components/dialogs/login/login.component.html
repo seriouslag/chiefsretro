@@ -4,12 +4,18 @@
 <div fxLayout.lt-md="row" fxLayout.gt-sm="column">
   <div>
 
-    <button md-button md-tooltip="Google Login" [mdTooltipShowDelay]="500" id="my-signin2" (click)="googleLogin()">
+    <button md-button md-tooltip="Login with Google" [mdTooltipShowDelay]="500" (click)="firebaseGoogleLogin()">
       <span>Sign In with </span><i class="mdi mdi-18px mdi-google google icon"></i>
     </button>
-    <button md-button md-tooltip="Facebook Login" [mdTooltipShowDelay]="500" (click)="fbLogin()">
-      <span>Sign In with </span><i class="mdi mdi-18px mdi-facebook-box facebook icon"></i>
+
+    <button md-button md-tooltip="Login with Facebook" [mdTooltipShowDelay]="500" (click)="firebaseFacebookLogin()">
+      <span>Sign In with </span><i class="mdi mdi-18px mdi-facebook facebook icon"></i>
+    </button>
+
+    <button md-button md-tooltip="Login with Twitter" [mdTooltipShowDelay]="500" (click)="firebaseTwitterLogin()">
+      <span>Sign In with </span><i class="mdi mdi-18px mdi-twitter twitter icon"></i>
     </button>
   </div>
+  <div fxFlex></div>
   <button md-dialog-close md-button (click)="cancel()" color="warn">Cancel</button>
 </div>

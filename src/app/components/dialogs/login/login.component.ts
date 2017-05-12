@@ -20,17 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-
     this.showLoginText = this.loginDialog.componentInstance.showLoginText;
-
-    setTimeout(() => {
-      console.log(this.loginService.isGoogleInit);
-      if (this.loginService.isGoogleInit) {
-        this.loginService.attachGoogleSignin(document.getElementById("my-signin2"));
-      }
-    }, 100);
-
-
   };
 
   ngOnDestroy() {
@@ -39,26 +29,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  googleLogin(): void {
-    this.action = true;
-    /*if(this.loginService.auth2) {
-     this.loginService.auth2.signIn().then(() => {
-     this.loginService.googleLogin();
-     });
-     } else {
-     this.loginDialog.close('google');
-     }*/
 
-    //now handled by googles attachClickListener
+  firebaseGoogleLogin(): void {
+    this.loginService.firebaseGoogleLogin();
   }
 
-  fbLogin(): void {
-    if (this.loginService.isFbInit) {
-      this.loginService.fbLogin();
-    } else {
-      this.loginDialog.close('fb');
-    }
-    this.action = true;
+  firebaseFacebookLogin(): void {
+    this.loginService.firebaseFacebookLogin();
+  }
+
+  firebaseTwitterLogin(): void {
+    this.loginService.firebaseTwitterLogin();
   }
 
 

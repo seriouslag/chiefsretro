@@ -25,6 +25,7 @@ import {Observable} from "rxjs/Observable";
 })
 export class AutosearchComponent implements OnInit, OnDestroy {
 
+
   products: Product[];
   productsSubscription: Subscription;
   waiting: any;
@@ -33,7 +34,7 @@ export class AutosearchComponent implements OnInit, OnDestroy {
   products2: Observable<Product[]>;
   private searchTerms = new Subject<string>();
 
-  constructor(protected productService: ProductService) {
+  constructor(private productService: ProductService) {
   }
 
   search2(event, term: string): void {
@@ -45,7 +46,7 @@ export class AutosearchComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.products2 = this.searchTerms
-      .debounceTime(300)
+      .debounceTime(150)
       .switchMap(term => term
         ? this.productService.getProductsContainingName(term)
         : Observable.of<Product[]>([]))
@@ -54,6 +55,7 @@ export class AutosearchComponent implements OnInit, OnDestroy {
         return Observable.of(<Product[]>([]))
       });
   }
+
 
   ngOnDestroy(): void {
     if (this.productsSubscription) {
@@ -83,7 +85,6 @@ export class AutosearchComponent implements OnInit, OnDestroy {
   search(term: string) {
     this.productService.defaultSearch(term).then(products => this.products = products);
   }
-
 
   //old?
   autosearch(event, term: string) {

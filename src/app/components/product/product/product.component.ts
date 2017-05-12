@@ -40,7 +40,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   product: Product;
 
-  index: number = 0;
+  imgIndex: number = 0;
   selectedProductOptionNumber: number = 0;
   selectedProductOption: ProductOption;
 
@@ -65,7 +65,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     for (let propName in changes) {
       if (propName == "product") {
         this.selectedProductOption = this.product.productOptions[0];
-        this.index = 0;
+        this.imgIndex = 0;
         this.imagePreload();
       }
     }
@@ -81,7 +81,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.selectedProductOption = this.product.productOptions[event.index];
     this.selectedProductOptionNumber = event.index;
     //reset index to set the selected image back to the first one
-    this.index = 0;
+    this.imgIndex = 0;
 
     this.evalCart();
   }
@@ -127,15 +127,34 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   nextImage(): void {
-    if (this.index < (this.selectedProductOption.productOptionImages.length - 1)) {
-      this.index++;
+    if (this.imgIndex < (this.selectedProductOption.productOptionImages.length - 1)) {
+      this.imgIndex++;
+    } else {
+      this.imgIndex = 0;
     }
   }
 
   previousImage(): void {
-    if (this.index > 0) {
-      this.index--;
+    if (this.imgIndex > 0) {
+      this.imgIndex--;
+    } else {
+      this.imgIndex = this.selectedProductOption.productOptionImages.length - 1;
     }
+  }
+
+  private swipe(event: any) {
+    console.log(event);
+    if (event.type == 'swiperight') {
+      this.previousImage();
+    } else if (event.type == 'swipeleft') {
+      this.nextImage();
+    } else {
+
+    }
+  }
+
+  changeImage(index: number): void {
+    this.imgIndex = index;
   }
 
   showToast(message: string): void {
