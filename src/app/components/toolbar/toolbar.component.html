@@ -1,24 +1,25 @@
 <md-toolbar color="primary" [@toolbar]>
   <div fxLayout="row" fxFlexFill fxLayoutAlign="start center">
-    <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+    <div fxFlex="33%" fxLayout="row" fxLayoutAlign="start center">
       <button md-icon-button (click)="toggleDesktopNavbar()" fxShow fxHide.lt-md>
         <md-icon>menu</md-icon>
       </button>
     </div>
-    <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+    <div fxFlex="34%" fxLayout="row" fxLayoutAlign="center center">
       <a routerLink="/home" routerLinkActive="active">
         <button md-button class="small_button">CHIEFSRETRO</button>
       </a>
     </div>
-    <div fxLayout="row" fxLayoutAlign="end center" fxFlex>
+    <div fxLayout="row" fxLayoutAlign="end center" fxFlex="33%">
       <div fxShow fxHide.lt-md>
         <app-autosearch></app-autosearch>
       </div>
+      <button fxHide fxShow.lt-md md-icon-button *ngIf="showMobileSearch==false" (click)="toggleMobileSearch()">
+        <md-icon>search</md-icon>
+      </button>
     </div>
-    <button fxHide fxShow.lt-md md-icon-button *ngIf="showMobileSearch==false" (click)="toggleMobileSearch()">
-      <md-icon>search</md-icon>
-    </button>
   </div>
+
   <md-toolbar-row *ngIf="showMobileSearch==true" fxHide fxShow.lt-md [@toolbar]>
     <app-autosearch></app-autosearch>
     <button fxHide fxShow.lt-md md-icon-button (click)="toggleMobileSearch()">

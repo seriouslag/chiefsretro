@@ -43,6 +43,7 @@ import {AboutComponent} from "./pages/about/about.component";
 import {LoginComponent} from "./components/dialogs/login/login.component";
 import {ProductTemplateComponent} from "./pages/product-template/product-template.component";
 import {routing} from "./app.route";
+import {firebase} from "./app.firebase";
 import {SearchComponent} from "./components/search/search.component";
 import {CommonModule} from "@angular/common";
 import {ProductComponent} from "./components/product/product/product.component";
@@ -50,7 +51,6 @@ import {FooterComponent} from "./components/footer/footer.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {SidenavComponent} from "./components/sidenav/sidenav.component";
 import {AutosearchComponent} from "./components/autosearch/autosearch.component";
-import {BottomnavComponent} from "./components/mobile/bottomnav/bottomnav.component";
 import {AllComponent} from "./pages/all/all.component";
 import {ThumbImageComponent} from "./components/images/thumb-image/thumb-image.component";
 import {ProductImagesComponent} from "./components/images/product-images/product-images.component";
@@ -73,8 +73,8 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 
 
 import * as Hammer from "hammerjs";
-import {AngularFireModule} from "angularfire2";
 import {AngularFireAuth} from "angularfire2/auth";
+
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any> {
     'pinch': {enable: false},
@@ -83,14 +83,6 @@ export class HammerConfig extends HammerGestureConfig {
     'swipe': {direction: Hammer.DIRECTION_HORIZONTAL, enable: true, domEvents: true}
   }
 }
-export const firebaseConfig = {
-  apiKey: "AIzaSyDAUp0tRd48ur-IRD4Bw4AJQ7OoslW355I",
-  authDomain: "chiefsretro-163916.firebaseapp.com",
-  databaseURL: "https://chiefsretro-163916.firebaseio.com",
-  projectId: "chiefsretro-163916",
-  storageBucket: "chiefsretro-163916.appspot.com",
-  messagingSenderId: "917853947579"
-};
 
 @NgModule({
   declarations: [
@@ -104,7 +96,6 @@ export const firebaseConfig = {
     FooterComponent,
     SidenavComponent,
     AutosearchComponent,
-    BottomnavComponent,
     AllComponent,
     ThumbImageComponent,
     ProductImagesComponent,
@@ -128,9 +119,10 @@ export const firebaseConfig = {
     MdOptionModule, MdLineModule, MdListModule, MdProgressBarModule, MdProgressSpinnerModule, MdAutocompleteModule,
     MdButtonToggleModule, MdRadioModule, MdRippleModule, MdSelectionModule, MdSelectModule, MdSliderModule,
     MdSlideToggleModule, MdSnackBarModule,
-    routing,
     FlexLayoutModule,
-    AngularFireModule.initializeApp(firebaseConfig)
+    routing,
+    firebase,
+
   ],
   providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {
     provide: HAMMER_GESTURE_CONFIG,

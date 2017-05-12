@@ -4,6 +4,7 @@
   left: 50%;
   z-index: 20;
   transform: translateX(-50%);
+  max-width: 100%;
 }
 
 .floatingCartContainer {

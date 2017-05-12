@@ -45,11 +45,12 @@ export class LoginService {
         this.loginSuccess('firebase');
 
       } else {
-        //user is signed
+        //user is signed out
         if (this._isSignedInWithFirebase.getValue()) {
+          this.logOut();
           this._isSignedInWithFirebase.next(false);
         }
-        this.logOut()
+
       }
     })
   }
@@ -200,6 +201,7 @@ export class LoginService {
         console.log(this.user.img);
         this.message = "Logged in as " + this.user.fname + " " + this.user.lname;
       }
+      this.userService.updateUser(this.user);
       this._loginStatusSource.next(true);
       this.toastService.loginToast(this.user.img, this.message, this.toastLength);
     });
