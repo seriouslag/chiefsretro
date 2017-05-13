@@ -110,7 +110,7 @@ export class UserService {
   }
 
   createUser(id: number = null, email: string, fname: string,
-             lname: string, femail: string = null, gemail: string = null, google?: any, firebase?: any, fb?: any, img?: string) {
+             lname: string, femail: string = null, gemail: string = null, google?: any, firebase?: any, fb?: any, img?: string): User {
 
     return {
       id: id,
@@ -127,7 +127,7 @@ export class UserService {
     } as User;
   }
 
-  createUserFromUser(user: User) {
+  createUserFromUser(user: User): User {
     return {
       id: user.id,
       email: user.email,
@@ -144,7 +144,7 @@ export class UserService {
   }
 
   resetUser(): void {
-    this.updateUser(null);
+    this.updateUser(this.createUser(null, null, null, null, null));
   }
 
   private toast(message: string): void {

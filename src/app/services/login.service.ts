@@ -41,7 +41,11 @@ export class LoginService {
         console.log(firebaseUser);
         //user is signed in
         this._isSignedInWithFirebase.next(true);
-        this.user.firebase = firebaseUser;
+        if (this.user) {
+          this.user.firebase = firebaseUser;
+        } else {
+          this.user = this.userService.createUser(null, null, null, null, null);
+        }
         this.loginSuccess('firebase');
 
       } else {
