@@ -2,7 +2,7 @@ import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig} from "@angula
 
 import {NgModule} from "@angular/core";
 
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import {
   MdAutocompleteModule,
@@ -122,8 +122,9 @@ export class HammerConfig extends HammerGestureConfig {
     FlexLayoutModule,
     routing,
     firebase,
-
+    ReactiveFormsModule
   ],
+  exports: [FormsModule, ReactiveFormsModule],
   providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {
     provide: HAMMER_GESTURE_CONFIG,
     useClass: HammerConfig

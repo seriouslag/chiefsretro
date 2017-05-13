@@ -12,7 +12,7 @@ import {AngularFireAuth} from "angularfire2/auth";
 
 @Injectable()
 export class UserService {
-  private _user = new BehaviorSubject<User>(this.createUser(null, '', 'Guest', '', null, null, null, this.afAuth.authState, null, null));
+  private _user = new BehaviorSubject<User>(null);
   public user = this._user.asObservable();
 
   private cartDialog: MdDialogRef<any>;
@@ -144,13 +144,7 @@ export class UserService {
   }
 
   resetUser(): void {
-    /*
-     TODO test ngzone to see if it is needed
-     */
-    // this.ngZone.run(() => {
-
     this.updateUser(null);
-    // });
   }
 
   private toast(message: string): void {

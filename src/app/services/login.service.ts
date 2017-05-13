@@ -111,6 +111,30 @@ export class LoginService {
     });
   }
 
+  public firebaseEmailLogin(email: string, password: string) {
+    this.afAuth.auth.signInWithEmailAndPassword(email, password);
+  }
+
+  public firebaseCreateUserFromEmail(email: string, password: string): firebase.Promise<any> {
+    console.log('here');
+    return this.afAuth.auth.createUserWithEmailAndPassword(email, password).then((response) => {
+      console.log(response);
+      return response;
+    });
+  }
+
+  public firebasePasswordReset(email: string) {
+    this.afAuth.auth.sendPasswordResetEmail(email);
+  }
+
+  public firebaseConfirmPasswordReset(code: string, pw: string) {
+    this.afAuth.auth.confirmPasswordReset(code, pw);
+  }
+
+  public firebaseVerifyPasswordReset(code: string) {
+    this.afAuth.auth.verifyPasswordResetCode(code);
+  }
+
   public firebaseFacebookLogin() {
     let provider = new firebase.auth.FacebookAuthProvider();
     provider.addScope('user_birthday');
@@ -195,10 +219,18 @@ export class LoginService {
     this.ngZone.run(() => {
       if (entry == 'firebase') {
         this.user.email = this.user.firebase.email;
-        this.user.fname = this.user.firebase.displayName.slice(0, this.user.firebase.displayName.indexOf(" "));
-        this.user.lname = this.user.firebase.displayName.slice(this.user.firebase.displayName.indexOf(" "), this.user.firebase.displayName.length);
-        this.user.img = this.user.firebase.photoURL;
-        console.log(this.user.img);
+        if (this.user.firebase.displayName) {
+          this.user.fname = this.user.firebase.displayName.slice(0, this.user.firebase.displayName.indexOf(" "));
+          this.user.lname = this.user.firebase.displayName.slice(this.user.firebase.displayName.indexOf(" "), this.user.firebase.displayName.length);
+        } else {
+          this.user.fname = this.user.email;
+          this.user.lname = "";
+        }
+        if (this.user.firebase.photoURL) {
+          this.user.img = this.user.firebase.photoURL;
+        } else {
+          this.user.img = null;
+        }
         this.message = "Logged in as " + this.user.fname + " " + this.user.lname;
       }
       this.userService.updateUser(this.user);

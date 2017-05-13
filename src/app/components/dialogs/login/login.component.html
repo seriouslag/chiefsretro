@@ -1,21 +1,149 @@
-<h1 md-dialog-title>Login</h1>
-<!--<div md-dialog-content>Choose your way to login:</div>-->
+<div class="dialog">
+  <h1 md-dialog-title>{{title}}</h1>
+  <div class="fxFlexFill">
+    <div fxLayout="column" *ngIf="!creation" [@slideleft]>
+      <form fxLayout="column" fxLayoutGap="10px" [formGroup]="loginForm" novalidate (submit)="firebaseEmailLogin()">
+        <md-input-container>
+          <input mdInput placeholder="Email" type="email" formControlName="email">
+          <md-hint class="errorHints"
+                   *ngIf="loginForm.controls['email'].touched && loginForm.controls['email'].hasError('email') && !loginForm.controls['email'].hasError('required')">
+            Email is invalid.
+          </md-hint>
+          <md-hint class="errorHints"
+                   *ngIf="loginForm.controls['email'].touched  && loginForm.controls['email'].hasError('required')">An
+            email is required to login.
+          </md-hint>
+        </md-input-container>
 
-<div fxLayout.lt-md="row" fxLayout.gt-sm="column">
-  <div>
+        <md-input-container>
+          <input mdInput placeholder="Password" type="password" formControlName="password">
+          <md-hint class="errorHints"
+                   *ngIf="loginForm.controls['password'].touched  && loginForm.controls['password'].hasError('required')">
+            Your password is required to login.
+          </md-hint>
+        </md-input-container>
 
-    <button md-button md-tooltip="Login with Google" [mdTooltipShowDelay]="500" (click)="firebaseGoogleLogin()">
-      <span>Sign In with </span><i class="mdi mdi-18px mdi-google google icon"></i>
-    </button>
 
-    <button md-button md-tooltip="Login with Facebook" [mdTooltipShowDelay]="500" (click)="firebaseFacebookLogin()">
-      <span>Sign In with </span><i class="mdi mdi-18px mdi-facebook facebook icon"></i>
-    </button>
+        <div fxLayout="row">
+          <button md-button md-tooltip="Login" type="submit" [mdTooltipShowDelay]="500" fxFlex
+                  [disabled]="loginForm.invalid">Login
+          </button>
+          <button md-button md-tooltip="Create an account" [mdTooltipShowDelay]="500" fxFlex
+                  (click)="createAcccount();">Create
+          </button>
+        </div>
+      </form>
 
-    <button md-button md-tooltip="Login with Twitter" [mdTooltipShowDelay]="500" (click)="firebaseTwitterLogin()">
-      <span>Sign In with </span><i class="mdi mdi-18px mdi-twitter twitter icon"></i>
-    </button>
+      <div fxLayout="row" fxFlexAlign="center center">
+        <div fxFlex></div>
+        <div>Or</div>
+        <div fxFlex></div>
+      </div>
+
+      <div>
+        <button md-button md-tooltip="Login with Google" [mdTooltipShowDelay]="500" (click)="firebaseGoogleLogin()">
+          <span>Sign In with </span><i class="mdi mdi-18px mdi-google google icon"></i>
+        </button>
+
+        <button md-button md-tooltip="Login with Facebook" [mdTooltipShowDelay]="500" (click)="firebaseFacebookLogin()">
+          <span>Sign In with </span><i class="mdi mdi-18px mdi-facebook facebook icon"></i>
+        </button>
+
+        <button md-button md-tooltip="Login with Twitter" [mdTooltipShowDelay]="500" (click)="firebaseTwitterLogin()">
+          <span>Sign In with </span><i class="mdi mdi-18px mdi-twitter twitter icon"></i>
+        </button>
+      </div>
+      <div fxFlex></div>
+      <button md-dialog-close md-button (click)="cancel()" color="warn">Cancel</button>
+    </div>
+
+
+    <form fxLayout="column" fxLayoutGap="10px" [formGroup]="accountForm" *ngIf="creation" novalidate [@slideright]
+          (submit)="firebaseCreateUserLogin()">
+      <md-input-container>
+        <input mdInput placeholder="First Name" type="text" formControlName="firstname">
+        <md-hint
+          *ngIf="accountForm.controls['firstname'].hasError('required') && accountForm.controls['firstname'].touched"
+          class="errorHints">A first name is required.
+        </md-hint>
+        <md-hint
+          *ngIf="accountForm.controls['firstname'].hasError('minlength') && accountForm.controls['firstname'].touched"
+          class="errorHints">First Name must be longer than 2 characters.
+        </md-hint>
+      </md-input-container>
+      <md-input-container>
+        <input mdInput placeholder="Last Name" type="text" formControlName="lastname">
+        <md-hint
+          *ngIf="accountForm.controls['lastname'].hasError('required') && accountForm.controls['lastname'].touched"
+          class="errorHints">A last name is required.
+        </md-hint>
+        <md-hint
+          *ngIf="accountForm.controls['lastname'].hasError('minlength') && accountForm.controls['lastname'].touched"
+          class="errorHints">Last Name must be longer than 2 characters.
+        </md-hint>
+      </md-input-container>
+      <div fxLayout="column" fxLayoutGap="10px" formGroupName="matchingEmail">
+        <md-input-container>
+          <input mdInput placeholder="Email" type="email" formControlName="email">
+          <md-hint
+            *ngIf="matchingEmail.controls['email'].hasError('required') && matchingEmail.controls['email'].touched && !matchingEmail.controls['email'].hasError('email')"
+            class="errorHints">An email is required.
+          </md-hint>
+          <md-hint *ngIf="matchingEmail.controls['email'].touched && matchingEmail.controls['email'].hasError('email')"
+                   class="errorHints">This is not a valid email.
+          </md-hint>
+        </md-input-container>
+
+        <md-input-container>
+          <input mdInput placeholder="Confirm Email" type="email" formControlName="cemail">
+
+          <md-hint
+            *ngIf="matchingEmail.controls['cemail'].hasError('required') && matchingEmail.controls['cemail'].touched"
+            class="errorHints">Must confirm email
+          </md-hint>
+          <md-hint
+            *ngIf="!matchingEmail.controls['cemail'].hasError('required') && matchingEmail.controls['email'].touched && accountForm.controls['matchingEmail'].hasError('mismatch')"
+            class="errorHints">Emails must match
+          </md-hint>
+
+        </md-input-container>
+      </div>
+      <div fxLayout="column" fxLayoutGap="10px" formGroupName="matchingPassword">
+        <md-input-container>
+          <input mdInput placeholder="Password" type="password" formControlName="password">
+          <md-hint
+            *ngIf="matchingPassword.controls['password'].hasError('required') && matchingPassword.controls['password'].touched"
+            class="errorHints">A password is required.
+          </md-hint>
+          <md-hint
+            *ngIf="matchingPassword.controls['password'].hasError('minlength') && matchingPassword.controls['password'].touched && !matchingPassword.controls['password'].hasError('required')"
+            class="errorHints">The password must be at least 8 characters long.
+          </md-hint>
+        </md-input-container>
+
+        <md-input-container>
+          <input mdInput placeholder="Confirm Password" type="password" formControlName="cpassword">
+          <md-hint
+            *ngIf="matchingPassword.controls['cpassword'].hasError('required') && matchingPassword.controls['cpassword'].touched"
+            class="errorHints">This field is required.
+          </md-hint>
+          <md-hint
+            *ngIf="matchingPassword.controls['password'].touched && accountForm.controls['matchingPassword'].hasError('mismatch') && !matchingPassword.controls['cpassword'].hasError('required')"
+            class="errorHints">Both passwords must match.
+          </md-hint>
+        </md-input-container>
+      </div>
+      <div fxLayout="row" class="required">
+        <div fxFlex></div>
+        <div>*all fields are required</div>
+      </div>
+
+      <div fxLayout="row">
+        <button md-button (click)="backToLogin()" color="warn">Back</button>
+        <button md-button md-tooltip="Create account" [mdTooltipShowDelay]="500" fxFlex type="submit"
+                [disabled]="accountForm.invalid">Create
+        </button>
+      </div>
+    </form>
   </div>
-  <div fxFlex></div>
-  <button md-dialog-close md-button (click)="cancel()" color="warn">Cancel</button>
 </div>

@@ -17,17 +17,27 @@ export class ToastService {
     }
     this.snackbar.open(text, button, {
       duration: duration,
-      extraClasses: true ? ['accent-backgroundColor'] : null
+      extraClasses: ['accent-backgroundColor']
     })
   }
 
   loginToast(profileUrl: string, message: string, duration: number) {
-    let login = this.snackbar.openFromComponent(LoginToastComponent, {
-      duration: duration,
-      extraClasses: true ? ['accent-backgroundColor'] : null
-    });
 
-    login.instance.profileUrl = profileUrl;
-    login.instance.loginMessage = message;
+
+    if (profileUrl) {
+      let login = this.snackbar.openFromComponent(LoginToastComponent, {
+        duration: duration,
+        extraClasses: ['accent-backgroundColor']
+      });
+
+      login.instance.profileUrl = profileUrl;
+      login.instance.loginMessage = message;
+    } else {
+      this.snackbar.open(message, 'OK', {
+        duration: duration,
+        extraClasses: ['accent-backgroundColor']
+      })
+    }
+
   }
 }
