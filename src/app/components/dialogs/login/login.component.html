@@ -25,7 +25,7 @@
 
 
         <div fxLayout="row">
-          <button md-button md-tooltip="Login" type="submit" [mdTooltipShowDelay]="500" fxFlex
+          <button md-button md-tooltip="Login" [mdTooltipShowDelay]="500" fxFlex
                   [disabled]="loginForm.invalid || submitted">Login
           </button>
           <button md-button md-tooltip="Create an account" [mdTooltipShowDelay]="500" fxFlex
@@ -144,7 +144,7 @@
 
       <div fxLayout="row">
         <button md-button (click)="backToLogin()" color="warn">Back</button>
-        <button md-button md-tooltip="Create account" [mdTooltipShowDelay]="500" fxFlex type="submit"
+        <button md-button md-tooltip="Create account" [mdTooltipShowDelay]="500" fxFlex
                 [disabled]="accountForm.invalid">Create
         </button>
       </div>

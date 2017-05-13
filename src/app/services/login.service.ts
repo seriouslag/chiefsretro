@@ -107,6 +107,8 @@ export class LoginService {
         alert('You have already signed up with a different auth provider for that email.');
         // If you are using multiple auth providers on your app you should handle linking
         // the user's accounts here.
+      } else if (errorCode === 'auth/network-request-failed') {
+        this.toast("Cannot connect to Google's services right now.");
       } else {
         console.error(error);
       }

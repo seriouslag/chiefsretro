@@ -31,7 +31,7 @@ export class RetroService {
       this._showCart.next(showCart == 'true');
     }
 
-    if (showDesktopNavbar) {
+    if (showDesktopNavbar || showDesktopNavbar == null) {
       this._showDesktopNavbar.next(showDesktopNavbar == 'true');
     }
   }
