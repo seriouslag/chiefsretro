@@ -8,7 +8,6 @@ import {MdDialogRef} from "@angular/material";
 import {DialogService} from "./dialog.service";
 import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
 import {ToastService} from "./toast.service";
-import {AngularFireAuth} from "angularfire2/auth";
 
 @Injectable()
 export class UserService {
@@ -156,11 +155,13 @@ export class UserService {
     let user = this.getUserFromLocalStorage();
     if (user) {
       this.updateUser(user);
+    } else {
+      this.resetUser();
     }
     return new Promise((resolve) => resolve(true));
   }
 
-  constructor(private ngZone: NgZone, private dialogService: DialogService, private toastService: ToastService, private afAuth: AngularFireAuth) {
+  constructor(private ngZone: NgZone, private dialogService: DialogService, private toastService: ToastService) {
   }
 
 }

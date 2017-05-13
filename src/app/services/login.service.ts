@@ -216,6 +216,9 @@ export class LoginService {
   }
 
   private loginSuccess(entry: string): void {
+    if (!this.user) {
+      console.log(this.user, 'user is not init');
+    }
     if (this.loginDialog) {
       this.loginDialog.close('force');
     }
