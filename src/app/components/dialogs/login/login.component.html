@@ -1,7 +1,7 @@
 <div class="dialog">
   <h1 md-dialog-title>{{title}}</h1>
   <div class="fxFlexFill">
-    <div fxLayout="column" *ngIf="!creation" [@slideleft]>
+    <div fxLayout="column" fxLayoutGap="10px" *ngIf="!creation" [@slideleft]>
       <form fxLayout="column" fxLayoutGap="10px" [formGroup]="loginForm" novalidate (submit)="firebaseEmailLogin()">
         <md-input-container>
           <input mdInput placeholder="Email" type="email" formControlName="email">
@@ -40,7 +40,7 @@
         <div fxFlex></div>
       </div>
 
-      <div>
+      <div fxLayout="column">
         <button md-button md-tooltip="Login with Google" [mdTooltipShowDelay]="500" (click)="firebaseGoogleLogin()">
           <span>Sign In with </span><i class="mdi mdi-18px mdi-google google icon"></i>
         </button>
@@ -114,6 +114,10 @@
           <md-hint
             *ngIf="matchingPassword.controls['password'].hasError('required') && matchingPassword.controls['password'].touched"
             class="errorHints">A password is required.
+          </md-hint>
+          <md-hint
+            *ngIf="!matchingPassword.controls['password'].hasError('minlength') && !matchingPassword.controls['password'].hasError('required') && matchingPassword.controls['password'].touched && matchingPassword.controls['password'].hasError('pw')"
+            class="errorHints">Must contain at least 1 lowercase, 1 uppercase, 1 number, and 1 symbol of $@!%*?&( or )
           </md-hint>
           <md-hint
             *ngIf="matchingPassword.controls['password'].hasError('minlength') && matchingPassword.controls['password'].touched && !matchingPassword.controls['password'].hasError('required')"

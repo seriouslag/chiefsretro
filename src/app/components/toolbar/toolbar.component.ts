@@ -25,7 +25,7 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
         style({
           top: '-50%',
         }),
-        animate('1s ease-in-out', style({
+        animate('.75s ease-in-out', style({
           top: 0,
         }))
       ]),

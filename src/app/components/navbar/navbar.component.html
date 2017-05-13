@@ -1,34 +1,40 @@
 <nav md-tab-nav-bar fxFlexFill color="primary">
-  <a md-tab-link routerLink="/home" fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center"
-     fxLayoutGap="5px">
-    <md-icon>home</md-icon>
-    <span *ngIf="showText">Home</span>
+  <a md-tab-link routerLink="/home" fxFlex color="accent" fxLayout="row">
+    <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <md-icon>home</md-icon>
+      <span *ngIf="showText">Home</span>
+    </div>
   </a>
-  <a md-tab-link routerLink="/about" fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center"
-     fxLayoutGap="5px">
-    <md-icon>whatshot</md-icon>
-    <span *ngIf="showText">About Us</span>
+  <a md-tab-link routerLink="/about" fxFlex color="accent" fxLayout="row">
+    <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <md-icon>whatshot</md-icon>
+      <span *ngIf="showText">About Us</span>
+    </div>
   </a>
 
-  <a md-tab-link (click)="toggleCart()" fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center"
-     fxLayoutGap="5px">
-    <md-icon>shopping_cart</md-icon>
-    <span *ngIf="showText">Cart</span>
+  <a md-tab-link (click)="toggleCart()" fxFlex color="accent" fxLayout="row">
+    <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <md-icon>shopping_cart</md-icon>
+      <span *ngIf="showText">Cart</span>
+    </div>
   </a>
 
 
   <a md-tab-link md-tooltip="{{loginStatusText}}" [mdTooltipShowDelay]="500"
-     fxFlex color="accent" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px"
+     fxFlex color="accent" fxLayout="row"
      (click)="changeLoginStatus()" *ngIf="!loginStatus">
-    <md-icon>power_settings_new</md-icon>
-    <span *ngIf="showText">{{loginStatusText}}</span>
+    <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <md-icon>power_settings_new</md-icon>
+      <span *ngIf="showText">{{loginStatusText}}</span>
+    </div>
   </a>
 
-  <a md-tab-link fxFlex color="accent" *ngIf="loginStatus" fxLayout="row" fxLayoutAlign="center center"
-     fxLayoutGap="5px" [mdMenuTriggerFor]="accountMenu">
-    <md-icon *ngIf="!user?.img">power_settings_new</md-icon>
-    <img *ngIf="user?.img" [src]="user.img" class="profileImg"/>
-    <span *ngIf="showText">Account</span>
+  <a md-tab-link fxFlex color="accent" *ngIf="loginStatus" fxLayout="row" [mdMenuTriggerFor]="accountMenu">
+    <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
+      <md-icon *ngIf="!user?.img">power_settings_new</md-icon>
+      <img *ngIf="user?.img" [src]="user.img" class="profileImg"/>
+      <span *ngIf="showText">Account</span>
+    </div>
   </a>
 </nav>
 

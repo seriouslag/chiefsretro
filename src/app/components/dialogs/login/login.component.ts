@@ -45,12 +45,35 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(public loginDialog: MdDialogRef<LoginComponent>, private toastService: ToastService) {
   }
 
-  private validateEmail(fc: FormControl) {
-    let EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,12}))/i;
+  private matchingPassword: FormGroup = new FormGroup({
+    password: new FormControl(null, [Validators.required, Validators.minLength(8), this.validatePW]),
+    cpassword: new FormControl(null, [Validators.required]),
+  }, this.passwordMatchValidator);
 
-    return EMAIL_REGEXP.test(fc.value) ? null : {
-      'email': true
-    };
+  firebaseEmailLogin(): void {
+    this.loginService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(), this.loginForm.controls['password'].value).then((response) => {
+      if (response == 'ok') {
+        //should be handled already
+      } else {
+        /*
+        TODO setup attemp limits
+         */
+        if (response == 'auth/user-disabled') {
+          this.toastService.toast('This account is deactivated');
+        } else if (response == 'auth/invalid-email') {
+          this.toast('Email is invalid');
+        } else if (response == 'auth/user-not-found') {
+          this.toast('This email is not found');
+        } else if (response == 'auth/wrong-password') {
+          this.toast('Password is incorrect');
+        } else {
+          console.log(response);
+          +
+            this.toast('Cannot process, unknown error');
+        }
+      }
+
+    });
   }
 
   private passwordMatchValidator(fg: FormGroup) {
@@ -84,19 +107,35 @@ export class LoginComponent implements OnInit, OnDestroy {
     password: new FormControl(null, [Validators.required]),
   });
 
-  /*
-   TODO Add regex for passwords
-   */
-
   private matchingEmail: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, this.validateEmail]),
     cemail: new FormControl('', [Validators.required]),
   }, this.emailMatchValidator);
 
-  private matchingPassword: FormGroup = new FormGroup({
-    password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
-    cpassword: new FormControl(null, [Validators.required]),
-  }, this.passwordMatchValidator);
+  firebaseCreateUserLogin(): void {
+    this.submitted = true;
+    this.loginService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value).then((response) => {
+      if (response == 'ok') {
+        this.toast("Created account: " + this.matchingEmail.controls['email'].value.toLowerCase());
+        this.backToLogin();
+        this.action = true;
+        this.loginDialog.close('force');
+      } else {
+        this.submitted = false;
+        if (response == 'auth/weak-password') {
+          this.toastService.toast('Password is too weak');
+        } else if (response == 'auth/invalid-email') {
+          this.toast('Email is invalid');
+        } else if (response == 'auth/email-already-in-use') {
+          this.toast('Email is in use, please try another login');
+        } else if (response == 'auth/operation-not-allowed') {
+          this.toast('This is not allowed at this time');
+        } else {
+          this.toast('Cannot process, unknown error');
+        }
+      }
+    });
+  }
 
   private accountForm: FormGroup = new FormGroup({
     firstname: new FormControl(null, [Validators.required, Validators.minLength(2)]),
@@ -129,33 +168,25 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginService.firebaseTwitterLogin();
   }
 
-  firebaseEmailLogin(): void {
-    this.loginService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(), this.loginForm.controls['password'].value);
+  private validatePW(fc: FormControl) {
+    let PW_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&()])[A-Za-z\d$@$!%*?&]{8,}/;
+
+    return PW_REGEXP.test(fc.value) ? null : {
+      'pw': true
+    }
   }
 
-  firebaseCreateUserLogin(): void {
-    this.submitted = true;
-    this.loginService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value).then((response) => {
-      if (response == 'ok') {
-        this.toastService.toast("Created account: " + this.matchingEmail.controls['email'].value.toLowerCase());
-        this.backToLogin();
-        this.action = true;
-        this.loginDialog.close('force');
-      } else {
-        this.submitted = false;
-        if (response == 'auth/weak-password') {
-          this.toastService.toast('Password is too weak');
-        } else if (response == 'auth/invalid-email') {
-          this.toastService.toast('Email is invalid');
-        } else if (response == 'auth/email-already-in-use') {
-          this.toastService.toast('Email is in use, please try another login');
-        } else if (response == 'auth/operation-not-allowed') {
-          this.toastService.toast('This is not allowed at this time');
-        } else {
-          this.toastService.toast('Cannot process, unknown error');
-        }
-      }
-    });
+  private validateEmail(fc: FormControl) {
+    let EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,12}))/i;
+
+
+    return EMAIL_REGEXP.test(fc.value) ? null : {
+      'email': true
+    };
+  }
+
+  private toast(message: string) {
+    this.toastService.toast(message, 'OK', 2000);
   }
 
   private createAcccount() {

@@ -37,8 +37,6 @@ export class LoginService {
 
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
-
-        console.log(firebaseUser);
         //user is signed in
         this._isSignedInWithFirebase.next(true);
         if (this.user) {
@@ -115,8 +113,38 @@ export class LoginService {
     });
   }
 
-  public firebaseEmailLogin(email: string, password: string) {
-    this.afAuth.auth.signInWithEmailAndPassword(email, password);
+  public firebaseEmailLogin(email: string, password: string): Promise<string> {
+    let message = new Promise((resolve => {
+      this.afAuth.auth.signInWithEmailAndPassword(email, password).then(reponse => {
+        resolve('ok');
+      }).catch((error: any) => {
+
+
+        let errorCode = error.code;
+        let errorMessage = error.message;
+
+        this.toast(errorMessage);
+
+
+        if (errorCode == 'auth/user-disabled') {
+
+        } else if (errorCode == 'auth/invalid-email') {
+
+        } else if (errorCode == 'auth/user-not-found') {
+
+        } else if (errorCode == 'auth/wrong-password') {
+
+        } else {
+          console.log('An unknow error occured', error);
+        }
+
+        resolve(errorCode);
+
+      });
+    }));
+
+    return message;
+
   }
 
   public firebaseCreateUserFromEmail(email: string, password: string): Promise<string> {
@@ -145,7 +173,7 @@ export class LoginService {
           console.log('An unknow error occured', error);
         }
 
-        resolve = errorCode;
+        resolve(errorCode);
 
       })
     });
