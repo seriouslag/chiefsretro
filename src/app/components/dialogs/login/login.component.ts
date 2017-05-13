@@ -3,6 +3,7 @@ import {MdDialogRef} from "@angular/material";
 import {LoginService} from "../../../services/login.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {animate, style, transition, trigger} from "@angular/animations";
+import {ToastService} from "../../../services/toast.service";
 
 
 @Component({
@@ -35,13 +36,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   showLoginText: boolean;
   action: boolean;
 
+  private submitted: boolean = false;
+
   private creation: boolean = false;
   private title: string = "Login";
 
 
-
-
-  constructor(public loginDialog: MdDialogRef<LoginComponent>) {
+  constructor(public loginDialog: MdDialogRef<LoginComponent>, private toastService: ToastService) {
   }
 
   private validateEmail(fc: FormControl) {
@@ -133,23 +134,39 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   firebaseCreateUserLogin(): void {
-    this.loginService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value);
+    this.submitted = true;
+    this.loginService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value).then((response) => {
+      if (response == 'ok') {
+        this.toastService.toast("Created account: " + this.matchingEmail.controls['email'].value.toLowerCase());
+        this.backToLogin();
+        this.action = true;
+        this.loginDialog.close('force');
+      } else {
+        this.submitted = false;
+        if (response == 'auth/weak-password') {
+          this.toastService.toast('Password is too weak');
+        } else if (response == 'auth/invalid-email') {
+          this.toastService.toast('Email is invalid');
+        } else if (response == 'auth/email-already-in-use') {
+          this.toastService.toast('Email is in use, please try another login');
+        } else if (response == 'auth/operation-not-allowed') {
+          this.toastService.toast('This is not allowed at this time');
+        } else {
+          this.toastService.toast('Cannot process, unknown error');
+        }
+      }
+    });
   }
 
   private createAcccount() {
     this.title = "Create Account";
     this.creation = true;
+    this.submitted = false;
   }
 
   private backToLogin() {
     this.title = "Login";
     this.creation = false;
-  }
-
-
-  defaultLogin(): void {
-    this.action = true;
-    this.loginDialog.close('default');
   }
 
   cancel(): void {

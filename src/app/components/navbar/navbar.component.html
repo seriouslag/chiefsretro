@@ -15,10 +15,26 @@
     <md-icon>shopping_cart</md-icon>
     <span *ngIf="showText">Cart</span>
   </a>
+
+
   <a md-tab-link md-tooltip="{{loginStatusText}}" [mdTooltipShowDelay]="500"
-     fxFlex color="accent" fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px"
-     (click)="changeLoginStatus()">
+     fxFlex color="accent" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px"
+     (click)="changeLoginStatus()" *ngIf="!loginStatus">
     <md-icon>power_settings_new</md-icon>
     <span *ngIf="showText">{{loginStatusText}}</span>
   </a>
+
+  <a md-tab-link fxFlex color="accent" *ngIf="loginStatus" fxLayout="row" fxLayoutAlign="center center"
+     fxLayoutGap="5px" [mdMenuTriggerFor]="accountMenu">
+    <md-icon *ngIf="!user?.img">power_settings_new</md-icon>
+    <img *ngIf="user?.img" [src]="user.img" class="profileImg"/>
+    <span *ngIf="showText">Account</span>
+  </a>
 </nav>
+
+<md-menu #accountMenu="mdMenu">
+  <button md-menu-item> Account</button>
+  <button md-menu-item (click)="changeLoginStatus()">
+    {{loginStatusText}}
+  </button>
+</md-menu>

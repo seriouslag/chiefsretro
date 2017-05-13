@@ -119,12 +119,38 @@ export class LoginService {
     this.afAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
-  public firebaseCreateUserFromEmail(email: string, password: string): firebase.Promise<any> {
-    console.log('here');
-    return this.afAuth.auth.createUserWithEmailAndPassword(email, password).then((response) => {
-      console.log(response);
-      return response;
+  public firebaseCreateUserFromEmail(email: string, password: string): Promise<string> {
+    let message = new Promise((resolve, reject) => {
+      this.afAuth.auth.createUserWithEmailAndPassword(email, password).then((response) => {
+
+        resolve('ok');
+      }).catch((error: any) => {
+
+
+        let errorCode = error.code;
+        let errorMessage = error.message;
+
+        this.toast(errorMessage);
+
+
+        if (errorCode == 'auth/weak-password') {
+
+        } else if (errorCode == 'auth/invalid-email') {
+
+        } else if (errorCode == 'auth/email-already-in-use') {
+
+        } else if (errorCode == 'auth/operation-not-allowed') {
+
+        } else {
+          console.log('An unknow error occured', error);
+        }
+
+        resolve = errorCode;
+
+      })
     });
+
+    return message;
   }
 
   public firebasePasswordReset(email: string) {

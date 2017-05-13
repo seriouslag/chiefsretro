@@ -2,6 +2,8 @@ import {Component, Input, OnDestroy, OnInit} from "@angular/core";
 import {LoginService} from "../../services/login.service";
 import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "../../services/retro.service";
+import {UserService} from "../../services/user.service";
+import {User} from "../../interfaces/user";
 
 @Component({
   selector: 'app-navbar',
@@ -12,12 +14,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   loginStatus: boolean;
   loginStatusText: string = "Login";
-  loginSubscription: Subscription;
+  private loginSubscription: Subscription;
+
+  private userSubscription: Subscription;
+  private user: User;
 
   @Input()
   showText: boolean = false;
 
-  constructor(private loginService: LoginService, private retroService: RetroService) {
+  constructor(private loginService: LoginService, private retroService: RetroService, private userService: UserService) {
   }
 
   ngOnInit() {
@@ -28,6 +33,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
       } else {
         this.loginStatusText = "Login";
       }
+    });
+
+    this.userSubscription = this.userService.user.subscribe(user => {
+      this.user = user;
     });
   }
 

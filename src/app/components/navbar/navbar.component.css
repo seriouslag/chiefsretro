@@ -13,3 +13,12 @@
 nav {
   border: 0 !important;
 }
+
+.profileImg {
+  max-width: 25px;
+  max-height: 25px;
+}
+
+md-icon {
+  text-shadow: 2px 2px #424242;
+}
