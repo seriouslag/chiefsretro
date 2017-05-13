@@ -4,11 +4,12 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host 0.0.0.0 --proxy-config proxy.config.json --port 4200",
+    "start": "ng serve --host 0.0.0.0 --proxy-config proxy.config.json --port 4200 --prod --aot",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "prod": "ng serve --host 0.0.0.0 --prod --aot --proxy-config proxy.config.json --port 4200"
   },
   "private": true,
   "dependencies": {

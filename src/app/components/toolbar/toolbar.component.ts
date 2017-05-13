@@ -46,8 +46,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   @Input()
   showCart: boolean;
 
-  private showMobileSearch: boolean;
-  private showDesktopNavbar: boolean;
+  showMobileSearch: boolean;
+  showDesktopNavbar: boolean;
   private showMobileSearchSubscription: Subscription;
   private showDesktopNavbarSubscription: Subscription;
 
@@ -55,12 +55,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
   }
 
 
-  private toggleMobileSearch(): void {
+  toggleMobileSearch(): void {
     this.retroService.toggleMobileSearch();
   }
 
 
-  private toggleDesktopNavbar(): void {
+  toggleDesktopNavbar(): void {
     this.retroService.toggleDesktopNavbar();
   }
 

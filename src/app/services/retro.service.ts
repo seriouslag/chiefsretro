@@ -32,7 +32,7 @@ export class RetroService {
     }
 
     if (showDesktopNavbar || showDesktopNavbar == null) {
-      this._showDesktopNavbar.next(showDesktopNavbar == 'true');
+      this._showDesktopNavbar.next(true);
     }
   }
 
@@ -47,7 +47,6 @@ export class RetroService {
   }
 
   public toggleDesktopNavbar(): void {
-    console.log('here');
     this._showDesktopNavbar.next(!this._showDesktopNavbar.getValue());
     sessionStorage.setItem('navBar', this._showDesktopNavbar.getValue().toString())
   }

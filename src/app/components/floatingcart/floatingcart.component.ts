@@ -41,7 +41,7 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
 export class FloatingcartComponent implements OnInit, OnDestroy {
 
 
-  private user: User;
+  user: User;
   private userSubscription: Subscription;
 
   constructor(private userService: UserService, private retroService: RetroService) {
@@ -57,15 +57,15 @@ export class FloatingcartComponent implements OnInit, OnDestroy {
     this.userSubscription.unsubscribe();
   }
 
-  private toggleCart(): void {
+  toggleCart(): void {
     this.retroService.toggleCart();
   }
 
-  private removeFromCart(cartItem: CartItem) {
+  removeFromCart(cartItem: CartItem) {
     this.userService.removeFromCart(cartItem.product, cartItem.productOption, 1);
   }
 
-  private addToCart(cartItem: CartItem) {
+  addToCart(cartItem: CartItem) {
     this.userService.addToCart(cartItem.product, cartItem.productOption, 1);
   }
 

@@ -12,16 +12,16 @@ import {RetroService} from "../../services/retro.service";
 export class SidenavComponent implements OnInit, OnDestroy {
   loginStatus: boolean;
   loginStatusText: string = "Login";
-  loginSubscription: Subscription;
+  private loginSubscription: Subscription;
 
   constructor(private loginService: LoginService, private retroService: RetroService) {
   }
 
-  private changeLoginStatus(): void {
+  changeLoginStatus(): void {
     this.loginService.changeLoginStatus(!this.loginStatus);
   }
 
-  private toggleCart() {
+  toggleCart() {
     if (location.pathname != '/checkout') {
       this.retroService.toggleCart();
     }

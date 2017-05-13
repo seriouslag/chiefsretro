@@ -36,10 +36,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   showLoginText: boolean;
   action: boolean;
 
-  private submitted: boolean = false;
+  submitted: boolean = false;
 
-  private creation: boolean = false;
-  private title: string = "Login";
+  creation: boolean = false;
+  title: string = "Login";
 
 
   constructor(public loginDialog: MdDialogRef<LoginComponent>, private toastService: ToastService) {
@@ -102,12 +102,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loginForm: FormGroup = new FormGroup({
+  loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, this.validateEmail]),
     password: new FormControl(null, [Validators.required]),
   });
 
-  private matchingEmail: FormGroup = new FormGroup({
+  matchingEmail: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, this.validateEmail]),
     cemail: new FormControl('', [Validators.required]),
   }, this.emailMatchValidator);
@@ -137,7 +137,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  private accountForm: FormGroup = new FormGroup({
+  accountForm: FormGroup = new FormGroup({
     firstname: new FormControl(null, [Validators.required, Validators.minLength(2)]),
     lastname: new FormControl(null, [Validators.required, Validators.minLength(2)]),
     matchingEmail: this.matchingEmail,
@@ -189,7 +189,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.toastService.toast(message, 'OK', 2000);
   }
 
-  private createAcccount() {
+  createAcccount() {
     this.title = "Create Account";
     this.creation = true;
     this.submitted = false;

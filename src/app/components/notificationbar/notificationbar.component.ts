@@ -26,7 +26,7 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
 export class NotificationbarComponent implements OnInit {
 
   private messageSubscription: Subscription;
-  private notification: { message: string, show: boolean };
+  notification: { message: string, show: boolean };
 
   constructor(private notificationService: NotificationService) {
   }
@@ -37,7 +37,7 @@ export class NotificationbarComponent implements OnInit {
     });
   }
 
-  private toggle() {
+  toggle() {
     this.notificationService.toggle();
   }
 

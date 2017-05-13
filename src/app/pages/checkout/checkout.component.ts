@@ -11,7 +11,7 @@ import {RetroService} from "../../services/retro.service";
 })
 export class CheckoutComponent implements OnInit {
 
-  private user: User;
+  user: User;
   private userSubscription: Subscription;
 
   constructor(private userService: UserService, private retroService: RetroService) {
@@ -26,18 +26,18 @@ export class CheckoutComponent implements OnInit {
   }
 
 
-  private addToCart(index: number): void {
+  addToCart(index: number): void {
     this.user.cartItems[index].quantity++;
   }
 
-  private removeFromCart(index: number): void {
+  removeFromCart(index: number): void {
     let num = this.user.cartItems[index].quantity;
     if (num > 0) {
       this.user.cartItems[index].quantity--;
     }
   }
 
-  private updateCart(): void {
+  updateCart(): void {
     this.userService.updateUser(this.user);
   }
 

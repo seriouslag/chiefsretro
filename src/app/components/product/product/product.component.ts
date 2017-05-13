@@ -46,9 +46,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   imgPreload: HTMLImageElement[] = [];
 
-  private user: User;
+  user: User;
   private userSubscription: Subscription;
-  private cartContainsSelectedProductOption: boolean = false;
+  cartContainsSelectedProductOption: boolean = false;
 
   constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private userService: UserService) {
   }
@@ -122,7 +122,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private removeFromCart(product: Product, productOption: ProductOption, quantity: number) {
+  removeFromCart(product: Product, productOption: ProductOption, quantity: number) {
     this.userService.removeFromCart(product, productOption, quantity);
   }
 
@@ -142,8 +142,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private swipe(event: any) {
-    console.log(event);
+  swipe(event: any) {
     if (event.type == 'swiperight') {
       this.previousImage();
     } else if (event.type == 'swipeleft') {

@@ -8,17 +8,20 @@ import {MdDialogRef} from "@angular/material";
 })
 export class CancelComponent implements OnInit {
 
+  customText: string;
+  showLoginText: string;
+
   constructor(public cancelDialog: MdDialogRef<CancelComponent>) {
   }
 
   ngOnInit() {
   }
 
-  private confirmCancel(): void {
+  confirmCancel(): void {
     this.cancelDialog.close(1);
   }
 
-  private cancelCancel(): void {
+  cancelCancel(): void {
     this.cancelDialog.close(0);
   }
 

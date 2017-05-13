@@ -8,17 +8,20 @@ import {MdDialogRef} from "@angular/material";
 })
 export class LogoutComponent implements OnInit {
 
+
+  showLoginText: string;
+
   constructor(public logoutDialog: MdDialogRef<LogoutComponent>) {
   }
 
   ngOnInit() {
   }
 
-  private logout(): void {
+  logout(): void {
     this.logoutDialog.close(1);
   }
 
-  private cancelLogout(): void {
+  cancelLogout(): void {
     this.logoutDialog.close(0);
   }
 

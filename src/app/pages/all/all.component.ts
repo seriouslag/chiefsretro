@@ -32,7 +32,7 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
   ]
 })
 export class AllComponent implements OnInit, OnDestroy {
-  productSubscription: Subscription;
+  private productSubscription: Subscription;
   products: Product[];
   waiting: boolean = true;
   failed: boolean = false;

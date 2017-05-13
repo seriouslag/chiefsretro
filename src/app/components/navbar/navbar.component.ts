@@ -17,7 +17,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private loginSubscription: Subscription;
 
   private userSubscription: Subscription;
-  private user: User;
+  user: User;
 
   @Input()
   showText: boolean = false;
@@ -46,11 +46,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     }
   }
 
-  private changeLoginStatus(): void {
+  changeLoginStatus(): void {
     this.loginService.changeLoginStatus(!this.loginStatus);
   }
 
-  private toggleCart() {
+  toggleCart() {
     if (location.pathname != '/checkout') {
       this.retroService.toggleCart();
     }

@@ -43,8 +43,15 @@ export class LoginService {
           this.user.firebase = firebaseUser;
         } else {
           this.user = this.userService.createUser(null, null, null, null, null);
+          this.user.firebase = firebaseUser;
         }
-        this.loginSuccess('firebase');
+
+        console.log(sessionStorage.getItem('login'));
+        if (sessionStorage.getItem('login') == 'true') {
+          this.silentLogin();
+        } else {
+          this.loginSuccess('firebase');
+        }
 
       } else {
         //user is signed out
@@ -256,7 +263,7 @@ export class LoginService {
         this.afAuth.auth.signOut();
         this._isSignedInWithFirebase.next(false);
       }
-      localStorage.setItem('login', 'false');
+      sessionStorage.setItem('login', 'false');
 
       this._loginStatusSource.next(false);
       this.toast(this.message);
@@ -268,10 +275,31 @@ export class LoginService {
     if (this.loginDialog) {
       this.loginDialog.close('force');
     }
+
+    if (this._isSignedInWithFirebase.getValue()) {
+      this.user.email = this.user.firebase.email;
+      if (this.user.firebase.displayName) {
+        this.user.fname = this.user.firebase.displayName.slice(0, this.user.firebase.displayName.indexOf(" "));
+        this.user.lname = this.user.firebase.displayName.slice(this.user.firebase.displayName.indexOf(" "), this.user.firebase.displayName.length);
+      } else {
+        this.user.fname = this.user.email;
+        this.user.lname = "";
+      }
+      if (this.user.firebase.photoURL) {
+        this.user.img = this.user.firebase.photoURL;
+      } else {
+        this.user.img = null;
+      }
+
+    }
+    this.userService.updateUser(this.user);
     this._loginStatusSource.next(true);
+    sessionStorage.setItem('login', 'true');
+    //no toast
   }
 
   private loginSuccess(entry: string): void {
+    sessionStorage.setItem('login', 'true');
     if (!this.user) {
       console.log(this.user, 'user is not init');
     }
