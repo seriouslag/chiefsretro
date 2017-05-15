@@ -43,7 +43,6 @@ import {AboutComponent} from "./pages/about/about.component";
 import {LoginComponent} from "./components/dialogs/login/login.component";
 import {ProductTemplateComponent} from "./pages/product-template/product-template.component";
 import {routing} from "./app.route";
-import {firebase} from "./app.firebase";
 import {SearchComponent} from "./components/search/search.component";
 import {CommonModule} from "@angular/common";
 import {ProductComponent} from "./components/product/product/product.component";
@@ -73,7 +72,9 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 
 
 import * as Hammer from "hammerjs";
+import {firebase} from "./app.firebase";
 import {AngularFireAuth} from "angularfire2/auth";
+import {AngularFireDatabaseModule} from "angularfire2/database";
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any> {
@@ -121,8 +122,9 @@ export class HammerConfig extends HammerGestureConfig {
     MdSlideToggleModule, MdSnackBarModule,
     FlexLayoutModule,
     routing,
+    AngularFireDatabaseModule,
     firebase,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   exports: [FormsModule, ReactiveFormsModule],
   providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {

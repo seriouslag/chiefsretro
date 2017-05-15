@@ -9,18 +9,19 @@
     </button>
   </md-card-subtitle>
   <md-card-content>
-    <div *ngIf="user.cartItems.length == 0" class="appMedium">
+    <div *ngIf="user == null || user?.cartItems.length == 0" class="appMedium">
       No Items In Cart.
     </div>
-    <div *ngFor="let cartItem of user.cartItems;" [@openclose]>
-      <div class="appMedium" fxLayout="row" fxLayoutAlign="none center">
+    <div *ngFor="let cartItem of user?.cartItems;">
+      <div class="appMedium" fxLayout="row" fxLayoutAlign="none center"
+           *ngIf="cartItem.product && cartItem.productOption">
         <button md-button (click)="removeFromCart(cartItem)" class="small_button">
           <md-icon>remove</md-icon>
         </button>
 
         <a md-button routerLink="/product/sku{{cartItem.product.productId}}" fxFlex>
           <div fxLayout="row" fxLayoutAlign="space-between center">
-            <app-thumb-image [product]="cartItem.product"></app-thumb-image>
+            <app-thumb-image [product]="cartItem.product" [rounded]="true"></app-thumb-image>
             <div fxFlex></div>
             <div>{{cartItem.productOption.productColor}} {{cartItem.product.productName}}</div>
             <div fxFlex></div>

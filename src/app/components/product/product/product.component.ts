@@ -83,19 +83,21 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     //reset index to set the selected image back to the first one
     this.imgIndex = 0;
 
-    this.evalCart();
+    //this.evalCart();
   }
 
-  private addToCart(product: Product, productOption: ProductOption, quantity: number) {
+  addToCart(product: Product, productOption: ProductOption, quantity: number) {
     this.userService.addToCart(product, productOption, quantity);
   }
 
   private evalCart(): void {
     this.cartContainsSelectedProductOption = false;
     for (let cartItem of this.user.cartItems) {
-      if (cartItem.productOption.productOptionId == this.selectedProductOption.productOptionId) {
-        this.cartContainsSelectedProductOption = true;
-        break;
+      if (cartItem.productOption) {
+        if (cartItem.productOption.productOptionId == this.selectedProductOption.productOptionId) {
+          this.cartContainsSelectedProductOption = true;
+          break;
+        }
       }
     }
   }

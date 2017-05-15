@@ -8,9 +8,9 @@ Cart:
   <div *ngFor="let cartItem of user?.cartItems; let i = index" fxLayout="column" fxLayoutGap="10px">
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlexFill>
-      <app-thumb-image [product]="cartItem.product"></app-thumb-image>
+      <app-thumb-image *ngIf="cartItem.product" [product]="cartItem.product"></app-thumb-image>
       <div fxFlex="20px"></div>
-      <div>{{cartItem.productOption.productColor}} {{cartItem.product.productName}}</div>
+      <div>{{cartItem.productOption?.productColor}} {{cartItem.product?.productName}}</div>
       <button md-button (click)="removeFromCart(i)" class="small_button">
         <md-icon>remove</md-icon>
       </button>

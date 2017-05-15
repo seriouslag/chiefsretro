@@ -13,6 +13,10 @@ import {User} from "../interfaces/user";
 
 import {AngularFireAuth} from "angularfire2/auth";
 import * as firebase from "firebase/app";
+import {AngularFireDatabase, FirebaseObjectObservable} from "angularfire2/database";
+import {DbCartItem} from "../interfaces/db-cart-item";
+import {CartItem} from "../interfaces/cart-item";
+import {ProductService} from "./product.service";
 
 @Injectable()
 export class LoginService {
@@ -20,46 +24,187 @@ export class LoginService {
   private _loginStatusSource = new BehaviorSubject<boolean>(false);
   private _isSignedInWithFirebase = new BehaviorSubject<boolean>(false);
 
+
   private message: string;
   private loginDialog: MdDialogRef<any>;
   private userSubscription: Subscription;
   private toastLength = 1500;
 
+
+  private dbSubscription: Subscription;
+
   // Observable item stream
+
   loginStatus$ = this._loginStatusSource.asObservable();
   isSignedInWithFirebase = this._isSignedInWithFirebase.asObservable();
-  user: User;
+  public user: User;
+
+  private item: FirebaseObjectObservable<any>;
+
+  private addGuestCartItems = false;
+
+
+  private getFirstName(fname: string): string {
+    if (fname) {
+      return fname.slice(0, fname.indexOf(" "));
+    } else {
+      return null;
+    }
+  }
+
+  private getLastName(lname: string): string {
+    if (lname) {
+      return lname.slice(lname.indexOf(" "), lname.length);
+    } else {
+      return null;
+    }
+  }
+
+  private getCartItem(productId: number, productOptionId: number, cartItem: number): void {
+    this.userService._waitingForUpdate.next(true);
+    let p = this.productService.getProductByProductId(productId).subscribe((product) => {
+      this.user.cartItems[cartItem].product = product;
+      let check = true;
+      for (let productOption of product.productOptions) {
+        if (productOptionId == productOption.productOptionId) {
+          this.user.cartItems[cartItem].productOption = productOption;
+        }
+      }
+      for (let cartItem of this.user.cartItems) {
+        if (cartItem.product == null) {
+          check = false;
+        }
+      }
+      if (check) {
+        this.userService._waitingForUpdate.next(false);
+      }
+      p.unsubscribe();
+    });
+  }
+
+  private returnCartItems(dbCartItems: DbCartItem[]): CartItem[] {
+    let cartItems: CartItem[] = [];
+
+
+    let i = 0;
+
+    for (let dbCartItem of dbCartItems) {
+      let cartItem: CartItem;
+
+      cartItem = {
+        product: null,
+        productOption: null,
+        quantity: dbCartItem.quantity,
+        dateAdded: dbCartItem.dateAdded
+      };
+      this.user.cartItems[i] = cartItem;
+
+      this.getCartItem(dbCartItem.productId, dbCartItem.productOptionId, i);
+
+      i++;
+      cartItems.push(cartItem);
+    }
+    return cartItems;
+  }
 
   public init(): void {
     this.userSubscription = this.userService.user.subscribe(user => {
       this.user = user;
+      console.log('initsub', user);
     });
 
+
     firebase.auth().onAuthStateChanged((firebaseUser) => {
+
+      console.log('user status change', firebaseUser);
       if (firebaseUser) {
+        this.user = {
+          id: firebaseUser.uid,
+          email: firebaseUser.email,
+          fname: this.getFirstName(firebaseUser.displayName),
+          lname: this.getLastName(firebaseUser.displayName),
+          img: firebaseUser.photoURL,
+          cartItems: this.user ? this.user.cartItems : []
+        } as User;
+
+
+        this.dbSubscription = this.db.object("users/" + firebaseUser.uid).subscribe((user) => {
+          if (this.addGuestCartItems) {
+            let dbCartItems: DbCartItem[] = [];
+            for (let cartItem of this.user.cartItems) {
+              let dbCartItem: DbCartItem = {
+                productId: cartItem.product.productId,
+                productOptionId: cartItem.productOption.productOptionId,
+                quantity: cartItem.quantity,
+                dateAdded: cartItem.dateAdded
+              };
+              dbCartItems.push(dbCartItem);
+            }
+            for (let dcartItem of user.cartItems) {
+              let dbCartItem: DbCartItem = dcartItem;
+              let i = 0;
+              let check: boolean = true;
+              for (let checkItem of this.user.cartItems) {
+                if (checkItem.productOption.productOptionId == dcartItem.productOptionId) {
+                  dbCartItems[i].quantity += dcartItem.quantity;
+                  check = false;
+                }
+              }
+              if (check) {
+                dbCartItems.push(dbCartItem);
+              }
+              i++;
+            }
+            console.log(dbCartItems);
+            this.item = this.db.object('/users/' + this.user.id);
+            this.item.update({cartItems: dbCartItems});
+            this.returnCartItems(dbCartItems);
+            this.addGuestCartItems = false;
+          } else {
+
+            if (user.cartItems) {
+              this.returnCartItems(user.cartItems);
+            }
+            this.userService.setUser(this.user);
+          }
+        });
+
         //user is signed in
         this._isSignedInWithFirebase.next(true);
-        if (this.user) {
-          this.user.firebase = firebaseUser;
-        } else {
-          this.user = this.userService.createUser(null, null, null, null, null);
-          this.user.firebase = firebaseUser;
-        }
+
+
         if (sessionStorage.getItem('login') == 'true') {
           this.silentLogin();
         } else {
-          this.loginSuccess('firebase');
+          this.loginSuccess();
         }
 
       } else {
         //user is signed out
         if (this._isSignedInWithFirebase.getValue()) {
-          this.logOut();
+          this.addGuestCartItems = true;
+          console.log('logged out of firebase');
+
           this._isSignedInWithFirebase.next(false);
+          this.userService.updateUser(this.user);
+          this.logOut();
+          this.userService.logout();
+          this.userService.userToGuest();
+        } else {
+          console.log('limbo');
+          let guest = this.userService.getUserFromLocalStorage();
+          if (guest) {
+            this.userService.updateUser(guest);
+          } else {
+            this.userService.userToGuest();
+          }
+          this.addGuestCartItems = true;
+          //user is not signed in and
         }
 
+
       }
-    })
+    });
   }
 
   public changeLoginStatus(boolean) {
@@ -258,8 +403,8 @@ export class LoginService {
 
     this.ngZone.run(() => {
       if (this._isSignedInWithFirebase.getValue()) {
+        this.userService.logout();
         this.afAuth.auth.signOut();
-        this._isSignedInWithFirebase.next(false);
       }
       sessionStorage.setItem('login', 'false');
 
@@ -274,6 +419,14 @@ export class LoginService {
       this.loginDialog.close('force');
     }
 
+    //this.setUserData();
+
+    this._loginStatusSource.next(true);
+    sessionStorage.setItem('login', 'true');
+    //no toast
+  }
+
+  private setUserData() {
     if (this._isSignedInWithFirebase.getValue()) {
       this.user.email = this.user.firebase.email;
       if (this.user.firebase.displayName) {
@@ -288,15 +441,19 @@ export class LoginService {
       } else {
         this.user.img = null;
       }
-
+      this.user.id = this.user.firebase.uid;
+      this.message = "Logged in as " + this.user.fname + " " + this.user.lname;
+    } else {
+      //for future use if another auth platform is added
     }
+
+
+    //after logins check if signed in user is all ready a user then load current info;
+
     this.userService.updateUser(this.user);
-    this._loginStatusSource.next(true);
-    sessionStorage.setItem('login', 'true');
-    //no toast
   }
 
-  private loginSuccess(entry: string): void {
+  private loginSuccess(): void {
     sessionStorage.setItem('login', 'true');
     if (!this.user) {
       console.log(this.user, 'user is not init');
@@ -306,29 +463,24 @@ export class LoginService {
     }
     this.message = "Logged in";
     this.ngZone.run(() => {
-      if (entry == 'firebase') {
-        this.user.email = this.user.firebase.email;
-        if (this.user.firebase.displayName) {
-          this.user.fname = this.user.firebase.displayName.slice(0, this.user.firebase.displayName.indexOf(" "));
-          this.user.lname = this.user.firebase.displayName.slice(this.user.firebase.displayName.indexOf(" "), this.user.firebase.displayName.length);
+
+
+      if (this._isSignedInWithFirebase.getValue()) {
+        if (this.user.fname) {
+          this.message = "Logged in as " + this.user.fname + " " + this.user.lname;
         } else {
-          this.user.fname = this.user.email;
-          this.user.lname = "";
+          this.message = "Logged in as " + this.user.email;
         }
-        if (this.user.firebase.photoURL) {
-          this.user.img = this.user.firebase.photoURL;
-        } else {
-          this.user.img = null;
-        }
-        this.message = "Logged in as " + this.user.fname + " " + this.user.lname;
       }
-      this.userService.updateUser(this.user);
+
+
       this._loginStatusSource.next(true);
       this.toastService.loginToast(this.user.img, this.message, this.toastLength);
     });
   }
 
   constructor(private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone,
-              private userService: UserService, private afAuth: AngularFireAuth) {
+              private userService: UserService, private afAuth: AngularFireAuth, private db: AngularFireDatabase, private productService: ProductService) {
+
   }
 }

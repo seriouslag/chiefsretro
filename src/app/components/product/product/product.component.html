@@ -27,15 +27,15 @@
       </md-card-content>
     </md-card>
 
-    <div class="options" *ngIf="product.productOptions.length>0">
+    <div class="options" *ngIf="product?.productOptions.length>0">
       <md-card>
         <md-card-subtitle>Options</md-card-subtitle>
         <md-card-content>
           <md-tab-group (selectChange)="selected($event)">
-            <md-tab *ngFor="let productOption of product.productOptions;" label="{{productOption.productColor}}">
+            <md-tab *ngFor="let productOption of product?.productOptions;" label="{{productOption.productColor}}">
               <br>
-              <div>{{productOption.productColor}} : ${{productOption.productPrice}}</div>
-              <div>In Stock: {{productOption.productQuantity}}</div>
+              <div>{{productOption?.productColor}} : ${{productOption?.productPrice}}</div>
+              <div>In Stock: {{productOption?.productQuantity}}</div>
             </md-tab>
           </md-tab-group>
         </md-card-content>
