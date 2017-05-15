@@ -40,8 +40,20 @@ a:-webkit-any-link {
   height: 100%;
 }
 
-.icon {
+.appicon {
   color: whitesmoke;
+}
+
+.facebook {
+  background-color: #3c5a99;
+}
+
+.twitter {
+  background-color: #2caae1;
+}
+
+.googleplus {
+  background-color: #df4b32;
 }
 
 /*.appDark {

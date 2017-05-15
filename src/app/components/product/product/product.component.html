@@ -11,21 +11,6 @@
         </div>
       </md-card-content>
 
-      <!--<md-card-actions *ngIf="product.productOptions.length>0 && selectedProductOption.productOptionImages.length"
-                       class="imageButtons" fxLayout="row" fxLayoutAlign="center center">
-        <div fxFlex fxLayout="row">
-          <div fxFlex></div>
-          <button md-button (click)="previousImage()" *ngIf="index!=0" class="small_button">Previous</button>
-        </div>
-        <div fxFlex="none"> Picture {{1+index}} out of {{selectedProductOption.productOptionImages.length}}</div>
-        <div fxFlex fxLayout="row">
-          <button md-button (click)="nextImage()" *ngIf="index!=selectedProductOption.productOptionImages.length-1"
-                  class="small_button">Next
-          </button>
-          <div fxFlex></div>
-        </div>
-      </md-card-actions>-->
-
       <md-card-actions *ngIf="product.productOptions.length>0 && selectedProductOption.productOptionImages.length"
                        class="imageButtons" fxLayout="row" fxLayoutAlign="center center">
         <md-radio-group [ngModel]="imgIndex" (change)="changeImage($event.value)">
@@ -33,7 +18,6 @@
                            [value]="i"></md-radio-button>
         </md-radio-group>
       </md-card-actions>
-
     </md-card>
 
     <md-card>
@@ -60,8 +44,9 @@
                   (click)="addToCart(product, selectedProductOption, 1)">
             Add {{selectedProductOption.productColor}} {{product.productName}} To Cart
           </button>
-          <button md-button md-tooltip="Share" tooltip-position="above" [mdTooltipShowDelay]="500"
-                  (click)="showToast('Shared');">Share
+          <button md-icon-button md-tooltip="Share" tooltip-position="above" [mdTooltipShowDelay]="500"
+                  (click)="showToast('Shared');">
+            <md-icon>share</md-icon>
           </button>
         </md-card-actions>
       </md-card>
@@ -81,6 +66,5 @@
         <md-icon>add_shopping_cart</md-icon>
       </button>
     </div>
-
   </div>
 </div>

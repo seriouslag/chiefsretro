@@ -11,7 +11,11 @@ export class ThumbImageComponent implements OnInit {
   @Input()
   product: Product;
 
-  imageSrc: string = "";
+  imageSrc: string;
+
+  @Input()
+  rounded: boolean;
+
 
   constructor() {
   }

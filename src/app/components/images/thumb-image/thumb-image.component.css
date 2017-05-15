@@ -1,5 +1,16 @@
+.thumbImageContainer {
+  width: 30px;
+  height: 30px;
+}
 
 .defaultThumbImage {
-  max-height: 30px;
-  max-width: 30px;
+  max-height: 40px;
+  max-width: 40px;
+}
+
+.rounded {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  overflow: hidden;
 }

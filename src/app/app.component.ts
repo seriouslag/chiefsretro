@@ -13,7 +13,7 @@ import {NotificationService} from "./services/notification.service";
   selector: 'app-chiefsretro',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  animations: []
+  animations: [],
 })
 export class AppComponent implements OnInit, OnDestroy {
 

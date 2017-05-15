@@ -42,15 +42,33 @@
 
       <div fxLayout="column">
         <button md-button md-tooltip="Login with Google" [mdTooltipShowDelay]="500" (click)="firebaseGoogleLogin()">
-          <span>Sign In with </span><i class="mdi mdi-18px mdi-google google icon"></i>
+          <span fxLayout="row" fxLayoutAlign="center center">
+            <span>Sign In with</span>
+            <span fxFlex="10px"></span>
+            <span class="google icon-wrapper">
+              <i class="mdi mdi-18px mdi-google appicon"></i>
+            </span>
+          </span>
         </button>
 
         <button md-button md-tooltip="Login with Facebook" [mdTooltipShowDelay]="500" (click)="firebaseFacebookLogin()">
-          <span>Sign In with </span><i class="mdi mdi-18px mdi-facebook facebook icon"></i>
+          <span fxLayout="row" fxLayoutAlign="center center">
+            <span>Sign In with</span>
+            <span fxFlex="10px"></span>
+            <span class="facebook icon-wrapper">
+              <i class="mdi mdi-18px mdi-facebook facebook appicon"></i>
+            </span>
+          </span>
         </button>
 
         <button md-button md-tooltip="Login with Twitter" [mdTooltipShowDelay]="500" (click)="firebaseTwitterLogin()">
-          <span>Sign In with </span><i class="mdi mdi-18px mdi-twitter twitter icon"></i>
+          <span fxLayout="row" fxLayoutAlign="center center">
+            <span>Sign In with</span>
+            <span fxFlex="10px"></span>
+            <span class="twitter icon-wrapper">
+              <i class="mdi mdi-18px mdi-twitter twitter appicon"></i>
+            </span>
+          </span>
         </button>
       </div>
       <div fxFlex></div>

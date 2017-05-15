@@ -45,8 +45,6 @@ export class LoginService {
           this.user = this.userService.createUser(null, null, null, null, null);
           this.user.firebase = firebaseUser;
         }
-
-        console.log(sessionStorage.getItem('login'));
         if (sessionStorage.getItem('login') == 'true') {
           this.silentLogin();
         } else {

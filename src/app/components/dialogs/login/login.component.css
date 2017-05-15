@@ -15,3 +15,24 @@
 .errorHints {
   color: red;
 }
+
+.icon-wrapper {
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  overflow: hidden;
+  width: 35px;
+  height: 35px;
+}
+
+.facebook {
+  background-color: #3c5a99;
+}
+
+.twitter {
+  background-color: #2caae1;
+}
+
+.google {
+  background-color: #df4b32;
+}

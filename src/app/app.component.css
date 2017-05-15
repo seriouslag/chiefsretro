@@ -66,3 +66,9 @@ md-sidenav {
   background-color: #e0e0e0;
 }
 
+.icon-wrapper {
+  background-size: 200%;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+}
