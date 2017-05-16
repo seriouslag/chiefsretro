@@ -22,21 +22,23 @@ export class ThumbImageComponent implements OnInit {
 
   ngOnInit() {
     for (let productOption of this.product.productOptions) {
-      for (let productOptionImage of productOption.productOptionImages) {
-        if (productOptionImage.productOptionImageLocation) {
-          if (!this.imageSrc) {
-            this.imageSrc = productOptionImage.productOptionImageLocation;
-            break;
-          } else {
-            break;
-          }
-        } else {
-          if (productOptionImage.productOptionImageOrder) {
+      if (productOption.productOptionImages) {
+        for (let productOptionImage of productOption.productOptionImages) {
+          if (productOptionImage.productOptionImageLocation) {
             if (!this.imageSrc) {
-              this.imageSrc = "src/assets/sku" + this.product.productId + "/" + productOptionImage.productOptionImageOrder + ".jpg";
+              this.imageSrc = productOptionImage.productOptionImageLocation;
               break;
             } else {
               break;
+            }
+          } else {
+            if (productOptionImage.productOptionImageOrder) {
+              if (!this.imageSrc) {
+                this.imageSrc = "src/assets/sku" + this.product.productId + "/" + productOptionImage.productOptionImageOrder + ".jpg";
+                break;
+              } else {
+                break;
+              }
             }
           }
         }

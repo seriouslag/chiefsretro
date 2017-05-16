@@ -33,6 +33,7 @@ export class FirebaseService {
   public cart = this._cart.asObservable();
   private cartDialog: MdDialogRef<any>;
 
+
   private loginDialog: MdDialogRef<LoginComponent>;
 
   public products: Product[];
@@ -46,57 +47,18 @@ export class FirebaseService {
       });
   }
 
-  private init(): void {
-    this.loggedInSubscription = this.af.authState.subscribe(user => {
+  public setCart(cartItems: CartItem[]): void {
+    for (let cartItem of cartItems) {
+      let dbCartItem: DbCartItem = {
+        productId: cartItem.product.productId,
+        productOptionId: cartItem.productOption.productOptionId,
+        quantity: cartItem.quantity,
+        dateAdded: cartItem.dateAdded
+      };
+      this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).set(dbCartItem);
+    }
 
-      let cartItems = [];
 
-      this._user.next(user);
-
-      if (user == null) {
-        sessionStorage.setItem('login', 'false');
-        //not logged in
-        if (this._signedIn.getValue()) {
-          //if was logged in then show logout message
-          this.showLogout();
-        } else {
-          //check localstorage for cartitems then assign them to cartItems
-
-        }
-        this._signedIn.next(false);
-
-      } else {
-        //logged in
-        if (sessionStorage.getItem('login') == 'true') {
-          this.silentLogin();
-        } else {
-          this.showLogin();
-        }
-
-        sessionStorage.setItem('login', 'true');
-
-        this._signedIn.next(true);
-        this._user.next(user);
-
-        //connect cart to database
-        this._dbcart = this.db.list('users/' + this._user.getValue().uid + "/cartItems/");
-        this._dbcart.subscribe((dbcart: DbCartItem[]) => {
-          this.dbcart = dbcart;
-          let cart: CartItem[] = [];
-          for (let dbCartItem of dbcart) {
-            let cartItem: CartItem = {
-              product: this.getProductByProductId(dbCartItem.productId),
-              productOption: this.getProductOptionByProductOptionId(dbCartItem.productOptionId),
-              quantity: dbCartItem.quantity,
-              dateAdded: dbCartItem.dateAdded
-            };
-            cart.push(cartItem)
-          }
-
-          this._cart.next(cart);
-        });
-      }
-    });
   }
 
   public getProductByProductId(id: number): Product {
@@ -150,6 +112,33 @@ export class FirebaseService {
       }
     } else {
       //guest add to cart
+      console.log('here', this._cart.getValue());
+      let tempCart = this._cart.getValue();
+      let i = 0;
+
+      let check: boolean = true;
+
+      for (let cartItems of tempCart) {
+        if (cartItems.productOption.productOptionId == productOption.productOptionId) {
+          tempCart[i].quantity += quantity;
+          check = false;
+        }
+        i++;
+      }
+      if (check) {
+        let tempCartItem: CartItem = {
+          product: product,
+          productOption: productOption,
+          quantity: quantity,
+          dateAdded: dateAdded
+        };
+
+        tempCart.push(tempCartItem);
+      }
+
+      localStorage.setItem('cart', JSON.stringify(tempCart));
+      this._cart.next(tempCart);
+
     }
     this.toast('Added ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' To Cart');
   }
@@ -161,21 +150,24 @@ export class FirebaseService {
       let i = 0;
       for (let cartItem of tempCart) {
         if (cartItem.productOptionId == productOption.productOptionId) {
-          tempCart[i].quantity -= product.productId;
-          if (tempCart[i].quantity <= 0) {
+          if (tempCart[i].quantity - quantity <= 0) {
             this.cartDialog = this.dialogService.openDialog(CancelComponent, {});
             this.cartDialog.componentInstance.customText = "Remove from cart?";
             let result = false;
+
+            let tempi = i;
 
             this.cartDialog.afterClosed().subscribe(cartResult => {
               //if the user wants to remove item then do so
               if (cartResult) {
                 this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + productOption.productOptionId).remove();
                 this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+              } else {
               }
               result = true;
             });
           } else {
+            tempCart[i].quantity -= quantity;
             this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + productOption.productOptionId).set(tempCart[i]);
             this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
             break;
@@ -184,9 +176,106 @@ export class FirebaseService {
         i++;
       }
     } else {
-      //guest remove from cart
+      //guest remove item
+      let tempCart: CartItem[] = this._cart.getValue();
+      let i: number = 0;
+      let tempIndex: number;
 
+      for (let cartItems of tempCart) {
+        if (cartItems.productOption.productOptionId == productOption.productOptionId) {
+          if (tempCart[i].quantity - quantity <= 0) {
+            tempIndex = i;
+            this.cartDialog = this.dialogService.openDialog(CancelComponent, {});
+            this.cartDialog.componentInstance.customText = "Remove from cart?";
+
+            this.cartDialog.afterClosed().subscribe(cartResult => {
+              if (cartResult) {
+                tempCart.splice(tempIndex, 1);
+                this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+                localStorage.setItem('cart', JSON.stringify(tempCart));
+                this._cart.next(tempCart);
+              }
+            });
+          } else {
+            tempCart[i].quantity -= quantity;
+            this._cart.next(tempCart);
+            this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+            localStorage.setItem('cart', JSON.stringify(tempCart));
+          }
+        }
+        i++;
+      }
     }
+  }
+
+  private init(): void {
+    this.loggedInSubscription = this.af.authState.subscribe(user => {
+
+      this._user.next(user);
+
+      if (user == null) {
+        sessionStorage.setItem('login', 'false');
+        //not logged in
+        if (this._signedIn.getValue()) {
+          //if was logged in then show logout message
+          this.showLogout();
+        } else {
+
+
+          //check localstorage for cartitems then assign them to cartItems
+          let cart = localStorage.getItem('cart');
+          if (cart) {
+            this._cart.next(JSON.parse(cart));
+          }
+
+        }
+        this._signedIn.next(false);
+
+      } else {
+        //logged in
+        if (sessionStorage.getItem('login') == 'true') {
+          this.silentLogin();
+        } else {
+          this.showLogin();
+        }
+
+        sessionStorage.setItem('login', 'true');
+
+        this._signedIn.next(true);
+        this._user.next(user);
+
+        //connect cart to database
+        this._dbcart = this.db.list('users/' + this._user.getValue().uid + "/cartItems/");
+
+        console.log('cart', this._cart.getValue());
+
+        //localcart to overwrite stored cart
+        let localCart = this._cart.getValue();
+        if (localCart.length) {
+          this.setCart(localCart);
+          this._cart.next(localCart);
+          localStorage.setItem('cart', null);
+        }
+
+
+        this._dbcart.subscribe((dbcart: DbCartItem[]) => {
+          this.dbcart = dbcart;
+          let cart: CartItem[] = [];
+          for (let dbCartItem of dbcart) {
+            let cartItem: CartItem = {
+              product: this.getProductByProductId(dbCartItem.productId),
+              productOption: this.getProductOptionByProductOptionId(dbCartItem.productOptionId),
+              quantity: dbCartItem.quantity,
+              dateAdded: dbCartItem.dateAdded
+            };
+            cart.push(cartItem)
+          }
+
+
+          this._cart.next(cart);
+        });
+      }
+    });
   }
 
   public changeLoginStatus(boolean) {
@@ -338,6 +427,9 @@ export class FirebaseService {
   }
 
   private showLogin(): void {
+    //close dialog if you get to this point
+    this.loginDialog.close('force');
+
     let message: string;
     if (this._user.getValue().displayName) {
       message = "Logged in as " + this._user.getValue().displayName;
