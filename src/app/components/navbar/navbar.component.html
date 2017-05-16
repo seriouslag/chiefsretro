@@ -30,8 +30,8 @@
 
   <a md-tab-link fxFlex color="accent" *ngIf="loginStatus" fxLayout="row" [mdMenuTriggerFor]="accountMenu">
     <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="5px">
-      <md-icon *ngIf="!user?.img">power_settings_new</md-icon>
-      <img *ngIf="user?.img" [src]="user.img" class="profileImg"/>
+      <md-icon *ngIf="!user?.photoURL">power_settings_new</md-icon>
+      <img *ngIf="user?.photoURL" [src]="user.photoURL" class="profileImg"/>
       <span *ngIf="showText">Account</span>
     </div>
   </a>

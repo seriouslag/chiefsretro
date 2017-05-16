@@ -1,9 +1,8 @@
 import {Component, Input, OnDestroy, OnInit} from "@angular/core";
-import {LoginService} from "../../services/login.service";
 import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "../../services/retro.service";
-import {UserService} from "../../services/user.service";
-import {User} from "../../interfaces/user";
+import {FirebaseService} from "../../services/firebase.service";
+import {User} from "firebase/app";
 
 @Component({
   selector: 'app-navbar',
@@ -22,11 +21,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   @Input()
   showText: boolean = false;
 
-  constructor(private loginService: LoginService, private retroService: RetroService, private userService: UserService) {
+  constructor(private firebaseService: FirebaseService, private retroService: RetroService) {
   }
 
   ngOnInit() {
-    this.loginSubscription = this.loginService.loginStatus$.subscribe(loginStatus => {
+    this.loginSubscription = this.firebaseService.signedIn.subscribe(loginStatus => {
       this.loginStatus = loginStatus;
       if (this.loginStatus) {
         this.loginStatusText = "Logout";
@@ -35,7 +34,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.userSubscription = this.userService.user.subscribe(user => {
+    this.userSubscription = this.firebaseService._user.subscribe(user => {
       this.user = user;
     });
   }
@@ -44,10 +43,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.loginSubscription) {
       this.loginSubscription.unsubscribe();
     }
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
   }
 
   changeLoginStatus(): void {
-    this.loginService.changeLoginStatus(!this.loginStatus);
+    this.firebaseService.changeLoginStatus(!this.loginStatus);
   }
 
   toggleCart() {

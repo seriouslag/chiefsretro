@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
-import {UserService} from "../../services/user.service";
-import {User} from "../../interfaces/user";
 import {Subscription} from "rxjs/Subscription";
 import {CartItem} from "../../interfaces/cart-item";
 import {RetroService} from "../../services/retro.service";
 import {animate, group, style, transition, trigger} from "@angular/animations";
+import {FirebaseService} from "../../services/firebase.service";
 
 @Component({
   selector: 'app-floatingcart',
@@ -41,20 +40,20 @@ import {animate, group, style, transition, trigger} from "@angular/animations";
 export class FloatingcartComponent implements OnInit, OnDestroy {
 
 
-  user: User;
-  private userSubscription: Subscription;
+  cart: CartItem[] = [];
+  private cartSubscription: Subscription;
 
-  constructor(private userService: UserService, private retroService: RetroService) {
+  constructor(private firebaseService: FirebaseService, private retroService: RetroService) {
   }
 
   ngOnInit() {
-    this.userSubscription = this.userService.user.subscribe((user) => {
-      this.user = user;
+    this.cartSubscription = this.firebaseService.cart.subscribe((cart) => {
+      this.cart = cart;
     });
   }
 
   ngOnDestroy() {
-    this.userSubscription.unsubscribe();
+    this.cartSubscription.unsubscribe();
   }
 
   toggleCart(): void {
@@ -62,11 +61,11 @@ export class FloatingcartComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(cartItem: CartItem) {
-    this.userService.removeFromCart(cartItem.product, cartItem.productOption, 1);
+    this.firebaseService.removeProductFromCart(cartItem.product, cartItem.productOption, 1);
   }
 
   addToCart(cartItem: CartItem) {
-    this.userService.addToCart(cartItem.product, cartItem.productOption, 1);
+    this.firebaseService.addProductToCart(cartItem.product, cartItem.productOption, 1, Date.now());
   }
 
 }

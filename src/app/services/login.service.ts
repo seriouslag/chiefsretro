@@ -129,6 +129,7 @@ export class LoginService {
 
 
         this.dbSubscription = this.db.object("users/" + firebaseUser.uid).subscribe((user) => {
+          console.log('products', user);
           if (this.addGuestCartItems) {
             let dbCartItems: DbCartItem[] = [];
             for (let cartItem of this.user.cartItems) {
@@ -270,14 +271,10 @@ export class LoginService {
       this.afAuth.auth.signInWithEmailAndPassword(email, password).then(reponse => {
         resolve('ok');
       }).catch((error: any) => {
-
-
         let errorCode = error.code;
         let errorMessage = error.message;
 
         this.toast(errorMessage);
-
-
         if (errorCode == 'auth/user-disabled') {
 
         } else if (errorCode == 'auth/invalid-email') {

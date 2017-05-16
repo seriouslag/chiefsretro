@@ -5,8 +5,6 @@ import {NavigationEnd, Router} from "@angular/router";
 import {AnalyticsService} from "./services/analytics.service";
 import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "./services/retro.service";
-import {LoginService} from "./services/login.service";
-import {UserService} from "./services/user.service";
 import {NotificationService} from "./services/notification.service";
 
 @Component({
@@ -21,14 +19,10 @@ export class AppComponent implements OnInit, OnDestroy {
   routerSubscription: Subscription;
   showCartSubscription: Subscription;
 
-  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private userService: UserService, private loginService: LoginService, private notificationService: NotificationService) {
+  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private notificationService: NotificationService) {
   }
 
   ngOnInit(): void {
-    this.userService.init().then(() => {
-      this.loginService.init();
-    }).catch(() => console.log('failed to call login service'));
-
     this.showCartSubscription = this.retroService.showCart.subscribe(showCart => {
       this.showCart = showCart;
     });

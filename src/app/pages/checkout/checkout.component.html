@@ -1,11 +1,11 @@
 Cart:
 <div>
 
-  <div *ngIf="!user?.cartItems.length" fxFlex>
+  <div *ngIf="!cart?.length" fxFlex>
     Your cart is empty.
   </div>
 
-  <div *ngFor="let cartItem of user?.cartItems; let i = index" fxLayout="column" fxLayoutGap="10px">
+  <div *ngFor="let cartItem of cart; let i = index" fxLayout="column" fxLayoutGap="10px">
 
     <div fxLayout="row" fxLayoutAlign="start center" fxFlexFill>
       <app-thumb-image *ngIf="cartItem.product" [product]="cartItem.product"></app-thumb-image>
@@ -23,5 +23,5 @@ Cart:
 
   </div>
 
-  <button md-button (click)="updateCart()" *ngIf="user?.cartItems.length">Update Cart</button>
+  <button md-button (click)="updateCart()" *ngIf="cart?.length">Update Cart</button>
 </div>

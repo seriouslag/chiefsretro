@@ -5,6 +5,8 @@ import {LoginToastComponent} from "../components/toasts/login/login.toast.compon
 @Injectable()
 export class ToastService {
 
+  toastDuration: number = 1500;
+
   constructor(private snackbar: MdSnackBar) {
   }
 
@@ -13,7 +15,7 @@ export class ToastService {
       button = 'OK';
     }
     if (!duration) {
-      duration = 1000;
+      duration = this.toastDuration;
     }
     this.snackbar.open(text, button, {
       duration: duration,
@@ -21,8 +23,10 @@ export class ToastService {
     })
   }
 
-  loginToast(profileUrl: string, message: string, duration: number) {
-
+  loginToast(profileUrl: string, message: string, duration?: number) {
+    if (!duration) {
+      duration = this.toastDuration;
+    }
 
     if (profileUrl) {
       let login = this.snackbar.openFromComponent(LoginToastComponent, {

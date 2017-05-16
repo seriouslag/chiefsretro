@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
-import {UserService} from "../../services/user.service";
-import {User} from "../../interfaces/user";
 import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "../../services/retro.service";
+import {FirebaseService} from "../../services/firebase.service";
+import {CartItem} from "../../interfaces/cart-item";
 
 @Component({
   selector: 'app-checkout',
@@ -11,15 +11,15 @@ import {RetroService} from "../../services/retro.service";
 })
 export class CheckoutComponent implements OnInit {
 
-  user: User;
-  private userSubscription: Subscription;
+  cart: CartItem[] = [];
+  private cartSubscription: Subscription;
 
-  constructor(private userService: UserService, private retroService: RetroService) {
+  constructor(private firebaseService: FirebaseService, private retroService: RetroService) {
   }
 
   ngOnInit() {
-    this.userSubscription = this.userService.user.subscribe(user => {
-      this.user = user;
+    this.cartSubscription = this.firebaseService.cart.subscribe(cart => {
+      this.cart = cart;
     });
 
     this.retroService.openCart(false);
@@ -27,18 +27,18 @@ export class CheckoutComponent implements OnInit {
 
 
   addToCart(index: number): void {
-    this.user.cartItems[index].quantity++;
+    this.cart[index].quantity++;
   }
 
   removeFromCart(index: number): void {
-    let num = this.user.cartItems[index].quantity;
+    let num = this.cart[index].quantity;
     if (num > 0) {
-      this.user.cartItems[index].quantity--;
+      this.cart[index].quantity--;
     }
   }
 
   updateCart(): void {
-    this.userService.updateUser(this.user);
+    this.firebaseService._cart.next(this.cart);
   }
 
 }

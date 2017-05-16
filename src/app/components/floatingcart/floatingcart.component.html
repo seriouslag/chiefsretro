@@ -9,10 +9,10 @@
     </button>
   </md-card-subtitle>
   <md-card-content>
-    <div *ngIf="user == null || user?.cartItems.length == 0" class="appMedium">
+    <div *ngIf="cart.length <= 0" class="appMedium">
       No Items In Cart.
     </div>
-    <div *ngFor="let cartItem of user?.cartItems;">
+    <div *ngFor="let cartItem of cart">
       <div class="appMedium" fxLayout="row" fxLayoutAlign="none center"
            *ngIf="cartItem.product && cartItem.productOption">
         <button md-button (click)="removeFromCart(cartItem)" class="small_button">

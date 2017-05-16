@@ -55,8 +55,6 @@ import {ThumbImageComponent} from "./components/images/thumb-image/thumb-image.c
 import {ProductImagesComponent} from "./components/images/product-images/product-images.component";
 import {LogoutComponent} from "./components/dialogs/logout/logout.component";
 import {LoginToastComponent} from "./components/toasts/login/login.toast.component";
-import {LoginService} from "./services/login.service";
-import {UserService} from "./services/user.service";
 import {ProductService} from "./services/product.service";
 import {ToastService} from "./services/toast.service";
 import {DialogService} from "./services/dialog.service";
@@ -75,6 +73,7 @@ import * as Hammer from "hammerjs";
 import {firebase} from "./app.firebase";
 import {AngularFireAuth} from "angularfire2/auth";
 import {AngularFireDatabaseModule} from "angularfire2/database";
+import {FirebaseService} from "./services/firebase.service";
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any> {
@@ -127,10 +126,10 @@ export class HammerConfig extends HammerGestureConfig {
     ReactiveFormsModule,
   ],
   exports: [FormsModule, ReactiveFormsModule],
-  providers: [LoginService, UserService, ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {
+  providers: [ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {
     provide: HAMMER_GESTURE_CONFIG,
     useClass: HammerConfig
-  }, AngularFireAuth],
+  }, AngularFireAuth, FirebaseService],
   entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent, CancelComponent],
   bootstrap: [AppComponent]
 })

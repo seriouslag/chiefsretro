@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {MdDialogRef} from "@angular/material";
-import {LoginService} from "../../../services/login.service";
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {animate, style, transition, trigger} from "@angular/animations";
 import {ToastService} from "../../../services/toast.service";
+import {FirebaseService} from "../../../services/firebase.service";
 
 
 @Component({
@@ -32,7 +32,7 @@ import {ToastService} from "../../../services/toast.service";
 
 export class LoginComponent implements OnInit, OnDestroy {
 
-  loginService: LoginService;
+  firebaseService: FirebaseService;
   showLoginText: boolean;
   action: boolean;
 
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }, this.passwordMatchValidator);
 
   firebaseEmailLogin(): void {
-    this.loginService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(), this.loginForm.controls['password'].value).then((response) => {
+    this.firebaseService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(), this.loginForm.controls['password'].value).then((response) => {
       if (response == 'ok') {
         //should be handled already
       } else {
@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   firebaseCreateUserLogin(): void {
     this.submitted = true;
-    this.loginService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value).then((response) => {
+    this.firebaseService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value).then((response) => {
       if (response == 'ok') {
         this.toast("Created account: " + this.matchingEmail.controls['email'].value.toLowerCase());
         this.backToLogin();
@@ -157,15 +157,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   firebaseGoogleLogin(): void {
-    this.loginService.firebaseGoogleLogin();
+    this.firebaseService.firebaseGoogleLogin();
   }
 
   firebaseFacebookLogin(): void {
-    this.loginService.firebaseFacebookLogin();
+    this.firebaseService.firebaseFacebookLogin();
   }
 
   firebaseTwitterLogin(): void {
-    this.loginService.firebaseTwitterLogin();
+    this.firebaseService.firebaseTwitterLogin();
   }
 
   private validatePW(fc: FormControl) {

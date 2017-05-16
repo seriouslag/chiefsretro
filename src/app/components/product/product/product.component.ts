@@ -4,10 +4,10 @@ import {ProductOption} from "../../../interfaces/product-option";
 import {MdTabChangeEvent} from "@angular/material";
 import {ToastService} from "../../../services/toast.service";
 import {AnalyticsService} from "../../../services/analytics.service";
-import {UserService} from "../../../services/user.service";
-import {User} from "../../../interfaces/user";
 import {Subscription} from "rxjs/Subscription";
 import {animate, group, style, transition, trigger} from "@angular/animations";
+import {FirebaseService} from "../../../services/firebase.service";
+import {CartItem} from "../../../interfaces/cart-item";
 
 @Component({
   selector: 'app-product',
@@ -46,16 +46,16 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   imgPreload: HTMLImageElement[] = [];
 
-  user: User;
-  private userSubscription: Subscription;
+  cart: CartItem[];
+  private cartSubscription: Subscription;
   cartContainsSelectedProductOption: boolean = false;
 
-  constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private userService: UserService) {
+  constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private firebaseService: FirebaseService) {
   }
 
   ngOnInit() {
-    this.userSubscription = this.userService.user.subscribe((user) => {
-      this.user = user;
+    this.cartSubscription = this.firebaseService._cart.subscribe((cart) => {
+      this.cart = cart;
       this.evalCart();
     });
   }
@@ -72,8 +72,8 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.userSubscription) {
-      this.userSubscription.unsubscribe();
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
     }
   }
 
@@ -83,16 +83,16 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     //reset index to set the selected image back to the first one
     this.imgIndex = 0;
 
-    //this.evalCart();
+    this.evalCart();
   }
 
   addToCart(product: Product, productOption: ProductOption, quantity: number) {
-    this.userService.addToCart(product, productOption, quantity);
+    this.firebaseService.addProductToCart(product, productOption, quantity, Date.now());
   }
 
   private evalCart(): void {
     this.cartContainsSelectedProductOption = false;
-    for (let cartItem of this.user.cartItems) {
+    for (let cartItem of this.cart) {
       if (cartItem.productOption) {
         if (cartItem.productOption.productOptionId == this.selectedProductOption.productOptionId) {
           this.cartContainsSelectedProductOption = true;
@@ -125,7 +125,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   removeFromCart(product: Product, productOption: ProductOption, quantity: number) {
-    this.userService.removeFromCart(product, productOption, quantity);
+    this.firebaseService.removeProductFromCart(product, productOption, quantity);
   }
 
   nextImage(): void {
