@@ -5,11 +5,12 @@ import {FirebaseService} from "../../services/firebase.service";
 import {CartItem} from "../../interfaces/cart-item";
 
 @Component({
-  selector: 'app-checkout',
-  templateUrl: './checkout.component.html',
-  styleUrls: ['./checkout.component.css']
+  selector: 'app-checkout-page',
+  templateUrl: './checkout.page.component.html',
+  styleUrls: ['./checkout.page.component.css'],
+  host: {style: ' flex: 1 1 auto; display: flex; flex-direction: column;'}
 })
-export class CheckoutComponent implements OnInit {
+export class CheckoutPageComponent implements OnInit {
 
   cart: CartItem[] = [];
   private cartSubscription: Subscription;

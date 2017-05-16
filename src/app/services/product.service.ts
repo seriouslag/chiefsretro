@@ -4,14 +4,17 @@ import {Observable} from "rxjs/Rx";
 import {Product} from "../interfaces/product";
 import {Router} from "@angular/router";
 import {ToastService} from "./toast.service";
+import {AngularFireDatabase, FirebaseObjectObservable} from "angularfire2/database";
+import {AngularFireAuth} from "angularfire2/auth";
 
 @Injectable()
 export class ProductService {
   private productUrl: string = '/api/product?productId=';
   private searchUrl: string = '/api/search?productName=';
   private allUrl: string = '/api/all';
+  private searchpageUrl: string = '/api/searchpage?';
 
-  constructor(private http: Http, private router: Router, private toastService: ToastService) {
+  constructor(private http: Http, private router: Router, private toastService: ToastService, private af: AngularFireAuth, private db: AngularFireDatabase,) {
   }
 
   goToProductPage(product: Product): void {
@@ -30,9 +33,21 @@ export class ProductService {
     return product;
   }
 
-  public getAllProducts(): Observable<Product[]> {
+  getAllProducts(): Observable<Product[]> {
     return this.http.get(this.allUrl).map(this.extractData).catch(this.handleError);
   }
+
+  getProductsByPage(page: number, itemsPerPage: number): Observable<Product[]> {
+    return this.http.get(this.searchpageUrl + "page=" + page + "&" + "itemsPerPage=" + itemsPerPage).map(this.extractData).catch(this.handleError);
+  }
+
+  getDBProductByProductId(id: number): FirebaseObjectObservable<Product> {
+    let product: FirebaseObjectObservable<Product> = this.db.object('products/' + id);
+
+    return product;
+  }
+
+
 
   //autocomplete searchbox
   defaultSearch(productName: string): Promise<Product[]> {

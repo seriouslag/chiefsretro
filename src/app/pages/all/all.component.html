@@ -1,6 +1,6 @@
 <div>
-  <div fxLayoutWrap fxLayout="row" fxLayoutAlign="space-around center" *ngIf="products" [@enterleave]>
-  <a md-button *ngFor="let product of products" routerLink="/product/sku{{product.productId}}"
+  <div fxLayoutWrap fxLayout="row" fxLayoutAlign="space-around center" [@enterleave]>
+    <a md-button *ngFor="let product of productList | async" routerLink="/product/sku{{product.productId}}"
      routerLinkActive="active">
     <a id="{{product.productId}}"></a>
     <a id="{{product.productName.replace(' ', '%20')}}"></a>
@@ -15,7 +15,8 @@
     </md-card>
   </a>
 </div>
-<div fxFlexFill class="center" *ngIf="!products">
+
+  <div fxFlexFill class="center" *ngIf="!productList">
   <md-spinner *ngIf="failed==false && waiting==true"></md-spinner>
   <div *ngIf="failed">
     No product found

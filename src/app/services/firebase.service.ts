@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {AngularFireDatabase, FirebaseListObservable} from "angularfire2/database";
+import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {ToastService} from "./toast.service";
 import * as firebase from "firebase/app";
@@ -21,30 +21,34 @@ export class FirebaseService {
 
   private loggedInSubscription: Subscription;
   private productsSubscription: Subscription;
+  private cartDialog: MdDialogRef<any>;
+  private loginDialog: MdDialogRef<LoginComponent>;
 
   public _signedIn = new BehaviorSubject<boolean>(false);
   public signedIn = this._signedIn.asObservable();
-
   public _user = new BehaviorSubject<User>(null);
   public user = this._user.asObservable();
   public dbcart: DbCartItem[];
   public _dbcart: FirebaseListObservable<any>;
   public _cart = new BehaviorSubject<CartItem[]>([]);
   public cart = this._cart.asObservable();
-  private cartDialog: MdDialogRef<any>;
-
-
-  private loginDialog: MdDialogRef<LoginComponent>;
-
   public products: Product[];
 
   constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService) {
 
-    this.productsSubscription = this.db.list('products/')
-      .subscribe((products: Product[]) => {
-        this.products = products;
-        this.init();
-      });
+    let products = sessionStorage.getItem('products');
+    if (products) {
+      this.products = JSON.parse(products);
+      this.init();
+    } else {
+      this.productsSubscription = this.db.list('products/')
+        .subscribe((products: Product[]) => {
+          this.products = products;
+          sessionStorage.setItem('products', JSON.stringify(this.products));
+          this.init();
+          this.productsSubscription.unsubscribe();
+        });
+    }
   }
 
   public setCart(cartItems: CartItem[]): void {
@@ -57,8 +61,11 @@ export class FirebaseService {
       };
       this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).set(dbCartItem);
     }
+  }
 
-
+  getDBProductByProductId(id: number): FirebaseObjectObservable<Product> {
+    let product: FirebaseObjectObservable<Product> = this.db.object('products/' + id);
+    return product;
   }
 
   public getProductByProductId(id: number): Product {
@@ -112,7 +119,6 @@ export class FirebaseService {
       }
     } else {
       //guest add to cart
-      console.log('here', this._cart.getValue());
       let tempCart = this._cart.getValue();
       let i = 0;
 
@@ -247,8 +253,6 @@ export class FirebaseService {
         //connect cart to database
         this._dbcart = this.db.list('users/' + this._user.getValue().uid + "/cartItems/");
 
-        console.log('cart', this._cart.getValue());
-
         //localcart to overwrite stored cart
         let localCart = this._cart.getValue();
         if (localCart.length) {
@@ -270,7 +274,6 @@ export class FirebaseService {
             };
             cart.push(cartItem)
           }
-
 
           this._cart.next(cart);
         });
@@ -413,6 +416,18 @@ export class FirebaseService {
     this.firebaseLogin(provider);
   }
 
+  public firebasePasswordReset(email: string) {
+    this.af.auth.sendPasswordResetEmail(email);
+  }
+
+  public firebaseConfirmPasswordReset(code: string, pw: string) {
+    this.af.auth.confirmPasswordReset(code, pw);
+  }
+
+  public firebaseVerifyPasswordReset(code: string) {
+    this.af.auth.verifyPasswordResetCode(code);
+  }
+
   private toast(message: string, button?: string, duration?: number): void {
     if (!button) {
       button = 'OK';
@@ -428,7 +443,9 @@ export class FirebaseService {
 
   private showLogin(): void {
     //close dialog if you get to this point
-    this.loginDialog.close('force');
+    if (this.loginDialog) {
+      this.loginDialog.close('force');
+    }
 
     let message: string;
     if (this._user.getValue().displayName) {

@@ -1,18 +1,13 @@
 <md-input-container color="accent">
-  <!--<input id="search" mdInput [mdAutocomplete]="auto" #term
-         (keyup)="autosearch($event,term.value)"
-  >-->
   <input id="search" mdInput [mdAutocomplete]="auto" #term
-         (keyup)="search2($event, term.value)"
-  >
+         (keyup)="search($event, term.value)">
   <md-placeholder>
     <md-icon>search</md-icon>
     <span> Search</span></md-placeholder>
 </md-input-container>
 
-
 <md-autocomplete #auto="mdAutocomplete">
-  <md-option *ngFor="let product of products2 | async" [value]="product.productName" (click)="click(product)"
+  <md-option *ngFor="let product of products | async" [value]="product.productName" (click)="click(product)"
              [@openclose]
              (onSelectionChange)="click(product)" onselect="click(product)" (onSelect)="click(product)">
     <div fxLayout="row" fxLayoutAlign="center center">

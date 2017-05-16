@@ -38,17 +38,16 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import "hammerjs";
 
 import {AppComponent} from "./app.component";
-import {HomeTemplateComponent} from "./pages/home-template/home-template.component";
-import {AboutComponent} from "./pages/about/about.component";
+import {HomePageComponent} from "./pages/home/home.page.component";
+import {AboutPageComponent} from "./pages/about/about.page.component";
 import {LoginComponent} from "./components/dialogs/login/login.component";
-import {ProductTemplateComponent} from "./pages/product-template/product-template.component";
+import {ProductPageComponent} from "./pages/product/product.page.component";
 import {routing} from "./app.route";
 import {SearchComponent} from "./components/search/search.component";
 import {CommonModule} from "@angular/common";
 import {ProductComponent} from "./components/product/product/product.component";
 import {FooterComponent} from "./components/footer/footer.component";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {SidenavComponent} from "./components/sidenav/sidenav.component";
 import {AutosearchComponent} from "./components/autosearch/autosearch.component";
 import {AllComponent} from "./pages/all/all.component";
 import {ThumbImageComponent} from "./components/images/thumb-image/thumb-image.component";
@@ -65,7 +64,7 @@ import {CancelComponent} from "./components/dialogs/cancel/cancel.component";
 import {NotificationbarComponent} from "./components/notificationbar/notificationbar.component";
 import {ToolbarComponent} from "./components/toolbar/toolbar.component";
 import {NotificationService} from "./services/notification.service";
-import {CheckoutComponent} from "./pages/checkout/checkout.component";
+import {CheckoutPageComponent} from "./pages/checkout/checkout.page.component";
 import {NavbarComponent} from "./components/navbar/navbar.component";
 
 
@@ -87,14 +86,13 @@ export class HammerConfig extends HammerGestureConfig {
 @NgModule({
   declarations: [
     AppComponent,
-    HomeTemplateComponent,
-    AboutComponent,
+    HomePageComponent,
+    AboutPageComponent,
     LoginComponent,
-    ProductTemplateComponent,
+    ProductPageComponent,
     SearchComponent,
     ProductComponent,
     FooterComponent,
-    SidenavComponent,
     AutosearchComponent,
     AllComponent,
     ThumbImageComponent,
@@ -105,7 +103,7 @@ export class HammerConfig extends HammerGestureConfig {
     CancelComponent,
     NotificationbarComponent,
     ToolbarComponent,
-    CheckoutComponent,
+    CheckoutPageComponent,
     NavbarComponent,
   ],
   imports: [

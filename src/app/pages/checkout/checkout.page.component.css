@@ -1,0 +1,10 @@
+.pleasegrow {
+  flex-grow: 1; /* Article will then become flex */
+  background: gold;
+}
+
+:host(app-checkout-page) {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
