@@ -16,6 +16,9 @@ export class ThumbImageComponent implements OnInit {
   @Input()
   rounded: boolean;
 
+  @Input()
+  size: number = 0;
+
 
   constructor() {
   }

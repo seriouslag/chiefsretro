@@ -47,19 +47,28 @@ export class FirebaseService {
           sessionStorage.setItem('products', JSON.stringify(this.products));
           this.init();
           this.productsSubscription.unsubscribe();
+        }, (error) => {
+          alert('FATAL ERROR: if you see Landon tell him.');
+          console.log(error);
         });
     }
   }
 
   public setCart(cartItems: CartItem[]): void {
     for (let cartItem of cartItems) {
-      let dbCartItem: DbCartItem = {
-        productId: cartItem.product.productId,
-        productOptionId: cartItem.productOption.productOptionId,
-        quantity: cartItem.quantity,
-        dateAdded: cartItem.dateAdded
-      };
-      this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).set(dbCartItem);
+      if (cartItem.quantity == 0) {
+        this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).remove();
+      } else {
+
+        let dbCartItem: DbCartItem = {
+          productId: cartItem.product.productId,
+          productOptionId: cartItem.productOption.productOptionId,
+          quantity: cartItem.quantity,
+          dateAdded: cartItem.dateAdded
+        };
+        this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).set(dbCartItem);
+      }
+
     }
   }
 
@@ -88,7 +97,14 @@ export class FirebaseService {
     return null;
   }
 
-  public addProductToCart(product: Product, productOption: ProductOption, quantity: number, dateAdded: number) {
+  public updateCart(cart: CartItem[]) {
+    this.setCart(cart);
+  }
+
+  public addProductToCart(product: Product, productOption: ProductOption, quantity: number, dateAdded: number, showToast?: boolean) {
+    if (showToast == null) {
+      showToast = true;
+    }
     if (this._user.getValue()) {
 
       let tempCart: DbCartItem[] = this.dbcart;
@@ -100,7 +116,9 @@ export class FirebaseService {
         if (cartItem.productOptionId == productOption.productOptionId) {
 
           tempCart[i].quantity += quantity;
-          this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOptionId).set(tempCart[i]);
+          if (showToast) {
+            this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOptionId).set(tempCart[i]);
+          }
           check = false;
           break;
         }
@@ -115,7 +133,9 @@ export class FirebaseService {
           dateAdded: dateAdded
         };
         //tempCart.push(dbCartItem);
-        this.db.object('users/' + this._user.getValue().uid + '/cartItems/' + productOption.productOptionId).set(dbCartItem)
+        if (showToast) {
+          this.db.object('users/' + this._user.getValue().uid + '/cartItems/' + productOption.productOptionId).set(dbCartItem)
+        }
       }
     } else {
       //guest add to cart
@@ -214,6 +234,93 @@ export class FirebaseService {
     }
   }
 
+  public changeLoginStatus(boolean) {
+    if (boolean) {
+      this.loginDialog = this.dialogService.openDialog(LoginComponent, new MdDialogConfig());
+      this.loginDialog.componentInstance.showLoginText = true;
+      this.loginDialog.componentInstance.firebaseService = this;
+      this.loginDialog.afterClosed().subscribe(loginResult => {
+        setTimeout(() => {
+          if (this._signedIn.getValue() == false) {
+            if (loginResult == 'force') {
+              //do nothing
+            } else if (loginResult == 'firebase') {
+              //handled elsewhere to avoid popup blocker
+            } else {
+              //this.loginCanceled();
+              //kind of annoying
+            }
+          }
+        }, 150);
+      });
+    } else {
+      //do log out;
+      let logoutDialog = this.dialogService.openDialog(LogoutComponent, new MdDialogConfig());
+      logoutDialog.afterClosed().subscribe(logoutResult => {
+        if (logoutResult) {
+
+          //disconnect from db before signing out
+          if (this._dbcart) {
+            this._dbcart.$ref.off();
+          }
+          this._cart.next([]);
+
+          localStorage.setItem('cart', '');
+
+          this.af.auth.signOut();
+        } else {
+          //canceled logout
+        }
+      });
+    }
+  }
+
+  public firebaseCreateUserFromEmail(email: string, password: string, name?: string): Promise<string> {
+    let message = new Promise((resolve, reject) => {
+      this.af.auth.createUserWithEmailAndPassword(email, password).then((response) => {
+        this.db.object('users/' + this._user.getValue().uid).set({email: email, name: name, created: Date.now()});
+        resolve('ok');
+      }).catch((error: any) => {
+        let errorCode = error.code;
+        let errorMessage = error.message;
+        this.toast(errorMessage);
+        if (errorCode == 'auth/weak-password') {
+        } else if (errorCode == 'auth/invalid-email') {
+        } else if (errorCode == 'auth/email-already-in-use') {
+        } else if (errorCode == 'auth/operation-not-allowed') {
+        } else {
+          console.log('An unknow error occured', error);
+        }
+        resolve(errorCode);
+      })
+    });
+    return message;
+  }
+
+  private firebaseLogin(provider: any) {
+    this.af.auth.signInWithPopup(provider).then((result) => {
+      //have event handler to handle this
+    }).catch((error: any) => {
+      this.showLoginFailed();
+      let errorCode = error.code;
+      let errorMessage = error.message;
+      // The email of the user's account used.
+      let email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      let credential = error.credential;
+      // [START_EXCLUDE]
+      if (errorCode === 'auth/account-exists-with-different-credential') {
+        alert('You have already signed up with a different auth provider for that email.');
+        // If you are using multiple auth providers on your app you should handle linking
+        // the user's accounts here.
+      } else if (errorCode === 'auth/network-request-failed') {
+        this.toast("Cannot connect to Google's services right now.");
+      } else {
+        console.error(error);
+      }
+    });
+  }
+
   private init(): void {
     this.loggedInSubscription = this.af.authState.subscribe(user => {
 
@@ -246,19 +353,17 @@ export class FirebaseService {
         }
 
         sessionStorage.setItem('login', 'true');
-
         this._signedIn.next(true);
-        this._user.next(user);
 
         //connect cart to database
-        this._dbcart = this.db.list('users/' + this._user.getValue().uid + "/cartItems/");
+        this._dbcart = this.db.list('users/' + user.uid + "/cartItems/");
 
         //localcart to overwrite stored cart
         let localCart = this._cart.getValue();
         if (localCart.length) {
           this.setCart(localCart);
           this._cart.next(localCart);
-          localStorage.setItem('cart', null);
+          localStorage.setItem('cart', '');
         }
 
 
@@ -274,92 +379,10 @@ export class FirebaseService {
             };
             cart.push(cartItem)
           }
-
           this._cart.next(cart);
         });
       }
     });
-  }
-
-  public changeLoginStatus(boolean) {
-    if (boolean) {
-      this.loginDialog = this.dialogService.openDialog(LoginComponent, new MdDialogConfig());
-      this.loginDialog.componentInstance.showLoginText = true;
-      this.loginDialog.componentInstance.firebaseService = this;
-      this.loginDialog.afterClosed().subscribe(loginResult => {
-        setTimeout(() => {
-          if (this._signedIn.getValue() == false) {
-            if (loginResult == 'force') {
-              //do nothing
-            } else if (loginResult == 'firebase') {
-              //handled elsewhere to avoid popup blocker
-            } else {
-              this.loginCanceled();
-            }
-          }
-        }, 150);
-      });
-    } else {
-      //do log out;
-      let logoutDialog = this.dialogService.openDialog(LogoutComponent, new MdDialogConfig());
-      logoutDialog.afterClosed().subscribe(logoutResult => {
-        if (logoutResult) {
-
-          //disconnect from db before signing out
-          if (this._dbcart) {
-            this._dbcart.$ref.off();
-          }
-          this.af.auth.signOut();
-        } else {
-          //canceled logout
-        }
-      });
-    }
-  }
-
-  private firebaseLogin(provider: any) {
-    this.af.auth.signInWithPopup(provider).then((result) => {
-      //have event handler to handle this
-    }).catch((error: any) => {
-      this.showLoginFailed();
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      // The email of the user's account used.
-      let email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      let credential = error.credential;
-      // [START_EXCLUDE]
-      if (errorCode === 'auth/account-exists-with-different-credential') {
-        alert('You have already signed up with a different auth provider for that email.');
-        // If you are using multiple auth providers on your app you should handle linking
-        // the user's accounts here.
-      } else if (errorCode === 'auth/network-request-failed') {
-        this.toast("Cannot connect to Google's services right now.");
-      } else {
-        console.error(error);
-      }
-    });
-  }
-
-  public firebaseCreateUserFromEmail(email: string, password: string): Promise<string> {
-    let message = new Promise((resolve, reject) => {
-      this.af.auth.createUserWithEmailAndPassword(email, password).then((response) => {
-        resolve('ok');
-      }).catch((error: any) => {
-        let errorCode = error.code;
-        let errorMessage = error.message;
-        this.toast(errorMessage);
-        if (errorCode == 'auth/weak-password') {
-        } else if (errorCode == 'auth/invalid-email') {
-        } else if (errorCode == 'auth/email-already-in-use') {
-        } else if (errorCode == 'auth/operation-not-allowed') {
-        } else {
-          console.log('An unknow error occured', error);
-        }
-        resolve(errorCode);
-      })
-    });
-    return message;
   }
 
   public firebaseEmailLogin(email: string, password: string): Promise<string> {

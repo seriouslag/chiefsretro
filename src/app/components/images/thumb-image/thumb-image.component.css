@@ -14,3 +14,33 @@
   border-radius: 50%;
   overflow: hidden;
 }
+
+.smallC {
+  width: 30px;
+  height: 30px;
+}
+
+.medC {
+  width: 50px;
+  height: 50px;
+}
+
+.largeC {
+  width: 100px;
+  height: 100px;
+}
+
+.small {
+  max-width: 40px;
+  max-height: 40px;
+}
+
+.med {
+  max-width: 62px;
+  max-height: 62px;
+}
+
+.large {
+  max-width: 125px;
+  max-height: 125px;
+}

@@ -1,3 +1,5 @@
-<div fxLayout="row" fxLayoutAlign="center center" class="thumbImageContainer" [class.rounded]="rounded">
-  <img class="defaultThumbImage" [src]="imageSrc" (error)="imageError()">
+<div fxLayout="row" fxLayoutAlign="center center" class="thumbImageContainer" [class.rounded]="rounded"
+     [ngClass]="{'smallC': size==0, 'medC': size==1, 'largeC': size==2}">
+  <img class="defaultThumbImage" [src]="imageSrc" (error)="imageError()"
+       [ngClass]="{'small': size==0, 'med': size==1, 'large': size==2}">
 </div>
