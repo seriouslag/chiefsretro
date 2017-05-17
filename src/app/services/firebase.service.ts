@@ -110,21 +110,18 @@ export class FirebaseService {
       let tempCart: DbCartItem[] = this.dbcart;
 
       let i = 0;
-      let check = true;
+      let checkForProduct = true;
 
       for (let cartItem of tempCart) {
         if (cartItem.productOptionId == productOption.productOptionId) {
-
           tempCart[i].quantity += quantity;
-          if (showToast) {
-            this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOptionId).set(tempCart[i]);
-          }
-          check = false;
+          this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOptionId).set(tempCart[i]);
+          checkForProduct = false;
           break;
         }
         i++;
       }
-      if (check) {
+      if (checkForProduct) {
 
         let dbCartItem: DbCartItem = {
           productId: product.productId,
@@ -132,26 +129,23 @@ export class FirebaseService {
           quantity: quantity,
           dateAdded: dateAdded
         };
-        //tempCart.push(dbCartItem);
-        if (showToast) {
-          this.db.object('users/' + this._user.getValue().uid + '/cartItems/' + productOption.productOptionId).set(dbCartItem)
-        }
+        this.db.object('users/' + this._user.getValue().uid + '/cartItems/' + productOption.productOptionId).set(dbCartItem)
       }
     } else {
       //guest add to cart
       let tempCart = this._cart.getValue();
       let i = 0;
 
-      let check: boolean = true;
+      let checkForProduct: boolean = true;
 
       for (let cartItems of tempCart) {
         if (cartItems.productOption.productOptionId == productOption.productOptionId) {
           tempCart[i].quantity += quantity;
-          check = false;
+          checkForProduct = false;
         }
         i++;
       }
-      if (check) {
+      if (checkForProduct) {
         let tempCartItem: CartItem = {
           product: product,
           productOption: productOption,
@@ -166,10 +160,18 @@ export class FirebaseService {
       this._cart.next(tempCart);
 
     }
-    this.toast('Added ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' To Cart');
+    if (showToast) {
+      this.toast('Added ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' To Cart');
+    }
   }
 
-  public removeProductFromCart(product: Product, productOption: ProductOption, quantity: number) {
+  public removeProductFromCart(product: Product, productOption: ProductOption, quantity: number, showToast?: boolean, checkBeforeRemove?: boolean) {
+    if (showToast == null) {
+      showToast = true;
+    }
+    if (checkBeforeRemove == null) {
+      checkBeforeRemove = true;
+    }
     if (this._user.getValue()) {
       let tempCart = this.dbcart;
 
@@ -177,25 +179,33 @@ export class FirebaseService {
       for (let cartItem of tempCart) {
         if (cartItem.productOptionId == productOption.productOptionId) {
           if (tempCart[i].quantity - quantity <= 0) {
-            this.cartDialog = this.dialogService.openDialog(CancelComponent, {});
-            this.cartDialog.componentInstance.customText = "Remove from cart?";
-            let result = false;
-
-            let tempi = i;
-
-            this.cartDialog.afterClosed().subscribe(cartResult => {
-              //if the user wants to remove item then do so
-              if (cartResult) {
-                this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + productOption.productOptionId).remove();
+            if (checkBeforeRemove) {
+              this.cartDialog = this.dialogService.openDialog(CancelComponent, {});
+              this.cartDialog.componentInstance.customText = "Remove from cart?";
+              let result = false;
+              this.cartDialog.afterClosed().subscribe(cartResult => {
+                //if the user wants to remove item then do so
+                if (cartResult) {
+                  this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + productOption.productOptionId).remove();
+                  if (showToast) {
+                    this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+                  }
+                }
+                result = true;
+              });
+            } else {
+              //no dialog
+              this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + productOption.productOptionId).remove();
+              if (showToast) {
                 this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
-              } else {
               }
-              result = true;
-            });
+            }
           } else {
             tempCart[i].quantity -= quantity;
             this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + productOption.productOptionId).set(tempCart[i]);
-            this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+            if (showToast) {
+              this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+            }
             break;
           }
         }
@@ -214,18 +224,32 @@ export class FirebaseService {
             this.cartDialog = this.dialogService.openDialog(CancelComponent, {});
             this.cartDialog.componentInstance.customText = "Remove from cart?";
 
-            this.cartDialog.afterClosed().subscribe(cartResult => {
-              if (cartResult) {
-                tempCart.splice(tempIndex, 1);
+            if (checkBeforeRemove) {
+              this.cartDialog.afterClosed().subscribe(cartResult => {
+                if (cartResult) {
+                  tempCart.splice(tempIndex, 1);
+                  if (showToast) {
+                    this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+                  }
+                  localStorage.setItem('cart', JSON.stringify(tempCart));
+                  this._cart.next(tempCart);
+                }
+              });
+            } else {
+              //no dialog
+              tempCart.splice(tempIndex, 1);
+              if (showToast) {
                 this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
-                localStorage.setItem('cart', JSON.stringify(tempCart));
-                this._cart.next(tempCart);
               }
-            });
+              localStorage.setItem('cart', JSON.stringify(tempCart));
+              this._cart.next(tempCart);
+            }
           } else {
             tempCart[i].quantity -= quantity;
             this._cart.next(tempCart);
-            this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+            if (showToast) {
+              this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
+            }
             localStorage.setItem('cart', JSON.stringify(tempCart));
           }
         }
@@ -334,18 +358,27 @@ export class FirebaseService {
           this.showLogout();
         } else {
 
-
           //check localstorage for cartitems then assign them to cartItems
           let cart = localStorage.getItem('cart');
           if (cart) {
             this._cart.next(JSON.parse(cart));
           }
-
         }
         this._signedIn.next(false);
 
       } else {
         //logged in
+
+        //set/update user data in db
+        let userData = {
+          name: user.displayName,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          lastLoggedIn: Date.now()
+        };
+
+        this.db.object('users/' + user.uid).update(userData);
+
         if (sessionStorage.getItem('login') == 'true') {
           this.silentLogin();
         } else {
@@ -365,7 +398,6 @@ export class FirebaseService {
           this._cart.next(localCart);
           localStorage.setItem('cart', '');
         }
-
 
         this._dbcart.subscribe((dbcart: DbCartItem[]) => {
           this.dbcart = dbcart;
@@ -462,12 +494,22 @@ export class FirebaseService {
   }
 
   private silentLogin(): void {
+    if (this.loginDialog) {
+      this.loginDialog.close('force');
+    }
+    if (this.cartDialog) {
+      this.cartDialog.close();
+    }
+    //do nothing; handled by auth subscription
   }
 
   private showLogin(): void {
     //close dialog if you get to this point
     if (this.loginDialog) {
       this.loginDialog.close('force');
+    }
+    if (this.cartDialog) {
+      this.cartDialog.close();
     }
 
     let message: string;

@@ -5,3 +5,7 @@ app-search {
 .small_button {
   min-width: 1%;
 }
+
+a {
+  color: whitesmoke;
+}

@@ -8,6 +8,7 @@
 
 .mat-tab-links {
   width: 100%;
+  color: whitesmoke;
 }
 
 nav {
@@ -20,6 +21,10 @@ nav {
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
+}
+
+a {
+  color: whitesmoke;
 }
 
 md-icon {
