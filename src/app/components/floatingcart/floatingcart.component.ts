@@ -49,6 +49,7 @@ export class FloatingcartComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.cartSubscription = this.firebaseService.cart.subscribe((cart) => {
       this.cart = cart;
+      console.log('float', cart);
     });
   }
 

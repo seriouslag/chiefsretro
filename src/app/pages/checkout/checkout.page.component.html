@@ -1,41 +1,55 @@
-<div fxLayout="column" fxFlexFill="">
-  <div fxLayout="row" fxLayoutAlign="start center">
-    <div>Cart:</div>
-    <div fxFlex="40px"></div>
-    <button md-button (click)="updateCart()" *ngIf="cart?.length">Update Cart</button>
-  </div>
-
-  <div fxFlex="20px"></div>
-  <div *ngIf="!cart?.length" fxFlex>
-    Your cart is empty.
-  </div>
-
-  <div *ngFor="let cartItem of cart; let i = index" fxLayout="row" fxLayoutAlign="start none">
-    <app-thumb-image *ngIf="cartItem.product" [product]="cartItem.product" [size]="2"
-                     [rounded]="true"></app-thumb-image>
-    <div fxFlex="20px"></div>
-    <div fxLayout="column" fxLayoutGap="5px" fxFlex="100px">
-      <div fxLayout="row" fxLayoutAlign="center center" fxFlex>
-        <div>{{cartItem.productOption?.productColor}} {{cartItem.product?.productName}}</div>
+<div fxFlexFill fxLayout="column">
+  <div fxFlexFill fxLayout="row" fxLayout.lt-md="column">
+    <div fxLayout="column">
+      <div fxLayout="row" fxLayoutAlign="start center">
+        <div>Cart:</div>
+        <div fxFlex></div>
+        <button md-button (click)="updateCart()" *ngIf="cart?.length">Update Cart</button>
       </div>
-      <div fxLayout="row" fxLayoutAlign="center start" fxFlex>
-        Price: ${{cartItem.productOption.productPrice}}
+
+      <div *ngIf="!cart?.length" fxFlex>
+        Your cart is empty.
+      </div>
+
+      <div *ngFor="let cartItem of cart; let i = index" fxLayout="row" fxLayoutAlign="start none">
+        <app-thumb-image *ngIf="cartItem.product" [product]="cartItem.product" [size]="size"
+                         [rounded]="true"></app-thumb-image>
+        <div fxFlex="20px"></div>
+        <div fxLayout="column" fxLayoutGap="5px" fxFlex="100px">
+          <div fxLayout="row" fxLayoutAlign="center center" fxFlex>
+            <div>{{cartItem.productOption?.productColor}} {{cartItem.product?.productName}}</div>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center start" fxFlex>
+            Price: ${{cartItem.productOption.productPrice}}
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center center" fxFlex.gt-xs="300px">
+          <button md-button (click)="removeFromCart(i)" class="small_button">
+            <md-icon>remove</md-icon>
+          </button>
+          <md-input-container>
+            <input mdInput maxlength="2" placeholder="Quantity"
+                   (input)="changeCartItemQuantity(i, $event.srcElement.value)" value="{{cartItem.quantity}}">
+          </md-input-container>
+          <button md-button (click)="addToCart(i)" class="small_button">
+            <md-icon>add</md-icon>
+          </button>
+          <div fxFlex></div>
+          <div fxLayout.lt-md="column" fxLayout.gt-xs="row" fxLayoutAlign="center center" fxLayoutGap="3px">
+            <div>Total:</div>
+            <div>${{[cartItem.quantity*cartItem.productOption.productPrice]}}</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div fxLayout="row" fxLayoutAlign="center center" fxFlex="200px">
-      <button md-button (click)="removeFromCart(i)" class="small_button">
-        <md-icon>remove</md-icon>
-      </button>
-      <div>
-        <md-input-container>
-          <input mdInput maxlength="2" placeholder="Quantity"
-                 (input)="changeCartItemQuantity(i, $event.srcElement.value)" value="{{cartItem.quantity}}">
-        </md-input-container>
-      </div>
-      <button md-button (click)="addToCart(i)" class="small_button">
-        <md-icon>add</md-icon>
-      </button>
-    </div>
-  </div>
 
+    <div fxFlex fxFlex.lt-md="30px"></div>
+    <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+
+      <button md-raised-button color="accent" id="stripe" (click)="openStripe()">Pay With Card</button>
+
+    </div>
+
+
+  </div>
 </div>

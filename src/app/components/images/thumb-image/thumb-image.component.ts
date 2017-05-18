@@ -19,7 +19,6 @@ export class ThumbImageComponent implements OnInit {
   @Input()
   size: number = 0;
 
-
   constructor() {
   }
 

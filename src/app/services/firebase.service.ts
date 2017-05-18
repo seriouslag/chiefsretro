@@ -1,4 +1,4 @@
-import {Injectable} from "@angular/core";
+import {Injectable, NgZone} from "@angular/core";
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {ToastService} from "./toast.service";
@@ -24,6 +24,8 @@ export class FirebaseService {
   private cartDialog: MdDialogRef<any>;
   private loginDialog: MdDialogRef<LoginComponent>;
 
+  private isInit: boolean = false;
+
   public _signedIn = new BehaviorSubject<boolean>(false);
   public signedIn = this._signedIn.asObservable();
   public _user = new BehaviorSubject<User>(null);
@@ -34,24 +36,8 @@ export class FirebaseService {
   public cart = this._cart.asObservable();
   public products: Product[];
 
-  constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService) {
-
-    let products = sessionStorage.getItem('products');
-    if (products) {
-      this.products = JSON.parse(products);
-      this.init();
-    } else {
-      this.productsSubscription = this.db.list('products/')
-        .subscribe((products: Product[]) => {
-          this.products = products;
-          sessionStorage.setItem('products', JSON.stringify(this.products));
-          this.init();
-          this.productsSubscription.unsubscribe();
-        }, (error) => {
-          alert('FATAL ERROR: if you see Landon tell him.');
-          console.log(error);
-        });
-    }
+  constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone) {
+    this.init();
   }
 
   public setCart(cartItems: CartItem[]): void {
@@ -158,6 +144,7 @@ export class FirebaseService {
 
       localStorage.setItem('cart', JSON.stringify(tempCart));
       this._cart.next(tempCart);
+      console.log('guest add to cart');
 
     }
     if (showToast) {
@@ -288,6 +275,7 @@ export class FirebaseService {
             this._dbcart.$ref.off();
           }
           this._cart.next([]);
+          this.dbcart = [];
 
           localStorage.setItem('cart', '');
 
@@ -345,7 +333,7 @@ export class FirebaseService {
     });
   }
 
-  private init(): void {
+  private setup() {
     this.loggedInSubscription = this.af.authState.subscribe(user => {
 
       this._user.next(user);
@@ -360,7 +348,8 @@ export class FirebaseService {
 
           //check localstorage for cartitems then assign them to cartItems
           let cart = localStorage.getItem('cart');
-          if (cart) {
+          console.log('localstore', cart);
+          if (cart.length) {
             this._cart.next(JSON.parse(cart));
           }
         }
@@ -392,7 +381,9 @@ export class FirebaseService {
         this._dbcart = this.db.list('users/' + user.uid + "/cartItems/");
 
         //localcart to overwrite stored cart
+
         let localCart = this._cart.getValue();
+        console.log('guest to login cart', localCart);
         if (localCart.length) {
           this.setCart(localCart);
           this._cart.next(localCart);
@@ -411,10 +402,41 @@ export class FirebaseService {
             };
             cart.push(cartItem)
           }
-          this._cart.next(cart);
+
+          if (cart.length) {
+            console.log('from db cart', cart);
+            this._cart.next(cart);
+          }
         });
       }
+
+      this.isInit = true;
+
     });
+  }
+
+  private init(): void {
+    let products = sessionStorage.getItem('products');
+
+
+    if (products) {
+      this.products = JSON.parse(products);
+      this.setup();
+    } else {
+      this.productsSubscription = this.db.list('products/')
+        .subscribe((products: Product[]) => {
+          this.products = products;
+          sessionStorage.setItem('products', JSON.stringify(this.products));
+          if (this.isInit == false) {
+            this.setup();
+          }
+        }, (error) => {
+          alert('FATAL ERROR: if you see Landon tell him.');
+          console.log(error);
+        });
+    }
+
+
   }
 
   public firebaseEmailLogin(email: string, password: string): Promise<string> {
