@@ -106,10 +106,10 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         token: (token: any, args: any) => {
           // You can access the token ID with `token.id`.
           // Get the token ID to your server-side code for use.
-          this.firebaseService.saveStripeToDb(token, args).then((success) => {
-            console.log("finished request");
+          this.firebaseService.saveStripeToDb(token, args, this.cart).then((success) => {
+            this.toastService.toast("Order Completed. Check your email.")
           }, (error) => {
-            console.log(error);
+            alert("Your order could not be processed, please contact our sales team.");
           });
         }
       });

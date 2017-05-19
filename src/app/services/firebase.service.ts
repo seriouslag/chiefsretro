@@ -17,6 +17,7 @@ import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
 import {StripeArgs} from "../interfaces/stripe-args";
 import {StripeToken} from "../interfaces/stripe-token";
+import {Order} from "../interfaces/order";
 
 @Injectable()
 export class FirebaseService {
@@ -76,6 +77,32 @@ export class FirebaseService {
       }
 
     }
+  }
+
+  public cartToDbCart(cart: CartItem[]): DbCartItem[] {
+    let dbCart: DbCartItem[] = [];
+    for (let cartItem of cart) {
+      dbCart.push(<DbCartItem>{
+        productId: cartItem.product.productId,
+        productOptionId: cartItem.productOption.productOptionId,
+        quantity: cartItem.quantity,
+        dateAdded: cartItem.dateAdded
+      });
+    }
+    return dbCart;
+  }
+
+  public dbCartToCart(dbCart: DbCartItem[]): CartItem[] {
+    let cart: CartItem[] = [];
+    for (let dbCartItem of dbCart) {
+      cart.push(<CartItem>{
+        product: this.getProductByProductId(dbCartItem.productId),
+        productOption: this.getProductOptionByProductOptionId(dbCartItem.productOptionId),
+        quantity: dbCartItem.quantity,
+        dateAdded: dbCartItem.dateAdded
+      });
+    }
+    return cart;
   }
 
   getDBProductByProductId(id: number): FirebaseObjectObservable<Product> {
@@ -449,11 +476,29 @@ export class FirebaseService {
     return promise;
   }
 
-  public saveStripeToDb(token, args): firebase.Promise<void> {
-    return this.db.object('orders/' + this._user.getValue().uid + '/' + Date.now()).set({
-      token: token as StripeToken,
-      args: args as StripeArgs
-    });
+  //Call when receive tokens back from stripe
+  public saveStripeToDb(token, args, cart: CartItem[]): firebase.Promise<void> {
+    let date = Date.now();
+    let dbCart: DbCartItem[] = this.cartToDbCart(cart);
+
+    if (this._user.getValue()) {
+      return this.db.object('orders/' + this._user.getValue().uid + '/' + date).set(<Order>{
+        date: date,
+        cart: dbCart,
+        token: token as StripeToken,
+        args: args as StripeArgs,
+        status: 'processing'
+      });
+    } else {
+      return this.db.list('orders/guests/').push(<Order>{
+        email: token.email,
+        date: date,
+        cart: dbCart,
+        token: token as StripeToken,
+        args: args as StripeArgs,
+        status: 'processing'
+      });
+    }
 
   }
 
