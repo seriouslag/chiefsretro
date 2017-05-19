@@ -1,4 +1,4 @@
-<div fxFlexFill fxLayout="column">
+<div fxFlexFill fxLayout="column" class="safariFix">
   <div fxFlexFill fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
     <div fxLayout="column" fxLayoutGap="10px">
       <div fxLayout="row" fxLayoutAlign="start center">
@@ -23,7 +23,7 @@
         <div fxFlexFill fxLayout="column">
 
           <div fxLayout="row" fxLayout="start center" class="cartItem">
-            <div fxLayout="column" fxLayoutAlign="center center">
+            <div fxLayout="column" fxLayoutAlign="center start">
               <div>
                 {{cartItem.productOption?.productColor + " " +cartItem.product?.productName}}
               </div>
@@ -66,7 +66,7 @@
     <div fxFlex.gt-sm="300px" fxFlex="none" fxLayout="row" fxLayoutAlign="none center">
       <md-card fxLayout="column" fxFlexFill fxLayoutGap="10px">
         <div>To test this please use fake/random information.<br>For card information please enter <span
-          style="white-space: nowrap">4242 4242 4242 4242</span> with a valid EXP date
+          style="white-space: nowrap">4242 4242 4242 4242</span> with a valid EXP date (01/2020)
         </div>
         <div>{{["Total: " + getNumAsCurrency(getCartTotal())]}}</div>
         <div>

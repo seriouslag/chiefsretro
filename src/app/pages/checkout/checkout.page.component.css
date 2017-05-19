@@ -7,3 +7,14 @@
   min-height: 20px;
   padding: 3px;
 }
+
+/*
+fix for safari
+ */
+.safariFix {
+  display: inherit !important;
+}
+
+md-card {
+  display: block !important;
+}
