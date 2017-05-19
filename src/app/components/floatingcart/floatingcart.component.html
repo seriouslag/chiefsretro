@@ -26,8 +26,7 @@
             <app-thumb-image [product]="cartItem.product" [rounded]="true"></app-thumb-image>
             <div fxFlex="10px"></div>
             <div fxLayout="row" fxLayoutWrap fxLayoutGap="3px" fxLayoutAlign="center center">
-              <div>{{cartItem.productOption.productColor}}</div>
-              <div>{{cartItem.product.productName}}</div>
+              <div>{{cartItem.productOption.productColor + " " + cartItem.product.productName}}</div>
             </div>
             <div fxFlex="10px"></div>
             <div>x{{cartItem.quantity}} @</div>

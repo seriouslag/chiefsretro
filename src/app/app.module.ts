@@ -73,6 +73,8 @@ import {firebase} from "./app.firebase";
 import {AngularFireAuth} from "angularfire2/auth";
 import {AngularFireDatabaseModule} from "angularfire2/database";
 import {FirebaseService} from "./services/firebase.service";
+import {CarouselModule} from "angular4-carousel";
+import {CarouselComponent} from "./components/images/carousel/carousel.component";
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any> {
@@ -105,6 +107,8 @@ export class HammerConfig extends HammerGestureConfig {
     ToolbarComponent,
     CheckoutPageComponent,
     NavbarComponent,
+    CarouselComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -122,6 +126,7 @@ export class HammerConfig extends HammerGestureConfig {
     AngularFireDatabaseModule,
     firebase,
     ReactiveFormsModule,
+    CarouselModule
   ],
   exports: [FormsModule, ReactiveFormsModule],
   providers: [ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {

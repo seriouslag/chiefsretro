@@ -148,3 +148,12 @@ body {
   border: 0;
 }
 
+/*
+THIS IS A FIX FOR CHROME ON ANDROID
+NEEDS TO BE TESTED ELSEWHERE
+ */
+.cdk-overlay-container {
+  bottom: 0 !important;
+  top: auto !important;
+}
+

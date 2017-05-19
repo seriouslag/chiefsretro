@@ -22,9 +22,6 @@ md-sidenav {
   z-index: 20;
 }
 
-.mat-sidenav-container {
-}
-
 .scrollbar-container {
   border: 0;
 }
@@ -72,3 +69,4 @@ md-sidenav {
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
 }
+

@@ -42,6 +42,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 
     this.userSubscription = this.firebaseService.user.subscribe(user => {
       this.user = user;
+      this.warn = false;
     });
 
     (<any>window).addEventListener('popstate', () => {
@@ -81,10 +82,17 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   }
 
   public openStripe(): void {
-    if (this.cart != null && this.handler == null) {
+    if (this.cart != null) {
       /*
       THIS CANNOT BE IN A SUBSCRIPTION IT KILLS IT
        */
+      let email;
+      if (this.user) {
+        email = this.user.email;
+      } else {
+        email = null;
+      }
+
       this.handler = (<any>window).StripeCheckout.configure({
         key: 'pk_test_4g2s1MP63IBbdSZjlMpfKhq5',
         image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
@@ -93,7 +101,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         billingAddress: true,
         currency: 'USD',
         allowRememberMe: true,
-        email: this.user.email,
+        email: email,
 
         token: (token: any, args: any) => {
           // You can access the token ID with `token.id`.

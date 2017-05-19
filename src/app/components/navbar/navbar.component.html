@@ -37,9 +37,8 @@
   </a>
 </nav>
 
-<md-menu #accountMenu="mdMenu">
+
+<md-menu #accountMenu="mdMenu" xPosition="after" yPosition="above">
   <button md-menu-item> Account</button>
-  <button md-menu-item (click)="changeLoginStatus()">
-    {{loginStatusText}}
-  </button>
+  <button md-menu-item (click)="changeLoginStatus()">{{loginStatusText}}</button>
 </md-menu>

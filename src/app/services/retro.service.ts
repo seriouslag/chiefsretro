@@ -42,8 +42,16 @@ export class RetroService {
   }
 
   public toggleCart(): void {
-    this._showCart.next(!this._showCart.getValue());
-    sessionStorage.setItem('showCart', this._showCart.getValue().toString());
+    if (location.pathname == '/checkout') {
+      this.openCart(false);
+    } else {
+      this._showCart.next(!this._showCart.getValue());
+      if (this._showCart.getValue()) {
+        sessionStorage.setItem('showCart', 'true');
+      } else {
+        sessionStorage.setItem('showCart', 'false');
+      }
+    }
   }
 
   public toggleDesktopNavbar(): void {
@@ -52,6 +60,9 @@ export class RetroService {
   }
 
   public openCart(show: boolean): void {
+    if (location.pathname == '/checkout') {
+      show = false;
+    }
     this._showCart.next(show);
     if (show) {
       sessionStorage.setItem('showCart', 'true');

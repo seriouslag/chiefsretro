@@ -66,7 +66,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       if (propName == "product") {
         this.selectedProductOption = this.product.productOptions[0];
         this.imgIndex = 0;
-        this.imagePreload();
+        //this.imagePreload();
       }
     }
   }
@@ -128,35 +128,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.firebaseService.removeProductFromCart(product, productOption, quantity);
   }
 
-  nextImage(): void {
-    if (this.imgIndex < (this.selectedProductOption.productOptionImages.length - 1)) {
-      this.imgIndex++;
-    } else {
-      this.imgIndex = 0;
-    }
-  }
 
-  previousImage(): void {
-    if (this.imgIndex > 0) {
-      this.imgIndex--;
-    } else {
-      this.imgIndex = this.selectedProductOption.productOptionImages.length - 1;
-    }
-  }
 
-  swipe(event: any) {
-    if (event.type == 'swiperight') {
-      this.previousImage();
-    } else if (event.type == 'swipeleft') {
-      this.nextImage();
-    } else {
 
-    }
-  }
-
-  changeImage(index: number): void {
-    this.imgIndex = index;
-  }
 
   showToast(message: string): void {
     this.toastService.toast(message, 'OK', 1000);
