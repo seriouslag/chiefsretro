@@ -10,7 +10,7 @@
             Card
           </button>
         </div>
-        <div fxFlex fxLayoutAlign="end center">
+        <div fxFlex fxLayoutAlign="end center" style="text-align: end">
           <div>{{["Total: " + getNumAsCurrency(getCartTotal())]}}</div>
         </div>
       </div>
@@ -21,38 +21,40 @@
 
       <md-card *ngFor="let cartItem of cart; let i = index" fxLayout="column" fxLayoutAlign="space-around center">
         <div fxFlexFill fxLayout="column">
-          <md-card-subtitle>
-            {{cartItem.productOption?.productColor + " " +cartItem.product?.productName}}
-          </md-card-subtitle>
-          <div fxLayout="row">
-            <app-thumb-image *ngIf="cartItem.product" [product]="cartItem.product" [size]="size"
-                             [rounded]="true"></app-thumb-image>
-            <div fxFlex="20px"></div>
-            <div fxLayout="column" fxLayoutGap="5px">
-              <div fxLayout="row" fxLayoutAlign="center center">
-                <div></div>
-              </div>
 
+          <div fxLayout="row" fxLayout="start center" class="cartItem">
+            <div fxLayout="column" fxLayoutAlign="center center">
+              <div>
+                {{cartItem.productOption?.productColor + " " +cartItem.product?.productName}}
+              </div>
+              <app-thumb-image *ngIf="cartItem.product" [product]="cartItem.product" [size]="size"
+                               [rounded]="true"></app-thumb-image>
+            </div>
+
+            <div fxFlex></div>
+            <div fxLayout="column" fxLayoutGap="15px" fxLayout.gt-sm="center space-between">
               <div fxLayout="row" fxLayoutAlign="center center">
                 <div> {{"Price: " + getNumAsCurrency(cartItem.productOption.productPrice)}}</div>
               </div>
+
+
+              <div fxLayout="row" fxLayoutAlign="center center" fxFlex.gt-sm="300px">
+                <button md-button (click)="removeFromCart(i)" class="small_button">
+                  <md-icon>remove</md-icon>
+                </button>
+                <md-input-container fxFlex="50px">
+                  <input mdInput maxlength="2" placeholder="Quantity"
+                         (input)="changeCartItemQuantity(i, $event.srcElement)" value="{{cartItem.quantity}}">
+                </md-input-container>
+                <button md-button (click)="addToCart(i)" class="small_button">
+                  <md-icon>add</md-icon>
+                </button>
+              </div>
             </div>
-            <div fxLayout="row" fxLayoutAlign="center center" fxFlex.gt-sm="300px">
-              <button md-button (click)="removeFromCart(i)" class="small_button">
-                <md-icon>remove</md-icon>
-              </button>
-              <md-input-container fxFlex="50px">
-                <input mdInput maxlength="2" placeholder="Quantity"
-                       (input)="changeCartItemQuantity(i, $event.srcElement)" value="{{cartItem.quantity}}">
-              </md-input-container>
-              <button md-button (click)="addToCart(i)" class="small_button">
-                <md-icon>add</md-icon>
-              </button>
-              <div fxFlex></div>
-              <div fxLayout.lt-md="column" fxLayout.gt-sm="row" fxLayoutAlign="center center" fxLayoutGap="3px">
-                <div>{{["Total: " + getNumAsCurrency(getItemTotal(cartItem.productOption.productPrice,
-                  cartItem.quantity))]}}
-                </div>
+            <div fxFlex></div>
+            <div fxLayout.lt-md="column" fxLayout.gt-sm="row" fxLayoutAlign="center center" fxLayoutGap="3px">
+              <div>{{["Total: " + getNumAsCurrency(getItemTotal(cartItem.productOption.productPrice,
+                cartItem.quantity))]}}
               </div>
             </div>
           </div>
@@ -72,7 +74,5 @@
         </div>
       </md-card>
     </div>
-
-
   </div>
 </div>

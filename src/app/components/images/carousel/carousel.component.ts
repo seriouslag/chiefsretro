@@ -21,12 +21,15 @@ export class CarouselComponent implements OnInit, OnChanges {
   @Input()
   selectedProductOption: ProductOption;
 
+  @Input()
+  animation: boolean;
+
   imageSources: string[];
 
   public config: ICarouselConfig = {
     verifyBeforeLoad: true,
     log: false,
-    animation: true,
+    animation: this.animation,
     animationType: AnimationConfig.SLIDE_OVERLAP,
     autoplay: true,
     autoplayDelay: 3000,

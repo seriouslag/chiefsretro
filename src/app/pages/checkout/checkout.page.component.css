@@ -2,3 +2,8 @@
 .small_button {
   min-width: 1%;
 }
+
+.cartItem div {
+  min-height: 20px;
+  padding: 3px;
+}

@@ -155,5 +155,16 @@ NEEDS TO BE TESTED ELSEWHERE
 .cdk-overlay-container {
   bottom: 0 !important;
   top: auto !important;
+  height: 100% !important;
 }
+
+.cdk-global-overlay-wrapper {
+  bottom: 0 !important;
+  top: auto !important;
+  height: 100% !important;
+}
+
+/*
+END FIX
+ */
 
