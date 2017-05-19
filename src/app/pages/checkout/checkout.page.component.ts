@@ -45,7 +45,6 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     });
 
     (<any>window).addEventListener('popstate', () => {
-      console.log('here');
       if (this.handler) {
         this.handler.close();
       }
@@ -55,16 +54,13 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       this.checkMobile()
     });
 
-    console.log('set up sub');
-
-
     this.cartSubscription = this.firebaseService.cart.subscribe((cart) => {
 
       if (this.warn && this.loginStatus) {
         this.toastService.toast('Your cart has been changed from another browser or device.');
         this.warn = true;
       }
-      console.log('cart', cart);
+
       this.cart = cart;
       this.oldCart = [];
       for (let cartItem of cart) {
@@ -79,7 +75,6 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       if (this.cart.length && this.loginStatus) {
         this.warn = true;
       }
-
     });
 
     this.retroService.openCart(false);
@@ -87,7 +82,6 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 
   public openStripe(): void {
     if (this.cart != null && this.handler == null) {
-      console.log('here');
       /*
       THIS CANNOT BE IN A SUBSCRIPTION IT KILLS IT
        */
@@ -104,7 +98,11 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         token: (token: any, args: any) => {
           // You can access the token ID with `token.id`.
           // Get the token ID to your server-side code for use.
-          console.log(token, args);
+          this.firebaseService.saveStripeToDb(token, args).then((success) => {
+            console.log("finished request");
+          }, (error) => {
+            console.log(error);
+          });
         }
       });
     }
@@ -113,7 +111,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         this.handler.open({
           name: 'Chiefs Retro',
           description: 'Test Description',
-          amount: 999,
+          amount: Math.floor(this.getCartTotal() * 100),
           zipCode: true,
         });
       } else {
@@ -172,6 +170,25 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     });
   }
 
+  getCartTotal(): number {
+    let total: number = 0;
+    for (let cartItem of this.cart) {
+      total += (cartItem.productOption.productPrice * 100 * cartItem.quantity) / 100;
+    }
+    return total;
+  }
+
+  getNumAsCurrency(num: number): string {
+    return num.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
+  }
+
+  getItemTotal(itemPrice: number, itemQuantity: number): number {
+    return (itemPrice * 100 * itemQuantity) / 100;
+  }
+
   addToCart(index: number): void {
     this.cart[index].quantity++;
   }
@@ -183,13 +200,22 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  changeCartItemQuantity(cartItemIndex: number, quantity: any) {
+  changeCartItemQuantity(cartItemIndex: number, htmlDomObject: any) {
+    htmlDomObject.value = htmlDomObject.value.trim().replace(/[^0-9]/g, "");
+
+    let numMatch = /^[0-9]{1,3}$/;
     //if(quantity passes as valid number)
-    this.cart[cartItemIndex].quantity = parseInt(quantity);
+    if (!htmlDomObject.value.trim()) {
+      htmlDomObject.value = "0";
+    }
+    if (htmlDomObject.value.match(numMatch)) {
+      this.cart[cartItemIndex].quantity = parseInt(htmlDomObject.value);
+    } else {
+    }
   }
 
   private checkMobile() {
-    if (this.media.isActive('xs')) {
+    if (this.media.isActive('xs') || this.media.isActive('sm')) {
       this.size = 1;
     } else {
       this.size = 2;
@@ -217,5 +243,4 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     }
     return check;
   }
-
 }

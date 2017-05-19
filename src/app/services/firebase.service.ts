@@ -15,6 +15,8 @@ import {Product} from "../interfaces/product";
 import {ProductOption} from "../interfaces/product-option";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
+import {StripeArgs} from "../interfaces/stripe-args";
+import {StripeToken} from "../interfaces/stripe-token";
 
 @Injectable()
 export class FirebaseService {
@@ -37,7 +39,25 @@ export class FirebaseService {
   public products: Product[];
 
   constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone) {
-    this.init();
+    let products = sessionStorage.getItem('products');
+
+
+    if (products) {
+      this.products = JSON.parse(products);
+      this.init();
+    } else {
+      this.productsSubscription = this.db.list('products/')
+        .subscribe((products: Product[]) => {
+          this.products = products;
+          sessionStorage.setItem('products', JSON.stringify(this.products));
+          if (this.isInit == false) {
+            this.init();
+          }
+        }, (error) => {
+          alert('FATAL ERROR: if you see Landon tell him.');
+          console.log(error);
+        });
+    }
   }
 
   public setCart(cartItems: CartItem[]): void {
@@ -320,6 +340,9 @@ export class FirebaseService {
       let email = error.email;
       // The firebase.auth.AuthCredential type that was used.
       let credential = error.credential;
+
+      this.toastService.toast(errorMessage);
+
       // [START_EXCLUDE]
       if (errorCode === 'auth/account-exists-with-different-credential') {
         alert('You have already signed up with a different auth provider for that email.');
@@ -333,9 +356,8 @@ export class FirebaseService {
     });
   }
 
-  private setup() {
+  private init(): void {
     this.loggedInSubscription = this.af.authState.subscribe(user => {
-
       this._user.next(user);
 
       if (user == null) {
@@ -349,8 +371,10 @@ export class FirebaseService {
           //check localstorage for cartitems then assign them to cartItems
           let cart = localStorage.getItem('cart');
           console.log('localstore', cart);
-          if (cart.length) {
-            this._cart.next(JSON.parse(cart));
+          if (cart) {
+            if (cart.length) {
+              this._cart.next(JSON.parse(cart));
+            }
           }
         }
         this._signedIn.next(false);
@@ -409,33 +433,27 @@ export class FirebaseService {
           }
         });
       }
-
       this.isInit = true;
-
     });
   }
 
-  private init(): void {
-    let products = sessionStorage.getItem('products');
-
-
-    if (products) {
-      this.products = JSON.parse(products);
-      this.setup();
+  public saveToDb(path: string, data: any): Promise<any> {
+    let promise;
+    if (path != null && data != null) {
+      promise = this.db.object(path).set(data).then(
+        promise.resolve(true)
+      );
     } else {
-      this.productsSubscription = this.db.list('products/')
-        .subscribe((products: Product[]) => {
-          this.products = products;
-          sessionStorage.setItem('products', JSON.stringify(this.products));
-          if (this.isInit == false) {
-            this.setup();
-          }
-        }, (error) => {
-          alert('FATAL ERROR: if you see Landon tell him.');
-          console.log(error);
-        });
+      promise.resolve(false);
     }
+    return promise;
+  }
 
+  public saveStripeToDb(token, args): firebase.Promise<void> {
+    return this.db.object('orders/' + this._user.getValue().uid + '/' + Date.now()).set({
+      token: token as StripeToken,
+      args: args as StripeArgs
+    });
 
   }
 

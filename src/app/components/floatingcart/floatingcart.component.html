@@ -2,7 +2,7 @@
   <md-card-subtitle fxLayout="row" fxLayoutAlign="center center">
     <div fxFlex="nogrow">Cart:</div>
     <span fxFlex></span>
-    <button md-button routerLink="/checkout" class="small_button">Checkout</button>
+    <button md-raised-button color="accent" routerLink="/checkout" class="small_button">Checkout</button>
     <span fxFlex></span>
     <button md-button fxFlex="nogrow" (click)="toggleCart()" class="small_button">
       <md-icon>close</md-icon>
@@ -32,7 +32,7 @@
             <div fxFlex="10px"></div>
             <div>x{{cartItem.quantity}} @</div>
             <div fxFlex="10px"></div>
-            <div>${{cartItem.productOption.productPrice}}</div>
+            <div>{{getNumAsCurrency(cartItem.productOption.productPrice)}}</div>
           </div>
         </button>
 

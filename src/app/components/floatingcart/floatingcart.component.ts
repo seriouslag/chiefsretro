@@ -57,6 +57,13 @@ export class FloatingcartComponent implements OnInit, OnDestroy {
     this.cartSubscription.unsubscribe();
   }
 
+  getNumAsCurrency(num: number): string {
+    return num.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    });
+  }
+
   toggleCart(): void {
     this.retroService.toggleCart();
   }
