@@ -1,15 +1,27 @@
 <div fxLayout="row"
      fxLayoutAlign="space-around center">
 
-  <div *ngIf="product" fxFlex.lt-md="100%" fxFlex.gt-sm="75%" class="productCardContainer">
+  <div *ngIf="product" fxFlex.lt-md="100%" fxFlex.gt-sm="100%" class="productCardContainer">
     <md-card>
       <md-card-title>{{product.productName}}</md-card-title>
       <md-card-content>
 
+        <div class="center" (swipeleft)="swipe($event)" (swiperight)="swipe($event)">
+          <app-product-images [imageIndex]="imgSrc" [product]="product" (click)="nextImage()" [@heroState]="state"
+                              (@heroState.done)="animationDone($event)"
+                              [selectedProductOptionNumber]="selectedProductOptionNumber"></app-product-images>
+        </div>
 
-        <app-carousel [product]="product" [selectedProductOption]="selectedProductOption"
-                      [selectedProductOptionNumber]="selectedProductOptionNumber" [imgIndex]="imgIndex"
-                      [animation]="false"></app-carousel>
+        <div *ngIf="product.productOptions.length>0 && selectedProductOption.productOptionImages.length"
+             class="imageButtons" fxLayout="row" fxLayoutAlign="center center">
+          <md-radio-group [ngModel]="imgIndex" (change)="changeImage($event.value, true)">
+            <md-radio-button
+              *ngFor="let productOptionImage of selectedProductOption.productOptionImages; let i = index;"
+              [value]="i"></md-radio-button>
+          </md-radio-group>
+
+        </div>
+
       </md-card-content>
     </md-card>
 

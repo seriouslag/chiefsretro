@@ -1,21 +1,22 @@
 <div fxFlexFill fxLayout="column" class="safariFix">
   <div fxFlexFill fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
     <div fxLayout="column" fxLayoutGap="10px">
-      <div fxLayout="row" fxLayoutAlign="start center">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutWrap="">
         <div fxFlex fxLayoutAlign="start center">
-          <div>Cart:</div>
+          <h3 class="cartTag">Cart:</h3>
         </div>
         <div fxFlex fxLayoutAlign="center center">
-          <button md-raised-button color="accent" (click)="openStripe()" fxHide fxShow.lt-md="true">*TEST* Pay With
+          <button md-raised-button color="accent" *ngIf="cart?.length" (click)="openStripe()" fxHide
+                  fxShow.lt-md="true">*TEST* Pay With
             Card
           </button>
         </div>
         <div fxFlex fxLayoutAlign="end center" style="text-align: end">
-          <div>{{["Total: " + getNumAsCurrency(getCartTotal())]}}</div>
+          <h3>{{["Total: " + getNumAsCurrency(getCartTotal())]}}</h3>
         </div>
       </div>
 
-      <div *ngIf="!cart?.length" fxFlex>
+      <div *ngIf="!cart?.length" fxFlex fxLayoutAlign="center center">
         Your cart is empty.
       </div>
 
@@ -62,15 +63,17 @@
       </md-card>
     </div>
 
-    <div fxFlex fxFlex.lt-md="30px"></div>
-    <div fxFlex.gt-sm="300px" fxFlex="none" fxLayout="row" fxLayoutAlign="none center">
+    <div fxFlex fxFlex.lt-md="15px" *ngIf="cart?.length"></div>
+    <div fxFlex.gt-sm="300px" fxFlex="none" fxLayout="row" fxLayoutAlign="none center" *ngIf="cart?.length">
       <md-card fxLayout="column" fxFlexFill fxLayoutGap="10px">
         <div>To test this please use fake/random information.<br>For card information please enter <span
           style="white-space: nowrap">4242 4242 4242 4242</span> with a valid EXP date (01/2020)
         </div>
-        <div>{{["Total: " + getNumAsCurrency(getCartTotal())]}}</div>
-        <div>
-          <button md-raised-button color="accent" (click)="openStripe()">*TEST* Pay With Card</button>
+        <h3>{{["Total: " + getNumAsCurrency(getCartTotal())]}}</h3>
+        <div fxLayout="row" fxLayoutAlign="center end">
+          <div>
+            <button md-raised-button color="accent" (click)="openStripe()">*TEST* Pay With Card</button>
+          </div>
         </div>
       </md-card>
     </div>

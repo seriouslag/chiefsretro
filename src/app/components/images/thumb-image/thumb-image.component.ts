@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
 import {Product} from "../../../interfaces/product";
 
 @Component({
@@ -6,12 +6,12 @@ import {Product} from "../../../interfaces/product";
   templateUrl: './thumb-image.component.html',
   styleUrls: ['./thumb-image.component.css']
 })
-export class ThumbImageComponent implements OnInit {
+export class ThumbImageComponent implements OnInit, OnChanges {
 
   @Input()
   product: Product;
 
-  imageSrc: string;
+  imageSrc: string = "";
 
   @Input()
   rounded: boolean;
@@ -22,7 +22,20 @@ export class ThumbImageComponent implements OnInit {
   constructor() {
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    //when the product changes set the selected productOption to default;
+    for (let propName in changes) {
+      if (propName == "product") {
+        this.setup();
+      }
+    }
+  }
+
   ngOnInit() {
+
+  }
+
+  setup() {
     for (let productOption of this.product.productOptions) {
       if (productOption.productOptionImages) {
         for (let productOptionImage of productOption.productOptionImages) {
@@ -36,7 +49,7 @@ export class ThumbImageComponent implements OnInit {
           } else {
             if (productOptionImage.productOptionImageOrder) {
               if (!this.imageSrc) {
-                this.imageSrc = "src/assets/sku" + this.product.productId + "/" + productOptionImage.productOptionImageOrder + ".jpg";
+                this.imageSrc = "/assets/sku" + this.product.productId + "/" + productOptionImage.productOptionImageOrder + ".jpg";
                 break;
               } else {
                 break;
@@ -49,7 +62,7 @@ export class ThumbImageComponent implements OnInit {
   }
 
   imageError() {
-    this.imageSrc = "src/assets/imageError.jpg";
+    this.imageSrc = "/assets/imageError.jpg";
     //do a log
   }
 

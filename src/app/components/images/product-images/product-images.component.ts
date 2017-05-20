@@ -33,7 +33,7 @@ export class ProductImagesComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.setup();
+    //this.setup();
   }
 
   setup(): void {
@@ -46,7 +46,7 @@ export class ProductImagesComponent implements OnInit, OnChanges {
         }
       } else {
         this.imagesUrl[0] = [] as string[];
-        this.imagesUrl[0].push("src/assets/imageError.jpg");
+        this.imagesUrl[0].push("/assets/imageError.jpg");
         this.imageIndex = 0;
         this.selectedProductOptionNumber = 0;
       }
@@ -54,7 +54,7 @@ export class ProductImagesComponent implements OnInit, OnChanges {
   }
 
   imageError(selectedProductOptionNumber: number, imageIndex: number): void {
-    this.imagesUrl[selectedProductOptionNumber][imageIndex] = "src/assets/imageError.jpg";
+    this.imagesUrl[selectedProductOptionNumber][imageIndex] = "/assets/imageError.jpg";
   }
 
   setupImages(productOption: ProductOption, productOptionNumber: number): void {
@@ -66,12 +66,12 @@ export class ProductImagesComponent implements OnInit, OnChanges {
         if (productOptionImages.productOptionImageLocation) {
           this.imagesUrl[productOptionNumber].push(productOptionImages.productOptionImageLocation);
         } else {
-          this.imagesUrl[productOptionNumber].push('/src/assets/sku' + this.product.productId + '/' + productOptionImages.productOptionImageOrder + '.jpg');
+          this.imagesUrl[productOptionNumber].push('/assets/sku' + this.product.productId + '/' + productOptionImages.productOptionImageOrder + '.jpg');
         }
       }
     } else {
       this.imagesUrl[productOptionNumber] = [] as string[];
-      this.imagesUrl[productOptionNumber].push("src/assets/imageError.jpg");
+      this.imagesUrl[productOptionNumber].push("/assets/imageError.jpg");
       this.imageIndex = 0;
       this.selectedProductOptionNumber = 0;
     }

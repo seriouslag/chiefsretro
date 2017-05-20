@@ -5,7 +5,7 @@ import {MdTabChangeEvent} from "@angular/material";
 import {ToastService} from "../../../services/toast.service";
 import {AnalyticsService} from "../../../services/analytics.service";
 import {Subscription} from "rxjs/Subscription";
-import {animate, group, style, transition, trigger} from "@angular/animations";
+import {animate, group, state, style, transition, trigger} from "@angular/animations";
 import {FirebaseService} from "../../../services/firebase.service";
 import {CartItem} from "../../../interfaces/cart-item";
 
@@ -32,6 +32,17 @@ import {CartItem} from "../../../interfaces/cart-item";
         ])
       ])
     ]),
+    trigger('heroState', [
+      state('inactive', style({
+        opacity: ' .25',
+        backgroundColor: 'black'
+      })),
+      state('active', style({
+        opacity: ' 1',
+      })),
+      transition('inactive => active', animate('0.5s 0.2s ease')),
+      transition('active => inactive', animate('125ms ease-out'))
+    ])
   ]
 })
 
@@ -41,6 +52,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   product: Product;
 
   imgIndex: number = 0;
+  imgSrc: number = 0;
   selectedProductOptionNumber: number = 0;
   selectedProductOption: ProductOption;
 
@@ -50,6 +62,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   private cartSubscription: Subscription;
   cartContainsSelectedProductOption: boolean = false;
 
+  state: string = "active";
+  isAnimating: boolean = true;
+
   constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private firebaseService: FirebaseService) {
   }
 
@@ -58,6 +73,12 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
       this.cart = cart;
       this.evalCart();
     });
+  }
+
+  startAnimation() {
+    if (!this.isAnimating) {
+      this.state = "inactive";
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -88,6 +109,16 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   addToCart(product: Product, productOption: ProductOption, quantity: number) {
     this.firebaseService.addProductToCart(product, productOption, quantity, Date.now());
+  }
+
+  animationDone(event: any) {
+
+    if (event.fromState == "active") {
+      this.imgSrc = this.imgIndex;
+      this.state = "active";
+    } else {
+      this.isAnimating = false
+    }
   }
 
   private evalCart(): void {
@@ -128,11 +159,47 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
     this.firebaseService.removeProductFromCart(product, productOption, quantity);
   }
 
-
-
-
-
   showToast(message: string): void {
     this.toastService.toast(message, 'OK', 1000);
   }
+
+
+  nextImage(): void {
+    if (this.imgIndex < (this.selectedProductOption.productOptionImages.length - 1)) {
+      this.imgIndex++;
+    } else {
+      this.imgIndex = 0;
+    }
+    this.startAnimation();
+  }
+
+  previousImage(): void {
+    if (this.imgIndex > 0) {
+      this.imgIndex--;
+    } else {
+      this.imgIndex = this.selectedProductOption.productOptionImages.length - 1;
+    }
+    this.startAnimation();
+  }
+
+  swipe(event: any) {
+    if (event.type == 'swiperight') {
+      this.previousImage();
+    } else if (event.type == 'swipeleft') {
+      this.nextImage();
+    } else {
+
+    }
+    this.startAnimation();
+  }
+
+  changeImage(index: number): void {
+    this.imgIndex = index;
+    this.startAnimation();
+  }
+
+
+
+
+
 }
