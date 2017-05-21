@@ -65,6 +65,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   state: string = "active";
   isAnimating: boolean = true;
 
+
   constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private firebaseService: FirebaseService) {
   }
 
@@ -76,8 +77,10 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   startAnimation() {
-    if (!this.isAnimating) {
-      this.state = "inactive";
+    if (this.selectedProductOption.productOptionImages.length > 1) {
+      if (!this.isAnimating) {
+        this.state = "inactive";
+      }
     }
   }
 
