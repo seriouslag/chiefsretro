@@ -6,7 +6,6 @@ import {Order} from "../../interfaces/order";
 import {User} from "firebase/app";
 import {CartItem} from "../../interfaces/cart-item";
 import {DbCartItem} from "../../interfaces/db-cart-item";
-import {isUndefined} from "util";
 
 @Component({
   selector: 'app-status-page',
@@ -15,15 +14,14 @@ import {isUndefined} from "util";
 })
 export class StatusPageComponent implements OnInit, OnDestroy {
 
-
   failed: boolean = false;
   waiting: boolean = true;
   user: User;
   cart: CartItem[] = [];
+  order: Order;
   private paramSubscription: Subscription;
   private orderSubscription: Subscription;
   private userSubscription: Subscription;
-  private order: Order;
   private params;
 
   constructor(private activatedRoute: ActivatedRoute, private firebaseService: FirebaseService) {
@@ -34,21 +32,13 @@ export class StatusPageComponent implements OnInit, OnDestroy {
       .subscribe(params => {
         this.params = params;
         console.log('params', params);
-        if (this.user) {
-          this.getOrder(params['orderId']),
-            (error) => {
-              console.log('something broke', error);
-            }
-        }
+        this.getOrder(params['orderId'])
       });
 
     this.userSubscription = this.firebaseService.user.subscribe(user => {
       this.user = user;
-      if (user && this.params) {
+      if (this.params) {
         this.getOrder(this.params['orderId']);
-      } else {
-        this.cart = [];
-        this.order = null;
       }
     });
   }
@@ -82,11 +72,27 @@ export class StatusPageComponent implements OnInit, OnDestroy {
   }
 
   getOrder(orderId: string): void {
-    this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, !isUndefined(this.user))
+    console.log();
+    this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, false)
       .subscribe(result => {
-          this.order = result;
-          this.cart = this.populateCart(this.order.cart);
-          this.failed = false;
+          console.log('result', result);
+          if (result.email != null) {
+            this.order = result;
+            this.cart = this.populateCart(this.order.cart);
+            this.failed = false;
+          } else {
+            this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, true).subscribe(result => {
+              console.log('checking result user ', result);
+              if (result.email != null) {
+                this.order = result;
+                this.cart = this.populateCart(this.order.cart);
+                this.failed = false;
+              } else {
+                this.failed = true;
+                console.log('failed to get order of: ' + orderId);
+              }
+            });
+          }
         },
         (error) => {
           this.failed = true;

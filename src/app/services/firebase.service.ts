@@ -525,11 +525,13 @@ export class FirebaseService {
 
     let path = "";
     if (userOrder && this.user) {
-      path = 'orders/' + this._user.getValue().uid + '/' + orderId
-    } else {
-      path = 'orders/' + orderId
-    }
 
+      path = 'orders/' + this._user.getValue().uid + '/' + orderId;
+      console.log(path);
+    } else {
+      console.log('');
+      path = 'orders/' + orderId;
+    }
     return this.db.object(path);
 
   }

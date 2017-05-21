@@ -1,3 +1,7 @@
 .accountContainer {
   padding: 10px;
 }
+
+.errorHints {
+  color: red;
+}

@@ -4,6 +4,8 @@ import {Subscription} from "rxjs/Subscription";
 import {User} from "firebase/app";
 import {Order} from "../../interfaces/order";
 
+import "rxjs/add/operator/take";
+
 
 @Component({
   selector: 'app-account-page',
@@ -15,6 +17,9 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
   user: User;
   orders: Order[];
+  searchOrder: Order;
+  searchId: string;
+  searchError: boolean = false;
   private userSubscription: Subscription;
   private ordersSubscription: Subscription;
 
@@ -31,6 +36,22 @@ export class AccountPageComponent implements OnInit, OnDestroy {
         });
       } else {
         this.orders = [];
+      }
+    });
+  }
+
+  getOrderByOrderId(orderId: string) {
+    this.firebaseService.getOrderByOrderId(orderId).take(1).subscribe((order: Order) => {
+      if (order.email == null) {
+        order = null;
+      }
+      if (order) {
+        this.searchOrder = order;
+        this.searchId = orderId;
+        this.searchError = false;
+      } else {
+        this.searchOrder = null;
+        this.searchError = true;
       }
     });
   }
