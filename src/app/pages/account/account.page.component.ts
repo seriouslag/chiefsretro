@@ -36,13 +36,15 @@ export class AccountPageComponent implements OnInit, OnDestroy {
         });
       } else {
         this.orders = [];
+        this.searchOrder = null;
+        this.searchId = "";
       }
     });
   }
 
   getOrderByOrderId(orderId: string) {
-    this.firebaseService.getOrderByOrderId(orderId).take(1).subscribe((order: Order) => {
-      if (order.email == null) {
+    this.firebaseService.getOrderByOrderId(orderId, this.user != null).take(1).subscribe((order: Order) => {
+      if (order.status == null) {
         order = null;
       }
       if (order) {
@@ -50,8 +52,20 @@ export class AccountPageComponent implements OnInit, OnDestroy {
         this.searchId = orderId;
         this.searchError = false;
       } else {
-        this.searchOrder = null;
-        this.searchError = true;
+        this.firebaseService.getOrderByOrderId(orderId, false).take(1).subscribe((order: Order) => {
+          console.log(order);
+          if (order.status == null) {
+            order = null;
+          }
+          if (order) {
+            this.searchOrder = order;
+            this.searchId = orderId;
+            this.searchError = false;
+          } else {
+            this.searchOrder = null;
+            this.searchError = true;
+          }
+        });
       }
     });
   }

@@ -37,6 +37,10 @@ export class StatusPageComponent implements OnInit, OnDestroy {
 
     this.userSubscription = this.firebaseService.user.subscribe(user => {
       this.user = user;
+      if (user) {
+        this.cart = [];
+        this.order = null;
+      }
       if (this.params) {
         this.getOrder(this.params['orderId']);
       }
@@ -76,14 +80,14 @@ export class StatusPageComponent implements OnInit, OnDestroy {
     this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, false)
       .subscribe(result => {
           console.log('result', result);
-          if (result.email != null) {
+          if (result.status != null) {
             this.order = result;
             this.cart = this.populateCart(this.order.cart);
             this.failed = false;
           } else {
             this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, true).subscribe(result => {
               console.log('checking result user ', result);
-              if (result.email != null) {
+              if (result.status != null) {
                 this.order = result;
                 this.cart = this.populateCart(this.order.cart);
                 this.failed = false;
