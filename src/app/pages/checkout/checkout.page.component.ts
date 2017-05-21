@@ -6,6 +6,7 @@ import {CartItem} from "../../interfaces/cart-item";
 import {ToastService} from "../../services/toast.service";
 import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 import {User} from "firebase/app";
+import {isUndefined} from "util";
 
 @Component({
   selector: 'app-checkout-page',
@@ -106,10 +107,18 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         token: (token: any, args: any) => {
           // You can access the token ID with `token.id`.
           // Get the token ID to your server-side code for use.
-          this.firebaseService.saveStripeToDb(token, args, this.cart).then((success) => {
-            this.toastService.toast("Order Completed. Check your email.")
+          this.firebaseService.saveOrderToDb(token, args, this.getCartTotal(), this.cart).then((success) => {
+            this.toastService.toast("Order Completed. Check your email.");
+            if (isUndefined(success) == false) {
+              //request server to process?
+              //send user to another page?
+              /*
+              TODO
+               */
+            }
           }, (error) => {
             alert("Your order could not be processed, please contact our sales team.");
+            console.log(error);
           });
         }
       });
@@ -134,6 +143,9 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     }
     if (this.loginSubscription) {
       this.loginSubscription.unsubscribe();
+    }
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
     }
     if (this.mediaSubscription) {
       this.mediaSubscription.unsubscribe();

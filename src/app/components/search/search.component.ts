@@ -25,7 +25,9 @@ export class SearchComponent implements OnInit, OnDestroy {
   ngOnInit() {}
 
   ngOnDestroy(): void {
-    this.productsSubscription.unsubscribe();
+    if (this.productsSubscription) {
+      this.productsSubscription.unsubscribe();
+    }
   }
 
   click(product: Product) {

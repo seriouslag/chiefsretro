@@ -73,6 +73,9 @@ import {firebase} from "./app.firebase";
 import {AngularFireAuth} from "angularfire2/auth";
 import {AngularFireDatabaseModule} from "angularfire2/database";
 import {FirebaseService} from "./services/firebase.service";
+import {StatusPageComponent} from "./pages/status/status.page.component";
+import {AccountPageComponent} from "./pages/account/account.page.component";
+import {four04Component} from "./pages/four04/four04.component";
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any> {
@@ -105,6 +108,9 @@ export class HammerConfig extends HammerGestureConfig {
     ToolbarComponent,
     CheckoutPageComponent,
     NavbarComponent,
+    StatusPageComponent,
+    AccountPageComponent,
+    four04Component,
 
   ],
   imports: [

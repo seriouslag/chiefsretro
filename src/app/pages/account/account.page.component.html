@@ -1,0 +1,16 @@
+<div fxLayout="column" fxLayoutGap="10px" class="accountContainer">
+  <div>Orders History:</div>
+  <md-card *ngFor="let order of orders">
+    <button md-button routerLink="/status/{{order.date}}" routerLinkActive="active">{{getNumberOfItemsInOrder(order) + "
+      @ " + getNumAsCurrency(order.total) + " on " + dateToString(order.date)}}
+    </button>
+  </md-card>
+
+  <md-card *ngIf="!orders.length && user">
+    This account has no orders on record
+  </md-card>
+
+  <md-card *ngIf="!user">
+    You are not signed in!
+  </md-card>
+</div>

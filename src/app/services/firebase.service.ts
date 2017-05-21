@@ -18,6 +18,8 @@ import {CancelComponent} from "../components/dialogs/cancel/cancel.component";
 import {StripeArgs} from "../interfaces/stripe-args";
 import {StripeToken} from "../interfaces/stripe-token";
 import {Order} from "../interfaces/order";
+import "rxjs/add/operator/take";
+
 
 @Injectable()
 export class FirebaseService {
@@ -69,6 +71,7 @@ export class FirebaseService {
 
         let dbCartItem: DbCartItem = {
           productId: cartItem.product.productId,
+          productOptionPrice: cartItem.productOption.productPrice,
           productOptionId: cartItem.productOption.productOptionId,
           quantity: cartItem.quantity,
           dateAdded: cartItem.dateAdded
@@ -86,7 +89,9 @@ export class FirebaseService {
         productId: cartItem.product.productId,
         productOptionId: cartItem.productOption.productOptionId,
         quantity: cartItem.quantity,
-        dateAdded: cartItem.dateAdded
+        dateAdded: cartItem.dateAdded,
+
+        productOptionPrice: cartItem.productOption.productPrice
       });
     }
     return dbCart;
@@ -99,9 +104,12 @@ export class FirebaseService {
         product: this.getProductByProductId(dbCartItem.productId),
         productOption: this.getProductOptionByProductOptionId(dbCartItem.productOptionId),
         quantity: dbCartItem.quantity,
-        dateAdded: dbCartItem.dateAdded
+        dateAdded: dbCartItem.dateAdded,
+
+        productOptionPrice: dbCartItem.productOptionPrice
       });
     }
+    console.log('cart', cart);
     return cart;
   }
 
@@ -159,6 +167,7 @@ export class FirebaseService {
         let dbCartItem: DbCartItem = {
           productId: product.productId,
           productOptionId: productOption.productOptionId,
+          productOptionPrice: productOption.productPrice,
           quantity: quantity,
           dateAdded: dateAdded
         };
@@ -477,28 +486,51 @@ export class FirebaseService {
   }
 
   //Call when receive tokens back from stripe
-  public saveStripeToDb(token, args, cart: CartItem[]): firebase.Promise<void> {
+  public saveOrderToDb(token: StripeToken, args: StripeArgs, total: number, cart: CartItem[]): firebase.Promise<void> {
     let date = Date.now();
     let dbCart: DbCartItem[] = this.cartToDbCart(cart);
 
     if (this._user.getValue()) {
+      this.db.object('users/' + this._user.getValue().uid + '/orders/' + date).set("processing");
       return this.db.object('orders/' + this._user.getValue().uid + '/' + date).set(<Order>{
         date: date,
         cart: dbCart,
         token: token as StripeToken,
         args: args as StripeArgs,
-        status: 'processing'
+        status: 'processing',
+        total: total
       });
     } else {
-      return this.db.list('orders/guests/').push(<Order>{
+      return this.db.list('orders/').push(<Order>{
         email: token.email,
         date: date,
         cart: dbCart,
         token: token as StripeToken,
         args: args as StripeArgs,
-        status: 'processing'
+        status: 'processing',
+        total: total
       });
     }
+  }
+
+  getAllOrders() {
+    if (this._user.getValue()) {
+      return this.db.list('orders/' + this._user.getValue().uid);
+    }
+  }
+
+  public getOrderByOrderId(orderId: string, userOrder?: boolean): FirebaseObjectObservable<Order> {
+    //userOrders is a check to that should already have been completed
+    //it checks if the order is connected to to a user account
+
+    let path = "";
+    if (userOrder && this.user) {
+      path = 'orders/' + this._user.getValue().uid + '/' + orderId
+    } else {
+      path = 'orders/' + orderId
+    }
+
+    return this.db.object(path);
 
   }
 

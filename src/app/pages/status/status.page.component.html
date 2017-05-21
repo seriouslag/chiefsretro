@@ -1,0 +1,21 @@
+<div *ngIf="order" fxLayout="column" fxLayoutGap="15px">
+  <div>
+    <div>{{"Order status: " + order.status}}</div>
+    <div>{{"Date placed: " + dateToString(order.date)}}</div>
+    <div>{{"Order Total: " + getNumAsCurrency(order.total)}}</div>
+  </div>
+  <div>
+    <md-card *ngFor="let cartItem of cart">
+      <md-card-title fxLayout="row">
+        <div>{{cartItem.quantity + " " + cartItem.productOption.productColor + " " + cartItem.product.productName + " @
+          " + getNumAsCurrency(cartItem.productOptionPrice) + "ea"}}
+        </div>
+      </md-card-title>
+    </md-card>
+  </div>
+</div>
+<div *ngIf="!order">
+  Your order could not be found :(
+  <br>
+  If your order was placed under an account please log in to that account to check its status
+</div>

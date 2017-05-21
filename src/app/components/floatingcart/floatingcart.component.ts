@@ -54,7 +54,9 @@ export class FloatingcartComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.cartSubscription.unsubscribe();
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
   }
 
   getNumAsCurrency(num: number): string {

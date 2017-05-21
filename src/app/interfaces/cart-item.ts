@@ -6,4 +6,6 @@ export interface CartItem {
   productOption: ProductOption;
   quantity: number;
   dateAdded: number;
+
+  productOptionPrice?: number;
 }

@@ -4,7 +4,9 @@ import {HomePageComponent} from "./pages/home/home.page.component";
 import {ProductPageComponent} from "./pages/product/product.page.component";
 import {AllComponent} from "./pages/all/all.component";
 import {CheckoutPageComponent} from "./pages/checkout/checkout.page.component";
-import {animate, style, transition, trigger} from "@angular/animations";
+import {StatusPageComponent} from "./pages/status/status.page.component";
+import {AccountPageComponent} from "./pages/account/account.page.component";
+import {four04Component} from "./pages/four04/four04.component";
 
 export const appRoutes: Routes = [
   {path: 'all', component: AllComponent},
@@ -13,25 +15,10 @@ export const appRoutes: Routes = [
   {path: 'about', component: AboutPageComponent},
   {path: 'product/:productId', component: ProductPageComponent},
   {path: 'checkout', component: CheckoutPageComponent},
-  { path: "**", redirectTo: '/home' }
+  {path: 'status/:orderId', component: StatusPageComponent},
+  {path: 'account', component: AccountPageComponent},
+  {path: "**", component: four04Component}
 ];
-
-export const fadeInAnimation =
-  trigger('fadeInAnimation', [
-  // route 'enter' transition
-    transition(':enter', [
-
-      // styles at start of transition
-      style({opacity: 0}),
-
-      // animation and styles at end of transition
-      animate('.3s', style({opacity: 1}))
-    ]),
-    transition(':leave', [
-      style({opacity: 1}),
-      animate('.3s', style({opacity: 0}))
-    ])
-]);
 
 export const routing = RouterModule.forRoot(appRoutes);
 

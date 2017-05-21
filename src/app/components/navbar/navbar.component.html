@@ -39,6 +39,6 @@
 
 
 <md-menu #accountMenu="mdMenu" xPosition="after" yPosition="above">
-  <button md-menu-item> Account</button>
+  <button md-menu-item *ngIf="user" routerLink="/account"> Account</button>
   <button md-menu-item (click)="changeLoginStatus()">{{loginStatusText}}</button>
 </md-menu>
