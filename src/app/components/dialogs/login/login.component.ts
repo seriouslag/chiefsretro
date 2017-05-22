@@ -35,25 +35,39 @@ export class LoginComponent implements OnInit, OnDestroy {
   firebaseService: FirebaseService;
   showLoginText: boolean;
   action: boolean;
-
   submitted: boolean = false;
-
   creation: boolean = false;
   title: string = "Login";
 
+  loginForm: FormGroup = new FormGroup({
+    email: new FormControl(null, [Validators.required, this.validateEmail]),
+    password: new FormControl(null, [Validators.required]),
+  });
 
-  constructor(public loginDialog: MdDialogRef<LoginComponent>, private toastService: ToastService) {
-  }
+  matchingEmail: FormGroup = new FormGroup({
+    email: new FormControl('', [Validators.required, this.validateEmail]),
+    cemail: new FormControl('', [Validators.required]),
+  }, this.emailMatchValidator);
 
-  private matchingPassword: FormGroup = new FormGroup({
+  matchingPassword: FormGroup = new FormGroup({
     password: new FormControl(null, [Validators.required, Validators.minLength(8), this.validatePW]),
     cpassword: new FormControl(null, [Validators.required]),
   }, this.passwordMatchValidator);
 
+  accountForm: FormGroup = new FormGroup({
+    firstname: new FormControl(null, [Validators.required, Validators.minLength(2)]),
+    lastname: new FormControl(null, [Validators.required, Validators.minLength(2)]),
+    matchingEmail: this.matchingEmail,
+    matchingPassword: this.matchingPassword,
+  });
+
+  constructor(public loginDialog: MdDialogRef<LoginComponent>, private toastService: ToastService) {
+  }
+
   firebaseEmailLogin(): void {
     this.firebaseService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(), this.loginForm.controls['password'].value).then((response) => {
       if (response == 'ok') {
-        //should be handled already
+        //should be handled by event listener
       } else {
         /*
         TODO setup attemp limits
@@ -68,11 +82,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.toast('Password is incorrect');
         } else {
           console.log(response);
-          +
-            this.toast('Cannot process, unknown error');
+          this.toast('Cannot process, unknown error');
         }
       }
-
     });
   }
 
@@ -102,19 +114,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
-  loginForm: FormGroup = new FormGroup({
-    email: new FormControl(null, [Validators.required, this.validateEmail]),
-    password: new FormControl(null, [Validators.required]),
-  });
-
-  matchingEmail: FormGroup = new FormGroup({
-    email: new FormControl('', [Validators.required, this.validateEmail]),
-    cemail: new FormControl('', [Validators.required]),
-  }, this.emailMatchValidator);
-
   firebaseCreateUserLogin(): void {
     this.submitted = true;
-    this.firebaseService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value).then((response) => {
+    this.firebaseService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value,
+      (this.accountForm.controls['firstname'].value + " " + this.accountForm.controls['lastname'].value)).then((response) => {
       if (response == 'ok') {
         this.toast("Created account: " + this.matchingEmail.controls['email'].value.toLowerCase());
         this.backToLogin();
@@ -137,14 +140,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
 
-  accountForm: FormGroup = new FormGroup({
-    firstname: new FormControl(null, [Validators.required, Validators.minLength(2)]),
-    lastname: new FormControl(null, [Validators.required, Validators.minLength(2)]),
-    matchingEmail: this.matchingEmail,
-    matchingPassword: this.matchingPassword,
-  });
-
-
   ngOnInit() {
     this.showLoginText = this.loginDialog.componentInstance.showLoginText;
   };
@@ -154,7 +149,6 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.loginDialog.close('canceled');
     }
   }
-
 
   firebaseGoogleLogin(): void {
     this.firebaseService.firebaseGoogleLogin();
@@ -178,7 +172,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   private validateEmail(fc: FormControl) {
     let EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,12}))/i;
-
 
     return EMAIL_REGEXP.test(fc.value) ? null : {
       'email': true

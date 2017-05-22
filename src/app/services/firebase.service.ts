@@ -19,6 +19,8 @@ import {StripeArgs} from "../interfaces/stripe-args";
 import {StripeToken} from "../interfaces/stripe-token";
 import {Order} from "../interfaces/order";
 import "rxjs/add/operator/take";
+import {FromStripeToken} from "../interfaces/from-stripe-token";
+import {isUndefined} from "util";
 
 
 @Injectable()
@@ -344,9 +346,13 @@ export class FirebaseService {
   }
 
   public firebaseCreateUserFromEmail(email: string, password: string, name?: string): Promise<string> {
+    if (name == null) {
+      name = "";
+    }
     let message = new Promise((resolve, reject) => {
       this.af.auth.createUserWithEmailAndPassword(email, password).then((response) => {
-        this.db.object('users/' + this._user.getValue().uid).set({email: email, name: name, created: Date.now()});
+        console.log(response);
+        this.db.object('users/' + response.uid).set({email: email, name: name, created: Date.now()});
         resolve('ok');
       }).catch((error: any) => {
         let errorCode = error.code;
@@ -485,30 +491,78 @@ export class FirebaseService {
     return promise;
   }
 
+  public fromStripeTokenToStripeToken(fromStripeToken: FromStripeToken): StripeToken {
+    if (isUndefined(fromStripeToken.card.fingerprint)) {
+      fromStripeToken.card.fingerprint = null;
+    }
+    let token = <StripeToken>{
+      email: fromStripeToken.email,
+      id: fromStripeToken.id,
+      card: {
+        id: fromStripeToken.card.id,
+        object: fromStripeToken.card.object,
+        addressCity: fromStripeToken.card.address_city,
+        addressCountry: fromStripeToken.card.address_country,
+        addressLine1: fromStripeToken.card.address_line1,
+        addressLine1Check: fromStripeToken.card.address_line1_check,
+        addressLine2: fromStripeToken.card.address_line2,
+        addressState: fromStripeToken.card.address_state,
+        addressZip: fromStripeToken.card.address_zip,
+        addressZipCheck: fromStripeToken.card.address_zip_check,
+        brand: fromStripeToken.card.brand,
+        country: fromStripeToken.card.country,
+        cvcCheck: fromStripeToken.card.cvc_check,
+        dynamicLast4: fromStripeToken.card.dynamic_last4,
+        expMonth: fromStripeToken.card.exp_month,
+        expYear: fromStripeToken.card.exp_year,
+        fingerprint: fromStripeToken.card.fingerprint,
+        funding: fromStripeToken.card.funding,
+        last4: fromStripeToken.card.last4,
+        metadata: fromStripeToken.card.metadata,
+        name: fromStripeToken.card.name,
+        tokenizationMethod: fromStripeToken.card.tokenization_method
+      },
+      clientIp: fromStripeToken.client_ip,
+      livemode: fromStripeToken.livemode,
+      type: fromStripeToken.type,
+      used: fromStripeToken.used
+    };
+    console.log(token);
+    return token;
+  }
+
   //Call when receive tokens back from stripe
-  public saveOrderToDb(token: StripeToken, args: StripeArgs, total: number, cart: CartItem[]): firebase.Promise<void> {
+  public saveOrderToDb(token: StripeToken, args: StripeArgs, total: number, cart: CartItem[]): Promise<string> {
     let date = Date.now();
     let dbCart: DbCartItem[] = this.cartToDbCart(cart);
 
     if (this._user.getValue()) {
       this.db.object('users/' + this._user.getValue().uid + '/orders/' + date).set("processing");
-      return this.db.object('orders/' + this._user.getValue().uid + '/' + date).set(<Order>{
-        date: date,
-        cart: dbCart,
-        token: token as StripeToken,
-        args: args as StripeArgs,
-        status: 'processing',
-        total: total
-      });
-    } else {
-      return this.db.list('orders/').push(<Order>{
+      this.db.object('orders/' + this._user.getValue().uid + '/' + date).set(<Order>{
         email: token.email,
         date: date,
         cart: dbCart,
-        token: token as StripeToken,
-        args: args as StripeArgs,
+        token: token,
+        args: args,
+        status: 'processing',
+        total: total,
+      });
+      return new Promise(resolve => {
+        resolve(date);
+      });
+    } else {
+      let key = this.db.list('orders/').push('').key;
+      this.db.object('orders/' + key + "/" + date).set(<Order>{
+        email: token.email,
+        date: date,
+        cart: dbCart,
+        token: token,
+        args: args,
         status: 'processing',
         total: total
+      });
+      return new Promise(resolve => {
+        resolve(date + "/" + key);
       });
     }
   }
@@ -519,19 +573,24 @@ export class FirebaseService {
     }
   }
 
-  public getOrderByOrderId(orderId: string, userOrder?: boolean): FirebaseObjectObservable<Order> {
+  public getOrderByOrderId(orderId: string, userOrder?: boolean, custId?: string): FirebaseObjectObservable<Order> {
     //userOrders is a check to that should already have been completed
     //it checks if the order is connected to to a user account
-
     let path = "";
-    if (userOrder && this.user) {
+    if (custId == null) {
 
-      path = 'orders/' + this._user.getValue().uid + '/' + orderId;
-      console.log(path);
+      if (userOrder && this._user.getValue()) {
+
+        path = 'orders/' + this._user.getValue().uid + '/' + orderId;
+        console.log(path);
+      } else {
+        console.log('');
+        path = 'orders/' + orderId;
+      }
     } else {
-      console.log('');
-      path = 'orders/' + orderId;
+      path = 'orders/' + orderId + "/" + custId;
     }
+    console.log('path: ' + path);
     return this.db.object(path);
 
   }

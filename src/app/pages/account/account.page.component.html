@@ -36,11 +36,11 @@
         </button>
       </md-card>
 
-      <md-card *ngIf="orders==null && user">
+      <md-card *ngIf="orders.length == 0 && user">
         This account has no orders on record
       </md-card>
 
-      <md-card *ngIf="user == null && orders == null">
+      <md-card *ngIf="user == null && orders.length == 0">
         You are not signed in!
       </md-card>
     </div>

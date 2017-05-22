@@ -6,7 +6,7 @@ import {CartItem} from "../../interfaces/cart-item";
 import {ToastService} from "../../services/toast.service";
 import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 import {User} from "firebase/app";
-import {isUndefined} from "util";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-checkout-page',
@@ -28,7 +28,8 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   private mediaSubscription: Subscription;
   private handler: any;
 
-  constructor(private firebaseService: FirebaseService, private retroService: RetroService, private toastService: ToastService, public media: ObservableMedia) {
+  constructor(private firebaseService: FirebaseService, private retroService: RetroService,
+              private toastService: ToastService, public media: ObservableMedia, private router: Router) {
   }
 
   ngOnInit() {
@@ -95,7 +96,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       }
 
       this.handler = (<any>window).StripeCheckout.configure({
-        key: 'pk_test_4g2s1MP63IBbdSZjlMpfKhq5',
+        key: 'pk_test_XbDJWkQFMGQExsFBbMvmIzoB',
         image: 'https://stripe.com/img/documentation/checkout/marketplace.png',
         locale: 'auto',
         shippingAddress: true,
@@ -103,21 +104,19 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         currency: 'USD',
         allowRememberMe: true,
         email: email,
-
         token: (token: any, args: any) => {
+          console.log("token: ", token);
           // You can access the token ID with `token.id`.
           // Get the token ID to your server-side code for use.
-          this.firebaseService.saveOrderToDb(token, args, this.getCartTotal(), this.cart).then((success) => {
-            this.toastService.toast("Order Completed. Check your email.");
-            if (isUndefined(success) == false) {
-              //request server to process?
-              //send user to another page?
-              /*
-              TODO
-               */
-            }
+          this.firebaseService.saveOrderToDb(this.firebaseService.fromStripeTokenToStripeToken(token), args, this.getCartTotal() * 100, this.cart).then((orderPage: string) => {
+            console.log(orderPage);
+            this.firebaseService.setCart([]);
+            localStorage.setItem('cart', '');
+            this.toastService.toast("Order Completed. Going to order page.");
+            this.router.navigate(["/status/" + orderPage]);
+
           }, (error) => {
-            alert("Your order could not be processed, please contact our sales team.");
+            alert("Your order could not be processed, please email our sales team.");
             console.log(error);
           });
         }

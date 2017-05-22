@@ -23,7 +23,6 @@
           </md-hint>
         </md-input-container>
 
-
         <div fxLayout="row">
           <button md-button md-tooltip="Login" [mdTooltipShowDelay]="500" fxFlex
                   [disabled]="loginForm.invalid || submitted">Login
@@ -74,7 +73,6 @@
       <div fxFlex></div>
       <button md-dialog-close md-button (click)="cancel()" color="warn">Cancel</button>
     </div>
-
 
     <form fxLayout="column" fxLayoutGap="10px" [formGroup]="accountForm" *ngIf="creation" novalidate [@slideright]
           (submit)="firebaseCreateUserLogin()">
@@ -161,10 +159,10 @@
       </div>
 
       <div fxLayout="row">
-        <button md-button (click)="backToLogin()" color="warn">Back</button>
-        <button md-button md-tooltip="Create account" [mdTooltipShowDelay]="500" fxFlex
+        <button md-button md-tooltip="Create account" [mdTooltipShowDelay]="500" fxFlex type="submit"
                 [disabled]="accountForm.invalid">Create
         </button>
+        <button md-button (click)="backToLogin()" color="warn">Back</button>
       </div>
     </form>
   </div>

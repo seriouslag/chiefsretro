@@ -16,7 +16,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
 
   user: User;
-  orders: Order[];
+  orders: Order[] = [];
   searchOrder: Order;
   searchId: string;
   searchError: boolean = false;

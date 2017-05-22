@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {Subscription} from "rxjs/Subscription";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Params} from "@angular/router";
 import {FirebaseService} from "../../services/firebase.service";
 import {Order} from "../../interfaces/order";
 import {User} from "firebase/app";
@@ -22,7 +22,7 @@ export class StatusPageComponent implements OnInit, OnDestroy {
   private paramSubscription: Subscription;
   private orderSubscription: Subscription;
   private userSubscription: Subscription;
-  private params;
+  private params: Params;
 
   constructor(private activatedRoute: ActivatedRoute, private firebaseService: FirebaseService) {
   }
@@ -32,17 +32,16 @@ export class StatusPageComponent implements OnInit, OnDestroy {
       .subscribe(params => {
         this.params = params;
         console.log('params', params);
-        this.getOrder(params['orderId'])
+        this.getOrder(params['orderId'], params['custId']);
       });
 
     this.userSubscription = this.firebaseService.user.subscribe(user => {
       this.user = user;
-      if (user) {
-        this.cart = [];
-        this.order = null;
-      }
+      this.cart = [];
+      this.order = null;
+      this.waiting = true;
       if (this.params) {
-        this.getOrder(this.params['orderId']);
+        this.getOrder(this.params['orderId'], this.params['custId']);
       }
     });
   }
@@ -75,33 +74,53 @@ export class StatusPageComponent implements OnInit, OnDestroy {
     return this.firebaseService.dbCartToCart(dbCart);
   }
 
-  getOrder(orderId: string): void {
-    console.log();
-    this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, false)
-      .subscribe(result => {
-          console.log('result', result);
-          if (result.status != null) {
-            this.order = result;
-            this.cart = this.populateCart(this.order.cart);
-            this.failed = false;
-          } else {
-            this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, true).subscribe(result => {
-              console.log('checking result user ', result);
+  getOrder(orderId: string, custId?: string): void {
+    if (custId == null) {
+      this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, false)
+        .subscribe(result => {
+            if (result) {
               if (result.status != null) {
                 this.order = result;
                 this.cart = this.populateCart(this.order.cart);
                 this.failed = false;
               } else {
-                this.failed = true;
-                console.log('failed to get order of: ' + orderId);
+                this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, true).subscribe(result => {
+                  console.log('checking result user ', result);
+                  if (result.status != null) {
+                    this.order = result;
+                    this.cart = this.populateCart(this.order.cart);
+                    this.failed = false;
+                  } else {
+                    this.failed = true;
+                    console.log('failed to get order of: ' + orderId);
+                  }
+                });
               }
-            });
+            }
+          },
+          (error) => {
+            this.failed = true;
+            console.log('failed to get order of: ' + orderId, error)
           }
-        },
-        (error) => {
-          this.failed = true;
-          console.log('failed to get order of: ' + orderId, error)
-        }
-      )
-  };
+        )
+    } else {
+      console.log('custId', custId);
+      this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, true, custId)
+        .subscribe(result => {
+          if (result) {
+            if (result.status != null) {
+              this.order = result;
+              this.cart = this.populateCart(this.order.cart);
+              this.failed = false;
+            } else {
+              this.failed = true;
+              console.log('failed to get order of: ' + orderId);
+            }
+          } else {
+            this.failed = true;
+            console.log('failed to get order of: ' + orderId);
+          }
+        });
+    }
+  }
 }
