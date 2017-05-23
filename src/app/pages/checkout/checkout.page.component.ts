@@ -27,6 +27,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   private user: User;
   private mediaSubscription: Subscription;
   private handler: any;
+  private itemsInCart = 0;
 
   constructor(private firebaseService: FirebaseService, private retroService: RetroService,
               private toastService: ToastService, public media: ObservableMedia, private router: Router) {
@@ -58,6 +59,16 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     });
 
     this.cartSubscription = this.firebaseService.cart.subscribe((cart) => {
+      //close checkout because cart changed
+      if (this.handler) {
+        this.handler.close();
+      }
+
+      let items = 0;
+      for (let cartItem of this.cart) {
+        items++;
+      }
+      this.itemsInCart = items;
 
       if (this.warn && this.loginStatus) {
         this.toastService.toast('Your cart has been changed from another browser or device.');
@@ -83,11 +94,9 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     this.retroService.openCart(false);
   }
 
+  //THIS CANNOT BE IN A SUBSCRIPTION IT KILLS IT
   public openStripe(): void {
     if (this.cart != null) {
-      /*
-      THIS CANNOT BE IN A SUBSCRIPTION IT KILLS IT
-       */
       let email;
       if (this.user) {
         email = this.user.email;
@@ -126,7 +135,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
       if (this.handler) {
         this.handler.open({
           name: 'Chiefs Retro',
-          description: 'Test Description',
+          description: 'Purchasing: ' + this.itemsInCart + ' items.',
           amount: Math.floor(this.getCartTotal() * 100),
           zipCode: true,
         });

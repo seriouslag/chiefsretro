@@ -494,13 +494,14 @@ export class FirebaseService {
   public fromStripeTokenToStripeToken(fromStripeToken: FromStripeToken): StripeToken {
     //I am not sure why fingerprint was being set to undefined but it was killing firebase
     //quick fix
+    //not needed now because we are not storing card data in database
     if (isUndefined(fromStripeToken.card.fingerprint)) {
       fromStripeToken.card.fingerprint = null;
     }
     let token = <StripeToken>{
       email: fromStripeToken.email,
       id: fromStripeToken.id,
-      card: {
+      /*card: {
         id: fromStripeToken.card.id,
         object: fromStripeToken.card.object,
         addressCity: fromStripeToken.card.address_city,
@@ -523,7 +524,7 @@ export class FirebaseService {
         metadata: fromStripeToken.card.metadata,
         name: fromStripeToken.card.name,
         tokenizationMethod: fromStripeToken.card.tokenization_method
-      },
+      },*/
       clientIp: fromStripeToken.client_ip,
       livemode: fromStripeToken.livemode,
       type: fromStripeToken.type,

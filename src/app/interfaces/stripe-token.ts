@@ -1,30 +1,8 @@
+
 export interface StripeToken {
   id: string,
   email: string,
-  card: {
-    id: string,
-    object: any,
-    addressCity: string,
-    addressCountry: string,
-    addressLine1: string,
-    addressLine1Check: string,
-    addressLine2: string,
-    addressState: string,
-    addressZip: string,
-    addressZipCheck: string,
-    brand: string,
-    country: string,
-    cvcCheck: string,
-    dynamicLast4: any,
-    expMonth: number,
-    expYear: number,
-    fingerprint: string,
-    funding: string,
-    last4: string,
-    metadata: any,
-    name: string,
-    tokenizationMethod: any
-  },
+  //card: Card
   clientIp: string,
   created: number,
   livemode: boolean,
