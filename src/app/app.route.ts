@@ -16,7 +16,7 @@ export const appRoutes: Routes = [
   {path: 'product/:productId', component: ProductPageComponent},
   {path: 'checkout', component: CheckoutPageComponent},
   {path: 'status/:orderId', component: StatusPageComponent},
-  {path: 'status/:custId/:orderId', component: StatusPageComponent},
+  {path: 'status/:orderId/:custId', component: StatusPageComponent},
   {path: 'account', component: AccountPageComponent},
   {path: "**", component: four04Component}
 ];

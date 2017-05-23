@@ -1,4 +1,4 @@
-import {Injectable, NgZone} from "@angular/core";
+import {Injectable} from "@angular/core";
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {ToastService} from "./toast.service";
@@ -43,9 +43,8 @@ export class FirebaseService {
   public cart = this._cart.asObservable();
   public products: Product[];
 
-  constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService, private ngZone: NgZone) {
+  constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService) {
     let products = sessionStorage.getItem('products');
-
 
     if (products) {
       this.products = JSON.parse(products);
@@ -80,7 +79,6 @@ export class FirebaseService {
         };
         this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).set(dbCartItem);
       }
-
     }
   }
 
@@ -151,7 +149,6 @@ export class FirebaseService {
     if (this._user.getValue()) {
 
       let tempCart: DbCartItem[] = this.dbcart;
-
       let i = 0;
       let checkForProduct = true;
 
@@ -179,7 +176,6 @@ export class FirebaseService {
       //guest add to cart
       let tempCart = this._cart.getValue();
       let i = 0;
-
       let checkForProduct: boolean = true;
 
       for (let cartItems of tempCart) {
@@ -199,7 +195,7 @@ export class FirebaseService {
 
         tempCart.push(tempCartItem);
       }
-
+      localStorage.setItem('cartDate', Date.now().toString());
       localStorage.setItem('cart', JSON.stringify(tempCart));
       this._cart.next(tempCart);
       console.log('guest add to cart');
@@ -277,6 +273,7 @@ export class FirebaseService {
                     this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
                   }
                   localStorage.setItem('cart', JSON.stringify(tempCart));
+                  localStorage.setItem('cartDate', Date.now().toString());
                   this._cart.next(tempCart);
                 }
               });
@@ -286,6 +283,7 @@ export class FirebaseService {
               if (showToast) {
                 this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
               }
+              localStorage.setItem('cartDate', Date.now().toString());
               localStorage.setItem('cart', JSON.stringify(tempCart));
               this._cart.next(tempCart);
             }
@@ -295,6 +293,7 @@ export class FirebaseService {
             if (showToast) {
               this.toast('Removed ' + quantity + ' ' + productOption.productColor + ' ' + product.productName + ' From Cart');
             }
+            localStorage.setItem('cartDate', Date.now().toString());
             localStorage.setItem('cart', JSON.stringify(tempCart));
           }
         }
@@ -335,6 +334,7 @@ export class FirebaseService {
           this._cart.next([]);
           this.dbcart = [];
 
+          localStorage.setItem('cartDate', Date.now().toString());
           localStorage.setItem('cart', '');
 
           this.af.auth.signOut();
@@ -349,7 +349,7 @@ export class FirebaseService {
     if (name == null) {
       name = "";
     }
-    let message = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       this.af.auth.createUserWithEmailAndPassword(email, password).then((response) => {
         console.log(response);
         this.db.object('users/' + response.uid).set({email: email, name: name, created: Date.now()});
@@ -368,7 +368,6 @@ export class FirebaseService {
         resolve(errorCode);
       })
     });
-    return message;
   }
 
   private firebaseLogin(provider: any) {
@@ -411,8 +410,11 @@ export class FirebaseService {
         } else {
 
           //check localstorage for cartitems then assign them to cartItems
+
+          /*
+           TODO if localStorage is older than lastOrder date, remove localstorage and do not use as new cart.
+           */
           let cart = localStorage.getItem('cart');
-          console.log('localstore', cart);
           if (cart) {
             if (cart.length) {
               this._cart.next(JSON.parse(cart));
@@ -479,19 +481,19 @@ export class FirebaseService {
     });
   }
 
-  public saveToDb(path: string, data: any): Promise<any> {
+  public saveToDb(path: string, data: any): Promise<boolean> {
     let promise;
     if (path != null && data != null) {
-      promise = this.db.object(path).set(data).then(
-        promise.resolve(true)
-      );
+      promise = this.db.object(path).set(data).then(resolve => promise.resolve(true));
     } else {
-      promise.resolve(false);
+      promise = new Promise(resolve => resolve(false));
     }
     return promise;
   }
 
   public fromStripeTokenToStripeToken(fromStripeToken: FromStripeToken): StripeToken {
+    //I am not sure why fingerprint was being set to undefined but it was killing firebase
+    //quick fix
     if (isUndefined(fromStripeToken.card.fingerprint)) {
       fromStripeToken.card.fingerprint = null;
     }
@@ -582,9 +584,8 @@ export class FirebaseService {
       if (userOrder && this._user.getValue()) {
 
         path = 'orders/' + this._user.getValue().uid + '/' + orderId;
-        console.log(path);
       } else {
-        console.log('');
+        //this is old and can be removed; also the userOrder should be unneeded anymore.
         path = 'orders/' + orderId;
       }
     } else {
@@ -596,7 +597,7 @@ export class FirebaseService {
   }
 
   public firebaseEmailLogin(email: string, password: string): Promise<string> {
-    let message = new Promise((resolve => {
+    return new Promise((resolve => {
       this.af.auth.signInWithEmailAndPassword(email, password).then(reponse => {
         resolve('ok');
       }).catch((error: any) => {
@@ -613,7 +614,6 @@ export class FirebaseService {
         resolve(errorCode);
       });
     }));
-    return message;
   }
 
   public firebaseFacebookLogin() {
