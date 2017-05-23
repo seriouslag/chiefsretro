@@ -1,5 +1,5 @@
 <div fxFlexFill fxLayout="column" class="safariFix">
-  <div fxFlexFill fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="10px">
+  <div fxFlexFill fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="10px">
     <div fxLayout="column" fxLayoutGap="10px">
       <div fxLayout="row" fxLayoutAlign="start center" fxLayoutWrap="">
         <div fxFlex fxLayoutAlign="start center">
@@ -7,8 +7,7 @@
         </div>
         <div fxFlex fxLayoutAlign="center center">
           <button md-raised-button color="accent" *ngIf="cart?.length" (click)="openStripe()" fxHide
-                  fxShow.lt-md="true">*TEST* Pay With
-            Card
+                  fxShow.lt-md="true">*TEST* Pay With Card
           </button>
         </div>
         <div fxFlex fxLayoutAlign="end center" style="text-align: end">
@@ -21,19 +20,20 @@
       </div>
 
       <md-card *ngFor="let cartItem of cart; let i = index" fxLayout="column" fxLayoutAlign="space-around center">
-        <div fxFlexFill fxLayout="column">
+        <!--<div fxFlexFill fxLayout="column">-->
 
           <div fxLayout="row" fxLayout="start center" class="cartItem">
-            <div fxLayout="column" fxLayoutAlign="center start">
-              <div>
+            <div fxLayout="column" fxLayoutAlign="center start" style="flex: 1 0 23%;">
+              <div fxFlex="nogrow">
                 {{cartItem.productOption?.productColor + " " +cartItem.product?.productName}}
               </div>
               <app-thumb-image *ngIf="cartItem.product" [product]="cartItem.product" [size]="size"
                                [rounded]="true"></app-thumb-image>
             </div>
 
-            <div fxFlex></div>
-            <div fxLayout="column" fxLayoutGap="15px" fxLayout.gt-sm="center space-between">
+            <!--div fxFlex></div>
+           <!-- <div fxLayout="column" fxLayoutGap="15px" fxLayout.gt-sm="center space-between">-->
+            <div style="flex: 1 0 44%;">
               <div fxLayout="row" fxLayoutAlign="center center">
                 <div> {{"Price: " + getNumAsCurrency(cartItem.productOption.productPrice)}}</div>
               </div>
@@ -52,14 +52,15 @@
                 </button>
               </div>
             </div>
-            <div fxFlex></div>
-            <div fxLayout.lt-md="column" fxLayout.gt-sm="row" fxLayoutAlign="center center" fxLayoutGap="3px">
+            <!--<div fxFlex></div>-->
+            <div fxLayout.lt-md="column" fxLayout.gt-sm="row" fxLayoutAlign="end center"
+                 fxLayoutAlign.lt-md="center end" style="flex: 1 0 23%;">
               <div>{{["Total: " + getNumAsCurrency(getItemTotal(cartItem.productOption.productPrice,
                 cartItem.quantity))]}}
               </div>
             </div>
           </div>
-        </div>
+        <!--  </div>  -->
       </md-card>
     </div>
 

@@ -9,7 +9,6 @@
 
 .cartItem div {
   min-height: 20px;
-  padding: 3px;
 }
 
 /*
@@ -21,4 +20,8 @@ fix for safari
 
 md-card {
   display: block !important;
+}
+
+.cartSize {
+  flex: 1 0 33%;
 }

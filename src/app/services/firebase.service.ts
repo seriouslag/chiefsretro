@@ -65,20 +65,29 @@ export class FirebaseService {
   }
 
   public setCart(cartItems: CartItem[]): void {
-    for (let cartItem of cartItems) {
-      if (cartItem.quantity == 0) {
-        this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).remove();
-      } else {
+    if (this._user.getValue()) {
+      if (cartItems.length) {
+        for (let cartItem of cartItems) {
+          if (cartItem.quantity == 0) {
+            this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).remove();
+          } else {
 
-        let dbCartItem: DbCartItem = {
-          productId: cartItem.product.productId,
-          productOptionPrice: cartItem.productOption.productPrice,
-          productOptionId: cartItem.productOption.productOptionId,
-          quantity: cartItem.quantity,
-          dateAdded: cartItem.dateAdded
-        };
-        this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).set(dbCartItem);
+            let dbCartItem: DbCartItem = {
+              productId: cartItem.product.productId,
+              productOptionPrice: cartItem.productOption.productPrice,
+              productOptionId: cartItem.productOption.productOptionId,
+              quantity: cartItem.quantity,
+              dateAdded: cartItem.dateAdded
+            };
+            this.db.object('users/' + this._user.getValue().uid + "/cartItems/" + cartItem.productOption.productOptionId).set(dbCartItem);
+          }
+        }
+      } else {
+        this.db.object('users/' + this._user.getValue().uid + "/cartItems/").remove();
       }
+    } else {
+      //no user is signed in
+      this._cart.next(cartItems);
     }
   }
 
@@ -471,10 +480,10 @@ export class FirebaseService {
             cart.push(cartItem)
           }
 
-          if (cart.length) {
-            console.log('from db cart', cart);
-            this._cart.next(cart);
-          }
+          //if (cart.length) {
+          console.log('from db cart', cart);
+          this._cart.next(cart);
+          //}
         });
       }
       this.isInit = true;
@@ -502,29 +511,29 @@ export class FirebaseService {
       email: fromStripeToken.email,
       id: fromStripeToken.id,
       /*card: {
-        id: fromStripeToken.card.id,
-        object: fromStripeToken.card.object,
-        addressCity: fromStripeToken.card.address_city,
-        addressCountry: fromStripeToken.card.address_country,
-        addressLine1: fromStripeToken.card.address_line1,
-        addressLine1Check: fromStripeToken.card.address_line1_check,
-        addressLine2: fromStripeToken.card.address_line2,
-        addressState: fromStripeToken.card.address_state,
-        addressZip: fromStripeToken.card.address_zip,
-        addressZipCheck: fromStripeToken.card.address_zip_check,
-        brand: fromStripeToken.card.brand,
-        country: fromStripeToken.card.country,
-        cvcCheck: fromStripeToken.card.cvc_check,
-        dynamicLast4: fromStripeToken.card.dynamic_last4,
-        expMonth: fromStripeToken.card.exp_month,
-        expYear: fromStripeToken.card.exp_year,
-        fingerprint: fromStripeToken.card.fingerprint,
-        funding: fromStripeToken.card.funding,
-        last4: fromStripeToken.card.last4,
-        metadata: fromStripeToken.card.metadata,
-        name: fromStripeToken.card.name,
-        tokenizationMethod: fromStripeToken.card.tokenization_method
-      },*/
+       id: fromStripeToken.card.id,
+       object: fromStripeToken.card.object,
+       addressCity: fromStripeToken.card.address_city,
+       addressCountry: fromStripeToken.card.address_country,
+       addressLine1: fromStripeToken.card.address_line1,
+       addressLine1Check: fromStripeToken.card.address_line1_check,
+       addressLine2: fromStripeToken.card.address_line2,
+       addressState: fromStripeToken.card.address_state,
+       addressZip: fromStripeToken.card.address_zip,
+       addressZipCheck: fromStripeToken.card.address_zip_check,
+       brand: fromStripeToken.card.brand,
+       country: fromStripeToken.card.country,
+       cvcCheck: fromStripeToken.card.cvc_check,
+       dynamicLast4: fromStripeToken.card.dynamic_last4,
+       expMonth: fromStripeToken.card.exp_month,
+       expYear: fromStripeToken.card.exp_year,
+       fingerprint: fromStripeToken.card.fingerprint,
+       funding: fromStripeToken.card.funding,
+       last4: fromStripeToken.card.last4,
+       metadata: fromStripeToken.card.metadata,
+       name: fromStripeToken.card.name,
+       tokenizationMethod: fromStripeToken.card.tokenization_method
+       },*/
       clientIp: fromStripeToken.client_ip,
       livemode: fromStripeToken.livemode,
       type: fromStripeToken.type,
