@@ -11,15 +11,14 @@
         </md-input-container>
         <button md-raised-button color="primart" (click)="getOrderByOrderId(orderId.value)">Search</button>
       </div>
-
     </div>
   </div>
 
   <div fxLayout="row">
-    <div fxLayout="column">
+    <div fxLayout="column" fxLayoutGap="10px">
       <md-card *ngIf="searchOrder">
         <button md-button routerLink="/status/{{searchId}}" routerLinkActive="active">
-          <md-card-subtitle>{{"Order ID: " + searchId}}</md-card-subtitle>
+          <md-card-subtitle>{{"Order ID: " + orderId.value}}</md-card-subtitle>
           {{getNumberOfItemsInOrder(searchOrder) + " items @ " + getNumAsCurrency(searchOrder.total) + " on " +
           dateToString(searchOrder.date)}}
         </button>

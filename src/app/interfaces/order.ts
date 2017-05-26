@@ -11,4 +11,5 @@ export interface Order {
   args: StripeArgs;
   name?: string;
   status: string;
+  orderMessage: string;
 }

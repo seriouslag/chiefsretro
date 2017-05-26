@@ -1,6 +1,7 @@
 <div *ngIf="order" fxLayout="column" fxLayoutGap="15px">
   <div>
     <div>{{"Order status: " + order.status}}</div>
+    <div *ngIf="order.orderMessage">{{order.orderMessage}}</div>
     <div>{{"Date placed: " + dateToString(order.date)}}</div>
     <div>{{"Order Total: " + getNumAsCurrency(order.total/100)}}</div>
   </div>

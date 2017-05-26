@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
+import {AfterViewChecked, Component, OnDestroy, OnInit} from "@angular/core";
 
 import "rxjs/operator/finally";
 import {NavigationEnd, Router} from "@angular/router";
@@ -13,7 +13,7 @@ import {NotificationService} from "./services/notification.service";
   styleUrls: ['./app.component.css'],
   animations: [],
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   showCart: boolean = false;
   routerSubscription: Subscription;
@@ -35,6 +35,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.notificationService.setMessage("Chiefsretro.com is in Alpha state and will be experiencing changes to functionality and appearance.");
   };
+
+  ngAfterViewChecked(): void {
+    // Feature detects Navigation Timing API support.
+    if (window.performance) {
+      // Gets the number of milliseconds since page load
+      // (and rounds the result since the value must be an integer).
+      let timeSincePageLoad = Math.round(performance.now());
+
+      // Sends the timing hit to Google Analytics.
+      this.analyticsService.gaEmitTiming('Home Page load', 'load', timeSincePageLoad);
+    }
+  }
 
   ngOnDestroy() : void {
     if (this.routerSubscription) {

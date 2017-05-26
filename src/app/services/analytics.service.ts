@@ -24,4 +24,8 @@ export class AnalyticsService {
     ga('send', 'pageview');
   }
 
+  public gaEmitTiming(timingCategroy: string, timingVar: string, timingValue: number) {
+    ga('send', 'timing', timingCategroy, timingVar, timingValue);
+  }
+
 }

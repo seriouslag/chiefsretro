@@ -70,7 +70,7 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 
 import * as Hammer from "hammerjs";
 import {firebase} from "./app.firebase";
-import {AngularFireAuth} from "angularfire2/auth";
+import {AngularFireAuth, AngularFireAuthModule} from "angularfire2/auth";
 import {AngularFireDatabaseModule} from "angularfire2/database";
 import {FirebaseService} from "./services/firebase.service";
 import {StatusPageComponent} from "./pages/status/status.page.component";
@@ -126,8 +126,9 @@ export class HammerConfig extends HammerGestureConfig {
     MdSlideToggleModule, MdSnackBarModule,
     FlexLayoutModule,
     routing,
-    AngularFireDatabaseModule,
     firebase,
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
     ReactiveFormsModule,
   ],
   exports: [FormsModule, ReactiveFormsModule],

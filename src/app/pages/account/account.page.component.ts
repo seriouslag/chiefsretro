@@ -42,32 +42,51 @@ export class AccountPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  getOrderByOrderId(orderId: string) {
-    this.firebaseService.getOrderByOrderId(orderId, this.user != null).take(1).subscribe((order: Order) => {
-      if (order.status == null) {
-        order = null;
-      }
-      if (order) {
-        this.searchOrder = order;
-        this.searchId = orderId;
-        this.searchError = false;
-      } else {
-        this.firebaseService.getOrderByOrderId(orderId, false).take(1).subscribe((order: Order) => {
-          console.log(order);
+  getOrderByOrderId(search: string) {
+    if (search.length) {
+      let index = search.indexOf('/');
+      let orderId = search.substring(index, search.length);
+      if (index > -1) {
+        let custId = search.substring(0, index);
+
+        this.firebaseService.getOrderByOrderId(orderId, custId).take(1).subscribe((order: Order) => {
           if (order.status == null) {
             order = null;
           }
           if (order) {
             this.searchOrder = order;
-            this.searchId = orderId;
+            this.searchId = order.date + "/" + custId;
             this.searchError = false;
           } else {
             this.searchOrder = null;
+            this.searchId = null;
+            this.searchError = true;
+          }
+        });
+
+      } else {
+        this.firebaseService.getOrderByOrderId(search).take(1).subscribe((order: Order) => {
+          if (order.status == null) {
+            order = null;
+          }
+          if (order) {
+            this.searchOrder = order;
+            this.searchId = search;
+            this.searchError = false;
+          } else {
+            this.searchOrder = null;
+            this.searchId = null;
             this.searchError = true;
           }
         });
       }
-    });
+    } else {
+      this.searchOrder = null;
+      this.searchId = null;
+      this.searchError = false;
+    }
+
+
   }
 
   getNumberOfItemsInOrder(order: Order): number {

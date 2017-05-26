@@ -2,8 +2,6 @@ import {Injectable} from "@angular/core";
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import {AngularFireAuth} from "angularfire2/auth";
 import {ToastService} from "./toast.service";
-import * as firebase from "firebase/app";
-import {User} from "firebase/app";
 import {Subscription} from "rxjs/Subscription";
 import {MdDialogConfig, MdDialogRef} from "@angular/material";
 import {LoginComponent} from "../components/dialogs/login/login.component";
@@ -20,8 +18,8 @@ import {StripeToken} from "../interfaces/stripe-token";
 import {Order} from "../interfaces/order";
 import "rxjs/add/operator/take";
 import {FromStripeToken} from "../interfaces/from-stripe-token";
-import {isUndefined} from "util";
-
+import * as firebase from "firebase/app";
+import {User} from "firebase/app";
 
 @Injectable()
 export class FirebaseService {
@@ -123,8 +121,7 @@ export class FirebaseService {
   }
 
   getDBProductByProductId(id: number): FirebaseObjectObservable<Product> {
-    let product: FirebaseObjectObservable<Product> = this.db.object('products/' + id);
-    return product;
+    return this.db.object('products/' + id);
   }
 
   public getProductByProductId(id: number): Product {
@@ -358,7 +355,7 @@ export class FirebaseService {
     if (name == null) {
       name = "";
     }
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.af.auth.createUserWithEmailAndPassword(email, password).then((response) => {
         console.log(response);
         this.db.object('users/' + response.uid).set({email: email, name: name, created: Date.now()});
@@ -501,39 +498,9 @@ export class FirebaseService {
   }
 
   public fromStripeTokenToStripeToken(fromStripeToken: FromStripeToken): StripeToken {
-    //I am not sure why fingerprint was being set to undefined but it was killing firebase
-    //quick fix
-    //not needed now because we are not storing card data in database
-    if (isUndefined(fromStripeToken.card.fingerprint)) {
-      fromStripeToken.card.fingerprint = null;
-    }
     let token = <StripeToken>{
       email: fromStripeToken.email,
       id: fromStripeToken.id,
-      /*card: {
-       id: fromStripeToken.card.id,
-       object: fromStripeToken.card.object,
-       addressCity: fromStripeToken.card.address_city,
-       addressCountry: fromStripeToken.card.address_country,
-       addressLine1: fromStripeToken.card.address_line1,
-       addressLine1Check: fromStripeToken.card.address_line1_check,
-       addressLine2: fromStripeToken.card.address_line2,
-       addressState: fromStripeToken.card.address_state,
-       addressZip: fromStripeToken.card.address_zip,
-       addressZipCheck: fromStripeToken.card.address_zip_check,
-       brand: fromStripeToken.card.brand,
-       country: fromStripeToken.card.country,
-       cvcCheck: fromStripeToken.card.cvc_check,
-       dynamicLast4: fromStripeToken.card.dynamic_last4,
-       expMonth: fromStripeToken.card.exp_month,
-       expYear: fromStripeToken.card.exp_year,
-       fingerprint: fromStripeToken.card.fingerprint,
-       funding: fromStripeToken.card.funding,
-       last4: fromStripeToken.card.last4,
-       metadata: fromStripeToken.card.metadata,
-       name: fromStripeToken.card.name,
-       tokenizationMethod: fromStripeToken.card.tokenization_method
-       },*/
       clientIp: fromStripeToken.client_ip,
       livemode: fromStripeToken.livemode,
       type: fromStripeToken.type,
@@ -585,23 +552,15 @@ export class FirebaseService {
     }
   }
 
-  public getOrderByOrderId(orderId: string, userOrder?: boolean, custId?: string): FirebaseObjectObservable<Order> {
+  public getOrderByOrderId(orderId: string, custId?: string): FirebaseObjectObservable<Order> {
     //userOrders is a check to that should already have been completed
     //it checks if the order is connected to to a user account
     let path = "";
-    if (custId == null) {
-
-      if (userOrder && this._user.getValue()) {
-
-        path = 'orders/' + this._user.getValue().uid + '/' + orderId;
-      } else {
-        //this is old and can be removed; also the userOrder should be unneeded anymore.
-        path = 'orders/' + orderId;
-      }
+    if (custId == null && this._user.getValue()) {
+      path = 'orders/' + this._user.getValue().uid + '/' + orderId;
     } else {
-      path = 'orders/' + orderId + "/" + custId;
+      path = 'orders/' + custId + "/" + orderId;
     }
-    console.log('path: ' + path);
     return this.db.object(path);
 
   }

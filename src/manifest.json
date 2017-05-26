@@ -1,0 +1,20 @@
+{
+  "short_name": "Chiefsretro",
+  "name": "Chiefsretro.com",
+  "icons": [
+    {
+      "src": "assets/logo/logo-128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "assets/logo/logo.png",
+      "type": "image/png",
+      "sizes": "400x400"
+    }
+  ],
+  "start_url": "index.html?launcher=true",
+  "default_locale": "en",
+  "display": "browser",
+  "gcm_sender_id": "103953800507"
+}

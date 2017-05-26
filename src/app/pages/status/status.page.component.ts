@@ -40,8 +40,10 @@ export class StatusPageComponent implements OnInit, OnDestroy {
       this.cart = [];
       this.order = null;
       this.waiting = true;
-      if (this.params) {
+      if (this.params['custId']) {
         this.getOrder(this.params['orderId'], this.params['custId']);
+      } else if (this.params['orderId']) {
+        this.getOrder(this.params['orderId']);
       }
     });
   }
@@ -76,51 +78,44 @@ export class StatusPageComponent implements OnInit, OnDestroy {
 
   getOrder(orderId: string, custId?: string): void {
     if (custId == null) {
-      this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, false)
-        .subscribe(result => {
+      this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId)
+        .subscribe(
+          result => {
             if (result) {
               if (result.status != null) {
                 this.order = result;
                 this.cart = this.populateCart(this.order.cart);
                 this.failed = false;
               } else {
-                this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, true).subscribe(result => {
-                  console.log('checking result user ', result);
-                  if (result.status != null) {
-                    this.order = result;
-                    this.cart = this.populateCart(this.order.cart);
-                    this.failed = false;
-                  } else {
-                    this.failed = true;
-                    console.log('failed to get order of: ' + orderId);
-                  }
-                });
+                this.failed = true;
+                console.log('failed to get order of: ' + orderId);
               }
             }
           },
-          (error) => {
+          error => {
             this.failed = true;
             console.log('failed to get order of: ' + orderId, error)
           }
-        )
+        );
     } else {
-      console.log('custId', custId);
-      this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, true, custId)
-        .subscribe(result => {
-          if (result) {
-            if (result.status != null) {
-              this.order = result;
-              this.cart = this.populateCart(this.order.cart);
-              this.failed = false;
+      this.orderSubscription = this.firebaseService.getOrderByOrderId(orderId, custId)
+        .subscribe(
+          result => {
+            if (result) {
+              if (result.status != null) {
+                this.order = result;
+                this.cart = this.populateCart(this.order.cart);
+                this.failed = false;
+              } else {
+                this.failed = true;
+                console.log('failed to get order of: ' + orderId);
+              }
             } else {
               this.failed = true;
               console.log('failed to get order of: ' + orderId);
             }
-          } else {
-            this.failed = true;
-            console.log('failed to get order of: ' + orderId);
           }
-        });
+        );
     }
   }
 }
