@@ -1,21 +1,21 @@
 <div class="app-wrapper  mat-app-background appBackgroundLight" fxLayout="column">
 
-  <app-toolbar [showCart]="showCart"></app-toolbar>
+  <app-toolbar [showCart]="showCart" *ngIf="!showAdmin"></app-toolbar>
+  <app-toolbar-admin *ngIf="showAdmin==true"></app-toolbar-admin>
 
   <div fxLayout="column" class="scroll-overlay" fxFlex>
-    <app-notificationbar></app-notificationbar>
+    <app-notificationbar *ngIf="!showAdmin"></app-notificationbar>
     <div fxFlex class="app-scroll appBackgroundLight" fxLayout="column">
       <div fxFlex class="router appBackgroundLight">
         <router-outlet></router-outlet>
 
       </div>
       <!--desktop footer-->
-      <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm></app-footer>
+      <app-footer fxFlex="nogrow" fxHide fxShow.gt-sm *ngIf="!showAdmin"></app-footer>
     </div>
   </div>
   <!--mobile navbar-->
-  <md-toolbar color="primary" class="mobilenav" fxHide fxShow.lt-md fxFlex="nogrow">
+  <md-toolbar color="primary" class="mobilenav" fxHide fxShow.lt-md fxFlex="nogrow" *ngIf="!showAdmin">
     <app-navbar [showText]="false"></app-navbar>
   </md-toolbar>
 </div>
-

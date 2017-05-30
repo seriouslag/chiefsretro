@@ -9,7 +9,8 @@ export const firebaseConfig = {
   messagingSenderId: "917853947579"
 };
 
-export const firebase = AngularFireModule.initializeApp(firebaseConfig);
+export const firebaseApp = AngularFireModule.initializeApp(firebaseConfig, 'firebaseApp');
+
 
 export const firebaseAdminConfig = {
   apiKey: "AIzaSyA-c_6Jzz7jRjQ_wKjBRamI9kjpn6y3fhc",
@@ -20,4 +21,5 @@ export const firebaseAdminConfig = {
   messagingSenderId: "240310378143"
 };
 
-export const firebaseAdmin = AngularFireModule.initializeApp(firebaseAdminConfig);
+export const firebaseAdminApp = AngularFireModule.initializeApp(firebaseAdminConfig, 'firebaseAdminApp');
+

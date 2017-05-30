@@ -4,12 +4,15 @@ import {MdDialogConfig, MdDialogRef} from "@angular/material";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {AngularFireAuth} from "angularfire2/auth";
 import {AngularFireDatabase} from "angularfire2/database";
+import * as firebase from "firebase/app";
 import {User} from "firebase/app";
 import {ToastService} from "./toast.service";
 import {LogoutComponent} from "../components/dialogs/logout/logout.component";
 import {AdminLoginComponent} from "../components/dialogs/admin-login/admin-login.component";
 import {DialogService} from "./dialog.service";
-
+import {firebaseAdminConfig} from "../app.firebase";
+import {Observable} from "rxjs/Observable";
+import {RetroService} from "./retro.service";
 @Injectable()
 export class AdminService {
 
@@ -20,21 +23,35 @@ export class AdminService {
   private loggedInSubscription: Subscription;
   private loginDialog: MdDialogRef<AdminLoginComponent>;
 
-  constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService) {
 
-    console.log('app name',);
+  private appAdmin: firebase.app.App;
 
-    this.loggedInSubscription = af.authState.subscribe(admin => {
-      this._admin.next(admin);
+  constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService, private retroService: RetroService) {
 
 
-      if (admin == null) {
-        sessionStorage.setItem('admin', 'false');
-        //not logged in
-        if (this._signedIn.getValue()) {
-          //if was logged in then show logout message
-          this.showLogout();
+    this.appAdmin = firebase.initializeApp(firebaseAdminConfig, "firebaseAdminApp");
+
+    this.loggedInSubscription =
+      Observable.create(this.appAdmin.auth().onAuthStateChanged(admin => {
+        console.log('admin2', admin);
+        this._admin.next(admin);
+
+        if (admin == null) {
+          //not logged in or logging out
+          sessionStorage.setItem('admin', 'false');
+          //not logged in
+          if (this._signedIn.getValue()) {
+            //if was logged in then show logout message
+            this.showLogout();
+          } else {
+
+
+          }
         } else {
+          //logged in or logging in
+          if (this.loginDialog) {
+            this.loginDialog.close();
+          }
 
           if (sessionStorage.getItem('admin') == 'true') {
             this.silentLogin();
@@ -44,17 +61,18 @@ export class AdminService {
 
           this._signedIn.next(true);
         }
-      } else {
-        if (this.loginDialog) {
-          this.loginDialog.close();
-        }
-      }
-    });
+      }));
   }
 
   public changeLoginStatus(boolean) {
+    if (this.loginDialog) {
+      this.loginDialog.close('force');
+    }
     if (boolean) {
-      this.loginDialog = this.dialogService.openDialog(AdminLoginComponent, new MdDialogConfig());
+      this.loginDialog = this.dialogService.openDialog(AdminLoginComponent, {
+        disableClose: true,
+
+      });
       this.loginDialog.componentInstance.adminService = this;
       this.loginDialog.afterClosed().subscribe(loginResult => {
         setTimeout(() => {
@@ -75,7 +93,9 @@ export class AdminService {
         if (logoutResult) {
           //disconnect from db before signing out
           //if a sub is added.
-          this.af.auth.signOut();
+          console.log('should log out');
+          this.appAdmin.auth().signOut();
+          this.retroService.setAdmin(false);
         } else {
           //canceled logout
         }
@@ -85,8 +105,9 @@ export class AdminService {
 
   public firebaseEmailLogin(email: string, password: string): Promise<string> {
     return new Promise((resolve => {
-      this.af.auth.signInWithEmailAndPassword(email, password).then(reponse => {
+      this.appAdmin.auth().signInWithEmailAndPassword(email, password).then(response => {
         resolve('ok');
+        //should be handled by event handler
       }).catch((error: any) => {
         let errorCode = error.code;
         let errorMessage = error.message;

@@ -67,17 +67,18 @@ import {NotificationService} from "./services/notification.service";
 import {CheckoutPageComponent} from "./pages/checkout/checkout.page.component";
 import {NavbarComponent} from "./components/navbar/navbar.component";
 
-
 import * as Hammer from "hammerjs";
-import {firebase, firebaseAdmin} from "./app.firebase";
+import {firebaseAdminApp, firebaseApp} from "./app.firebase";
 import {AngularFireAuth, AngularFireAuthModule} from "angularfire2/auth";
 import {AngularFireDatabaseModule} from "angularfire2/database";
 import {FirebaseService} from "./services/firebase.service";
 import {StatusPageComponent} from "./pages/status/status.page.component";
 import {AccountPageComponent} from "./pages/account/account.page.component";
 import {four04Component} from "./pages/four04/four04.component";
-import {AdminComponent} from "./pages/admin/admin.component";
+import {AdminPageComponent} from "./pages/admin/admin.page.component";
 import {AdminLoginComponent} from "./components/dialogs/admin-login/admin-login.component";
+import {AdminService} from "./services/admin.service";
+import {ToolbarAdminComponent} from "./components/admin/toolbar-admin/toolbar-admin.component";
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any> {
@@ -113,8 +114,9 @@ export class HammerConfig extends HammerGestureConfig {
     StatusPageComponent,
     AccountPageComponent,
     four04Component,
-    AdminComponent,
+    AdminPageComponent,
     AdminLoginComponent,
+    ToolbarAdminComponent,
 
   ],
   imports: [
@@ -130,8 +132,9 @@ export class HammerConfig extends HammerGestureConfig {
     MdSlideToggleModule, MdSnackBarModule,
     FlexLayoutModule,
     routing,
-    firebase,
-    firebaseAdmin,
+    firebaseAdminApp,
+    firebaseApp,
+
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     ReactiveFormsModule,
@@ -140,7 +143,7 @@ export class HammerConfig extends HammerGestureConfig {
   providers: [ProductService, ToastService, DialogService, AnalyticsService, RetroService, NotificationService, {
     provide: HAMMER_GESTURE_CONFIG,
     useClass: HammerConfig
-  }, AngularFireAuth, FirebaseService],
+  }, AngularFireAuth, FirebaseService, AdminService],
   entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent, CancelComponent, AdminLoginComponent],
   bootstrap: [AppComponent]
 })

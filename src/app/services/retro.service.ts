@@ -14,6 +14,9 @@ export class RetroService {
   private _showDesktopNavbar = new BehaviorSubject<Boolean>(false);
   public showDesktopNavbar: Observable<boolean> = this._showDesktopNavbar.asObservable();
 
+  private _showAdmin = new BehaviorSubject<Boolean>(false);
+  public showAdmin: Observable<boolean> = this._showAdmin.asObservable();
+
   constructor() {
     this.init();
   }
@@ -39,6 +42,16 @@ export class RetroService {
   public toggleMobileSearch(): void {
     this._showMobileSearch.next(!this._showMobileSearch.getValue());
     sessionStorage.setItem('showMobileCart', this._showMobileSearch.getValue().toString());
+  }
+
+  public toggleAdmin(): void {
+    this._showAdmin.next(!this._showAdmin.getValue());
+    sessionStorage.setItem('showAdmin', this._showAdmin.getValue().toString());
+  }
+
+  public setAdmin(show: boolean): void {
+    this._showAdmin.next(show);
+    sessionStorage.setItem('showAdmin', show.toString())
   }
 
   public toggleCart(): void {

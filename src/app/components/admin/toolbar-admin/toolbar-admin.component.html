@@ -1,0 +1,10 @@
+<md-toolbar color="primary">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxFlex>
+    <div>Admin Mode</div>
+    <div fxShow fxHide.lt-sm>{{admin?.email}}</div>
+    <button md-button (click)="logout()">Logout</button>
+  </div>
+  <md-toolbar-row fxHide fxShow.lt-sm>
+    <div fxLayout="row" fxLayoutAlign="center center" fxFlex>{{admin?.email}}</div>
+  </md-toolbar-row>
+</md-toolbar>

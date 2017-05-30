@@ -20,7 +20,6 @@ import "rxjs/add/operator/take";
 import {FromStripeToken} from "../interfaces/from-stripe-token";
 import * as firebase from "firebase/app";
 import {User} from "firebase/app";
-import {firebaseChiefs} from "../app.firebase";
 
 @Injectable()
 export class FirebaseService {
@@ -42,10 +41,8 @@ export class FirebaseService {
   public cart = this._cart.asObservable();
   public products: Product[];
 
-  private app;
 
   constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService) {
-
 
     let products = sessionStorage.getItem('products');
 

@@ -6,6 +6,7 @@ import {AnalyticsService} from "./services/analytics.service";
 import {Subscription} from "rxjs/Subscription";
 import {RetroService} from "./services/retro.service";
 import {NotificationService} from "./services/notification.service";
+import {AdminService} from "./services/admin.service";
 
 @Component({
   selector: 'app-chiefsretro',
@@ -16,15 +17,22 @@ import {NotificationService} from "./services/notification.service";
 export class AppComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   showCart: boolean = false;
-  routerSubscription: Subscription;
-  showCartSubscription: Subscription;
+  showAdmin: boolean = false;
 
-  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private notificationService: NotificationService) {
+  private routerSubscription: Subscription;
+  private showCartSubscription: Subscription;
+  private showAdminSubscription: Subscription;
+
+  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private notificationService: NotificationService, private adminService: AdminService) {
   }
 
   ngOnInit(): void {
     this.showCartSubscription = this.retroService.showCart.subscribe(showCart => {
       this.showCart = showCart;
+    });
+
+    this.showAdminSubscription = this.retroService.showAdmin.subscribe(showAdmin => {
+      this.showAdmin = showAdmin;
     });
 
     this.routerSubscription = this.router.events.subscribe(event => {
@@ -49,8 +57,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngOnDestroy() : void {
-    if (this.routerSubscription) {
-      this.routerSubscription.unsubscribe();
+    if (this.showAdmin) {
+      this.showAdminSubscription.unsubscribe();
     }
     if (this.showCartSubscription) {
       this.routerSubscription.unsubscribe();
