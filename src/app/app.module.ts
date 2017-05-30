@@ -69,13 +69,15 @@ import {NavbarComponent} from "./components/navbar/navbar.component";
 
 
 import * as Hammer from "hammerjs";
-import {firebase} from "./app.firebase";
+import {firebase, firebaseAdmin} from "./app.firebase";
 import {AngularFireAuth, AngularFireAuthModule} from "angularfire2/auth";
 import {AngularFireDatabaseModule} from "angularfire2/database";
 import {FirebaseService} from "./services/firebase.service";
 import {StatusPageComponent} from "./pages/status/status.page.component";
 import {AccountPageComponent} from "./pages/account/account.page.component";
 import {four04Component} from "./pages/four04/four04.component";
+import {AdminComponent} from "./pages/admin/admin.component";
+import {AdminLoginComponent} from "./components/dialogs/admin-login/admin-login.component";
 
 export class HammerConfig extends HammerGestureConfig {
   overrides = <any> {
@@ -111,6 +113,8 @@ export class HammerConfig extends HammerGestureConfig {
     StatusPageComponent,
     AccountPageComponent,
     four04Component,
+    AdminComponent,
+    AdminLoginComponent,
 
   ],
   imports: [
@@ -127,6 +131,7 @@ export class HammerConfig extends HammerGestureConfig {
     FlexLayoutModule,
     routing,
     firebase,
+    firebaseAdmin,
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     ReactiveFormsModule,
@@ -136,7 +141,7 @@ export class HammerConfig extends HammerGestureConfig {
     provide: HAMMER_GESTURE_CONFIG,
     useClass: HammerConfig
   }, AngularFireAuth, FirebaseService],
-  entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent, CancelComponent],
+  entryComponents: [LoginComponent, LogoutComponent, LoginToastComponent, CancelComponent, AdminLoginComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {

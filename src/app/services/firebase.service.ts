@@ -20,6 +20,7 @@ import "rxjs/add/operator/take";
 import {FromStripeToken} from "../interfaces/from-stripe-token";
 import * as firebase from "firebase/app";
 import {User} from "firebase/app";
+import {firebaseChiefs} from "../app.firebase";
 
 @Injectable()
 export class FirebaseService {
@@ -41,7 +42,11 @@ export class FirebaseService {
   public cart = this._cart.asObservable();
   public products: Product[];
 
+  private app;
+
   constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService) {
+
+
     let products = sessionStorage.getItem('products');
 
     if (products) {
@@ -369,7 +374,7 @@ export class FirebaseService {
         } else if (errorCode == 'auth/email-already-in-use') {
         } else if (errorCode == 'auth/operation-not-allowed') {
         } else {
-          console.log('An unknow error occured', error);
+          console.log('An unknown error occured', error);
         }
         resolve(errorCode);
       })

@@ -7,6 +7,7 @@ import {CheckoutPageComponent} from "./pages/checkout/checkout.page.component";
 import {StatusPageComponent} from "./pages/status/status.page.component";
 import {AccountPageComponent} from "./pages/account/account.page.component";
 import {four04Component} from "./pages/four04/four04.component";
+import {AdminComponent} from "./pages/admin/admin.component";
 
 export const appRoutes: Routes = [
   {path: 'all', component: AllComponent},
@@ -18,6 +19,7 @@ export const appRoutes: Routes = [
   {path: 'status/:orderId', component: StatusPageComponent},
   {path: 'status/:orderId/:custId', component: StatusPageComponent},
   {path: 'account', component: AccountPageComponent},
+  {path: 'admin', component: AdminComponent},
   {path: "**", component: four04Component}
 ];
 

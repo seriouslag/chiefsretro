@@ -10,3 +10,14 @@ export const firebaseConfig = {
 };
 
 export const firebase = AngularFireModule.initializeApp(firebaseConfig);
+
+export const firebaseAdminConfig = {
+  apiKey: "AIzaSyA-c_6Jzz7jRjQ_wKjBRamI9kjpn6y3fhc",
+  authDomain: "chiefsretro-admin.firebaseapp.com",
+  databaseURL: "https://chiefsretro-admin.firebaseio.com",
+  projectId: "chiefsretro-admin",
+  storageBucket: "chiefsretro-admin.appspot.com",
+  messagingSenderId: "240310378143"
+};
+
+export const firebaseAdmin = AngularFireModule.initializeApp(firebaseAdminConfig);

@@ -1,0 +1,25 @@
+<div class="dialog">
+  <h1 md-dialog-title>Admin Login</h1>
+  <div class="fxFlexFill">
+    <div fxLayout="column" fxLayoutGap="10px" [@slideleft]>
+      <form fxLayout="column" fxLayoutGap="10px" [formGroup]="loginForm" novalidate (submit)="firebaseEmailLogin()">
+        <md-input-container>
+          <input mdInput placeholder="Email" type="email" formControlName="email">
+        </md-input-container>
+
+        <md-input-container>
+          <input mdInput placeholder="Password" type="password" formControlName="password">
+        </md-input-container>
+
+        <div fxLayout="row">
+          <button md-button md-tooltip="Login" [mdTooltipShowDelay]="500" fxFlex
+                  [disabled]="loginForm.invalid || submitted">Login
+          </button>
+          <button md-button md-dialog-close="" routerLinkActive="active" routerLink="/home" (click)="cancel()"
+                  color="warn">Back to Home
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
