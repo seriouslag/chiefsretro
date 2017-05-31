@@ -43,25 +43,17 @@ export class FirebaseService {
 
 
   constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService) {
-
-    let products = sessionStorage.getItem('products');
-
-    if (products) {
-      this.products = JSON.parse(products);
-      this.init();
-    } else {
-      this.productsSubscription = this.db.list('products/')
-        .subscribe((products: Product[]) => {
-          this.products = products;
-          sessionStorage.setItem('products', JSON.stringify(this.products));
-          if (this.isInit == false) {
-            this.init();
-          }
-        }, (error) => {
-          alert('FATAL ERROR: if you see Landon tell him.');
-          console.log(error);
-        });
-    }
+    this.productsSubscription = this.db.list('products/')
+      .subscribe((products: Product[]) => {
+        this.products = products;
+        sessionStorage.setItem('products', JSON.stringify(this.products));
+        if (this.isInit == false) {
+          this.init();
+        }
+      }, (error) => {
+        alert('FATAL ERROR: if you see Landon tell him.');
+        console.log(error);
+      });
   }
 
   public setCart(cartItems: CartItem[]): void {
@@ -118,7 +110,6 @@ export class FirebaseService {
         productOptionPrice: dbCartItem.productOptionPrice
       });
     }
-    console.log('cart', cart);
     return cart;
   }
 
@@ -479,10 +470,7 @@ export class FirebaseService {
             cart.push(cartItem)
           }
 
-          //if (cart.length) {
-          console.log('from db cart', cart);
           this._cart.next(cart);
-          //}
         });
       }
       this.isInit = true;
