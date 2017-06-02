@@ -6,7 +6,7 @@ import {AllComponent} from "./pages/all/all.component";
 import {CheckoutPageComponent} from "./pages/checkout/checkout.page.component";
 import {StatusPageComponent} from "./pages/status/status.page.component";
 import {AccountPageComponent} from "./pages/account/account.page.component";
-import {four04Component} from "./pages/four04/four04.component";
+import {Four04Component} from "./pages/four04/four04.component";
 import {AdminPageComponent} from "./pages/admin/admin.page.component";
 
 export const appRoutes: Routes = [
@@ -20,7 +20,7 @@ export const appRoutes: Routes = [
   {path: 'status/:orderId/:custId', component: StatusPageComponent},
   {path: 'account', component: AccountPageComponent},
   {path: 'admin', component: AdminPageComponent},
-  {path: "**", component: four04Component}
+  {path: '**', component: Four04Component}
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

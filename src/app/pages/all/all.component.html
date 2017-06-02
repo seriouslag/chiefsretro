@@ -6,17 +6,20 @@
     <a id="{{product.productName.replace(' ', '%20')}}"></a>
     <md-card>
       <md-card-subtitle>{{product.productName}}</md-card-subtitle>
-      <md-card-content *ngIf="product.productOptions.length>0">
-        <div class="center" *ngIf="product.productOptions[0].productOptionImages.length>0">
-          <img class="card-image-small"
-               src="/src/assets/sku{{product.productId}}/{{product.productOptions[0].productOptionImages[0].productOptionImageOrder}}.jpg"/>
+      <md-card-content>
+        <div class="center">
+          <img *ngIf="product.productOptions[0]?.productOptionImages?.length>0" class="card-image-small"
+               src="assets/sku{{product.productId}}/{{product.productOptions[0].productOptionImages[0]?.productOptionImageOrder}}.jpg"/>
+          <img *ngIf="product.productOptions[0]?.productOptionImages?.length==0" class="card-image-small"
+               src="assets/imageError.jpg">
+          <img *ngIf="product.productOptions.length==0" class="card-image-small" src="assets/imageError.jpg">
         </div>
       </md-card-content>
     </md-card>
   </a>
 </div>
 
-  <div fxFlexFill class="center" *ngIf="!productList">
+  <div fxFlexFill class="center">
   <md-spinner *ngIf="failed==false && waiting==true"></md-spinner>
   <div *ngIf="failed">
     No product found

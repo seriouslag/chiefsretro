@@ -11,21 +11,21 @@ export class ThumbImageComponent implements OnInit, OnChanges {
   @Input()
   product: Product;
 
-  imageSrc: string = "";
+  imageSrc = '';
 
   @Input()
   rounded: boolean;
 
   @Input()
-  size: number = 0;
+  size = 0;
 
   constructor() {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //when the product changes set the selected productOption to default;
-    for (let propName in changes) {
-      if (propName == "product") {
+    // when the product changes set the selected productOption to default;
+    for (const propName in changes) {
+      if (propName === 'product') {
         this.setup();
       }
     }
@@ -36,9 +36,9 @@ export class ThumbImageComponent implements OnInit, OnChanges {
   }
 
   setup() {
-    for (let productOption of this.product.productOptions) {
+    for (const productOption of this.product.productOptions) {
       if (productOption.productOptionImages) {
-        for (let productOptionImage of productOption.productOptionImages) {
+        for (const productOptionImage of productOption.productOptionImages) {
           if (productOptionImage.productOptionImageLocation) {
             if (!this.imageSrc) {
               this.imageSrc = productOptionImage.productOptionImageLocation;
@@ -49,7 +49,7 @@ export class ThumbImageComponent implements OnInit, OnChanges {
           } else {
             if (productOptionImage.productOptionImageOrder) {
               if (!this.imageSrc) {
-                this.imageSrc = "/assets/sku" + this.product.productId + "/" + productOptionImage.productOptionImageOrder + ".jpg";
+                this.imageSrc = '/assets/sku' + this.product.productId + '/' + productOptionImage.productOptionImageOrder + '.jpg';
                 break;
               } else {
                 break;
@@ -62,8 +62,8 @@ export class ThumbImageComponent implements OnInit, OnChanges {
   }
 
   imageError() {
-    this.imageSrc = "/assets/imageError.jpg";
-    //do a log
+    this.imageSrc = '/assets/imageError.jpg';
+    // do a log
   }
 
 }

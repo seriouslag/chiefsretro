@@ -14,8 +14,8 @@ import {DbCartItem} from "../../interfaces/db-cart-item";
 })
 export class StatusPageComponent implements OnInit, OnDestroy {
 
-  failed: boolean = false;
-  waiting: boolean = true;
+  failed = false;
+  waiting = true;
   user: User;
   cart: CartItem[] = [];
   order: Order;
@@ -68,8 +68,8 @@ export class StatusPageComponent implements OnInit, OnDestroy {
   }
 
   dateToString(date: string) {
-    let parsedDate = new Date(parseInt(date));
-    return (parsedDate.toLocaleDateString() + " @ " + parsedDate.toLocaleTimeString());
+    const parsedDate = new Date(parseInt(date, 10));
+    return (parsedDate.toLocaleDateString() + ' @ ' + parsedDate.toLocaleTimeString());
   }
 
   populateCart(dbCart: DbCartItem[]): CartItem[] {

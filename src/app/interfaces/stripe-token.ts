@@ -2,7 +2,7 @@
 export interface StripeToken {
   id: string,
   email: string,
-  //card: Card
+  // card: Card
   clientIp: string,
   created: number,
   livemode: boolean,

@@ -43,7 +43,6 @@ import {AboutPageComponent} from "./pages/about/about.page.component";
 import {LoginComponent} from "./components/dialogs/login/login.component";
 import {ProductPageComponent} from "./pages/product/product.page.component";
 import {routing} from "./app.route";
-import {SearchComponent} from "./components/search/search.component";
 import {CommonModule} from "@angular/common";
 import {ProductComponent} from "./components/product/product/product.component";
 import {FooterComponent} from "./components/footer/footer.component";
@@ -74,7 +73,7 @@ import {AngularFireDatabaseModule} from "angularfire2/database";
 import {FirebaseService} from "./services/firebase.service";
 import {StatusPageComponent} from "./pages/status/status.page.component";
 import {AccountPageComponent} from "./pages/account/account.page.component";
-import {four04Component} from "./pages/four04/four04.component";
+import {Four04Component} from "./pages/four04/four04.component";
 import {AdminPageComponent} from "./pages/admin/admin.page.component";
 import {AdminLoginComponent} from "./components/dialogs/admin-login/admin-login.component";
 import {AdminService} from "./services/admin.service";
@@ -96,7 +95,6 @@ export class HammerConfig extends HammerGestureConfig {
     AboutPageComponent,
     LoginComponent,
     ProductPageComponent,
-    SearchComponent,
     ProductComponent,
     FooterComponent,
     AutosearchComponent,
@@ -113,7 +111,7 @@ export class HammerConfig extends HammerGestureConfig {
     NavbarComponent,
     StatusPageComponent,
     AccountPageComponent,
-    four04Component,
+    Four04Component,
     AdminPageComponent,
     AdminLoginComponent,
     ToolbarAdminComponent,

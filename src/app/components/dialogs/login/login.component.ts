@@ -35,9 +35,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   firebaseService: FirebaseService;
   showLoginText: boolean;
   action: boolean;
-  submitted: boolean = false;
-  creation: boolean = false;
-  title: string = "Login";
+  submitted = false;
+  creation = false;
+  title = 'Login';
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl(null, [Validators.required, this.validateEmail]),
@@ -65,20 +65,21 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   firebaseEmailLogin(): void {
-    this.firebaseService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(), this.loginForm.controls['password'].value).then((response) => {
-      if (response == 'ok') {
-        //should be handled by event listener
+    this.firebaseService.firebaseEmailLogin(this.loginForm.controls['email']
+      .value.toLowerCase(), this.loginForm.controls['password'].value).then((response) => {
+      if (response === 'ok') {
+        // should be handled by event listener
       } else {
         /*
-        TODO setup attemp limits
+         TODO setup attempt limits
          */
-        if (response == 'auth/user-disabled') {
+        if (response === 'auth/user-disabled') {
           this.toastService.toast('This account is deactivated');
-        } else if (response == 'auth/invalid-email') {
+        } else if (response === 'auth/invalid-email') {
           this.toast('Email is invalid');
-        } else if (response == 'auth/user-not-found') {
+        } else if (response === 'auth/user-not-found') {
           this.toast('This email is not found');
-        } else if (response == 'auth/wrong-password') {
+        } else if (response === 'auth/wrong-password') {
           this.toast('Password is incorrect');
         } else {
           console.log(response);
@@ -89,8 +90,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private passwordMatchValidator(fg: FormGroup) {
-    let password = fg.get('password').value;
-    let cpassword = fg.get('cpassword').value;
+    const password = fg.get('password').value;
+    const cpassword = fg.get('cpassword').value;
 
     if (password === cpassword) {
       fg.get('cpassword').setErrors(null);
@@ -102,8 +103,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private emailMatchValidator(fg: FormGroup) {
-    let email = fg.get('email').value;
-    let cemail = fg.get('cemail').value;
+    const email = fg.get('email').value;
+    const cemail = fg.get('cemail').value;
 
     if (email.toLowerCase() === cemail.toLowerCase()) {
       fg.get('cemail').setErrors(null);
@@ -116,22 +117,23 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   firebaseCreateUserLogin(): void {
     this.submitted = true;
-    this.firebaseService.firebaseCreateUserFromEmail(this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value,
-      (this.accountForm.controls['firstname'].value + " " + this.accountForm.controls['lastname'].value)).then((response) => {
-      if (response == 'ok') {
-        this.toast("Created account: " + this.matchingEmail.controls['email'].value.toLowerCase());
+    this.firebaseService.firebaseCreateUserFromEmail(
+      this.matchingEmail.controls['email'].value.toLowerCase(), this.matchingPassword.controls['password'].value,
+      (this.accountForm.controls['firstname'].value + ' ' + this.accountForm.controls['lastname'].value)).then((response) => {
+      if (response === 'ok') {
+        this.toast('Created account: ' + this.matchingEmail.controls['email'].value.toLowerCase());
         this.backToLogin();
         this.action = true;
         this.loginDialog.close('force');
       } else {
         this.submitted = false;
-        if (response == 'auth/weak-password') {
+        if (response === 'auth/weak-password') {
           this.toastService.toast('Password is too weak');
-        } else if (response == 'auth/invalid-email') {
+        } else if (response === 'auth/invalid-email') {
           this.toast('Email is invalid');
-        } else if (response == 'auth/email-already-in-use') {
+        } else if (response === 'auth/email-already-in-use') {
           this.toast('Email is in use, please try another login');
-        } else if (response == 'auth/operation-not-allowed') {
+        } else if (response === 'auth/operation-not-allowed') {
           this.toast('This is not allowed at this time');
         } else {
           this.toast('Cannot process, unknown error');
@@ -145,7 +147,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
 
   ngOnDestroy() {
-    if (this.action == false) {
+    if (this.action === false) {
       this.loginDialog.close('canceled');
     }
   }
@@ -163,7 +165,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private validatePW(fc: FormControl) {
-    let PW_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&()])[A-Za-z\d$@$!%*?&]{8,}/;
+    const PW_REGEXP = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@!%*?&()])[A-Za-z\d$@!%*?&]{8,}/;
 
     return PW_REGEXP.test(fc.value) ? null : {
       'pw': true
@@ -171,7 +173,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   private validateEmail(fc: FormControl) {
-    let EMAIL_REGEXP = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,12}))/i;
+    const EMAIL_REGEXP =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,12}))/i;
 
     return EMAIL_REGEXP.test(fc.value) ? null : {
       'email': true
@@ -182,14 +185,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.toastService.toast(message, 'OK', 2000);
   }
 
-  createAcccount() {
-    this.title = "Create Account";
+  createAccount() {
+    this.title = 'Create Account';
     this.creation = true;
     this.submitted = false;
   }
 
   private backToLogin() {
-    this.title = "Login";
+    this.title = 'Login';
     this.creation = false;
   }
 

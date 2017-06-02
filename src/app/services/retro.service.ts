@@ -22,16 +22,16 @@ export class RetroService {
   }
 
   private init(): void {
-    let showCart = sessionStorage.getItem('showCart');
-    let showMobileSearch = sessionStorage.getItem('showCart');
-    let showDesktopNavbar = sessionStorage.getItem('navBar');
+    const showCart = sessionStorage.getItem('showCart');
+    const showMobileSearch = sessionStorage.getItem('showCart');
+    const showDesktopNavbar = sessionStorage.getItem('navBar');
 
     if (showMobileSearch) {
-      this._showMobileSearch.next(showMobileSearch == 'true');
+      this._showMobileSearch.next(showMobileSearch === 'true');
     }
 
-    if (showCart && location.pathname != '/checkout') {
-      this._showCart.next(showCart == 'true');
+    if (showCart && location.pathname !== '/checkout') {
+      this._showCart.next(showCart === 'true');
     }
 
     if (showDesktopNavbar || showDesktopNavbar == null) {
@@ -55,7 +55,7 @@ export class RetroService {
   }
 
   public toggleCart(): void {
-    if (location.pathname == '/checkout') {
+    if (location.pathname === '/checkout') {
       this.openCart(false);
     } else {
       this._showCart.next(!this._showCart.getValue());
@@ -73,7 +73,7 @@ export class RetroService {
   }
 
   public openCart(show: boolean): void {
-    if (location.pathname == '/checkout') {
+    if (location.pathname === '/checkout') {
       show = false;
     }
     this._showCart.next(show);

@@ -5,7 +5,7 @@ import {LoginToastComponent} from "../components/toasts/login/login.toast.compon
 @Injectable()
 export class ToastService {
 
-  toastDuration: number = 1500;
+  toastDuration = 1500;
 
   constructor(private snackbar: MdSnackBar) {
   }
@@ -29,7 +29,7 @@ export class ToastService {
     }
 
     if (profileUrl) {
-      let login = this.snackbar.openFromComponent(LoginToastComponent, {
+      const login = this.snackbar.openFromComponent(LoginToastComponent, {
         duration: duration,
         extraClasses: ['accent-backgroundColor']
       });

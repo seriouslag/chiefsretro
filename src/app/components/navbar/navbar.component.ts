@@ -12,14 +12,14 @@ import {User} from "firebase/app";
 export class NavbarComponent implements OnInit, OnDestroy {
 
   loginStatus: boolean;
-  loginStatusText: string = "Login";
+  loginStatusText = 'Login';
   private loginSubscription: Subscription;
 
   private userSubscription: Subscription;
   user: User;
 
   @Input()
-  showText: boolean = false;
+  showText = false;
 
   constructor(private firebaseService: FirebaseService, private retroService: RetroService) {
   }
@@ -28,9 +28,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.loginSubscription = this.firebaseService.signedIn.subscribe(loginStatus => {
       this.loginStatus = loginStatus;
       if (this.loginStatus) {
-        this.loginStatusText = "Logout";
+        this.loginStatusText = 'Logout';
       } else {
-        this.loginStatusText = "Login";
+        this.loginStatusText = 'Login';
       }
     });
 
@@ -53,7 +53,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   toggleCart() {
-    if (location.pathname != '/checkout') {
+    if (location.pathname !== '/checkout') {
       this.retroService.toggleCart();
     }
   }

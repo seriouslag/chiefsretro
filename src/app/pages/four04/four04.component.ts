@@ -5,7 +5,7 @@ import {Component, OnInit} from "@angular/core";
   templateUrl: './four04.component.html',
   styleUrls: ['./four04.component.css']
 })
-export class four04Component implements OnInit {
+export class Four04Component implements OnInit {
 
   constructor() {
   }

@@ -34,11 +34,11 @@ import {CartItem} from "../../../interfaces/cart-item";
     ]),
     trigger('heroState', [
       state('inactive', style({
-        opacity: ' .25',
-        backgroundColor: 'black'
+        transform: 'rotateY(90deg)',
       })),
       state('active', style({
-        opacity: ' 1',
+        transform: 'rotateY(0deg)',
+
       })),
       transition('inactive => active', animate('0.5s 0.2s ease')),
       transition('active => inactive', animate('125ms ease-out'))
@@ -51,19 +51,19 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   product: Product;
 
-  imgIndex: number = 0;
-  imgSrc: number = 0;
-  selectedProductOptionNumber: number = 0;
+  imgIndex = 0;
+  imgSrc = 0;
+  selectedProductOptionNumber = 0;
   selectedProductOption: ProductOption;
 
   imgPreload: HTMLImageElement[] = [];
 
   cart: CartItem[];
   private cartSubscription: Subscription;
-  cartContainsSelectedProductOption: boolean = false;
+  cartContainsSelectedProductOption = false;
 
-  state: string = "active";
-  isAnimating: boolean = true;
+  state = 'active';
+  isAnimating = true;
 
 
   constructor(private toastService: ToastService, private analyticsService: AnalyticsService, private firebaseService: FirebaseService) {
@@ -79,18 +79,18 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   startAnimation() {
     if (this.selectedProductOption.productOptionImages.length > 1) {
       if (!this.isAnimating) {
-        this.state = "inactive";
+        this.state = 'inactive';
       }
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    //when the product changes set the selected productOption to default;
-    for (let propName in changes) {
-      if (propName == "product") {
+    // when the product changes set the selected productOption to default;
+    for (const propName in changes) {
+      if (propName === 'product') {
         this.selectedProductOption = this.product.productOptions[0];
         this.imgIndex = 0;
-        //this.imagePreload();
+        // this.imagePreload();
       }
     }
   }
@@ -104,7 +104,7 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   selected(event: MdTabChangeEvent): void {
     this.selectedProductOption = this.product.productOptions[event.index];
     this.selectedProductOptionNumber = event.index;
-    //reset index to set the selected image back to the first one
+    // reset index to set the selected image back to the first one
     this.imgIndex = 0;
 
     this.evalCart();
@@ -116,9 +116,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   animationDone(event: any) {
 
-    if (event.fromState == "active") {
+    if (event.fromState === 'active') {
       this.imgSrc = this.imgIndex;
-      this.state = "active";
+      this.state = 'active';
     } else {
       this.isAnimating = false
     }
@@ -126,9 +126,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
 
   private evalCart(): void {
     this.cartContainsSelectedProductOption = false;
-    for (let cartItem of this.cart) {
+    for (const cartItem of this.cart) {
       if (cartItem.productOption) {
-        if (cartItem.productOption.productOptionId == this.selectedProductOption.productOptionId) {
+        if (cartItem.productOption.productOptionId === this.selectedProductOption.productOptionId) {
           this.cartContainsSelectedProductOption = true;
           break;
         }
@@ -137,16 +137,16 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   imagePreload(): void {
-    //reset
+    // reset
     this.imgPreload = [];
-    for (let productOption of this.product.productOptions) {
-      for (let productOptionImage of productOption.productOptionImages) {
+    for (const productOption of this.product.productOptions) {
+      for (const productOptionImage of productOption.productOptionImages) {
         if (productOptionImage.productOptionImageLocation) {
-          let img = new Image();
+          const img = new Image();
           img.src = productOptionImage.productOptionImageLocation;
           this.imgPreload.push(img);
         } else {
-          let img = new Image();
+          const img = new Image();
           img.src = '/src/assets/sku' + this.product.productId + '/' + productOptionImage.productOptionImageOrder + '.jpg';
           img.addEventListener('error', () => {
             this.analyticsService.gaEmitEvent('image', 'error', 'sku' + this.product.productId.toString());
@@ -186,9 +186,9 @@ export class ProductComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   swipe(event: any) {
-    if (event.type == 'swiperight') {
+    if (event.type === 'swiperight') {
       this.previousImage();
-    } else if (event.type == 'swipeleft') {
+    } else if (event.type === 'swipeleft') {
       this.nextImage();
     } else {
 

@@ -19,7 +19,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   orders: Order[] = [];
   searchOrder: Order;
   searchId: string;
-  searchError: boolean = false;
+  searchError = false;
   private userSubscription: Subscription;
   private ordersSubscription: Subscription;
 
@@ -37,17 +37,17 @@ export class AccountPageComponent implements OnInit, OnDestroy {
       } else {
         this.orders = [];
         this.searchOrder = null;
-        this.searchId = "";
+        this.searchId = '';
       }
     });
   }
 
   getOrderByOrderId(search: string) {
     if (search.length) {
-      let index = search.indexOf('/');
-      let orderId = search.substring(index, search.length);
+      const index = search.indexOf('/');
+      const orderId = search.substring(index, search.length);
       if (index > -1) {
-        let custId = search.substring(0, index);
+        const custId = search.substring(0, index);
 
         this.firebaseService.getOrderByOrderId(orderId, custId).take(1).subscribe((order: Order) => {
           if (order.status == null) {
@@ -55,7 +55,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
           }
           if (order) {
             this.searchOrder = order;
-            this.searchId = order.date + "/" + custId;
+            this.searchId = order.date + '/' + custId;
             this.searchError = false;
           } else {
             this.searchOrder = null;
@@ -91,7 +91,7 @@ export class AccountPageComponent implements OnInit, OnDestroy {
 
   getNumberOfItemsInOrder(order: Order): number {
     let numOfItems = 0;
-    for (let cartItem of order.cart) {
+    for (const cartItem of order.cart) {
       numOfItems += cartItem.quantity;
     }
     return numOfItems;
@@ -105,8 +105,8 @@ export class AccountPageComponent implements OnInit, OnDestroy {
   }
 
   dateToString(date: string): string {
-    let parsedDate = new Date(parseInt(date));
-    return (parsedDate.toLocaleDateString() + " @ " + parsedDate.toLocaleTimeString());
+    const parsedDate = new Date(parseInt(date, 10));
+    return (parsedDate.toLocaleDateString() + ' @ ' + parsedDate.toLocaleTimeString());
   }
 
   ngOnDestroy(): void {

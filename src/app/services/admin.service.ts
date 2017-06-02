@@ -22,14 +22,12 @@ export class AdminService {
   public admin = this._admin.asObservable();
   private loggedInSubscription: Subscription;
   private loginDialog: MdDialogRef<AdminLoginComponent>;
-
-
   private appAdmin: firebase.app.App;
 
-  constructor(private af: AngularFireAuth, private db: AngularFireDatabase, private toastService: ToastService, private dialogService: DialogService, private retroService: RetroService) {
+  constructor(private af: AngularFireAuth, private db: AngularFireDatabase,
+              private toastService: ToastService, private dialogService: DialogService, private retroService: RetroService) {
 
-
-    this.appAdmin = firebase.initializeApp(firebaseAdminConfig, "firebaseAdminApp");
+    this.appAdmin = firebase.initializeApp(firebaseAdminConfig, 'firebaseAdminApp');
 
     this.loggedInSubscription =
       Observable.create(this.appAdmin.auth().onAuthStateChanged(admin => {
@@ -37,23 +35,20 @@ export class AdminService {
         this._admin.next(admin);
 
         if (admin == null) {
-          //not logged in or logging out
+          // not logged in or logging out
           sessionStorage.setItem('admin', 'false');
-          //not logged in
+          // not logged in
           if (this._signedIn.getValue()) {
-            //if was logged in then show logout message
+            // if was logged in then show logout message
             this.showLogout();
-          } else {
-
-
           }
         } else {
-          //logged in or logging in
+          // logged in or logging in
           if (this.loginDialog) {
             this.loginDialog.close();
           }
 
-          if (sessionStorage.getItem('admin') == 'true') {
+          if (sessionStorage.getItem('admin') === 'true') {
             this.silentLogin();
           } else {
             this.showLogin();
@@ -76,28 +71,28 @@ export class AdminService {
       this.loginDialog.componentInstance.adminService = this;
       this.loginDialog.afterClosed().subscribe(loginResult => {
         setTimeout(() => {
-          if (this._signedIn.getValue() == false) {
-            if (loginResult == 'force') {
-              //do nothing
+          if (this._signedIn.getValue() === false) {
+            if (loginResult === 'force') {
+              // do nothing
             } else {
-              //this.loginCanceled();
-              //kind of annoying
+              // this.loginCanceled();
+              // kind of annoying
             }
           }
         }, 150);
       });
     } else {
-      //do log out;
-      let logoutDialog = this.dialogService.openDialog(LogoutComponent, new MdDialogConfig());
+      // do log out;
+      const logoutDialog = this.dialogService.openDialog(LogoutComponent, new MdDialogConfig());
       logoutDialog.afterClosed().subscribe(logoutResult => {
         if (logoutResult) {
-          //disconnect from db before signing out
-          //if a sub is added.
+          // disconnect from db before signing out
+          // if a sub is added.
           console.log('should log out');
           this.appAdmin.auth().signOut();
           this.retroService.setAdmin(false);
         } else {
-          //canceled logout
+          // canceled logout
         }
       });
     }
@@ -107,17 +102,17 @@ export class AdminService {
     return new Promise((resolve => {
       this.appAdmin.auth().signInWithEmailAndPassword(email, password).then(response => {
         resolve('ok');
-        //should be handled by event handler
+        // should be handled by event handler
       }).catch((error: any) => {
-        let errorCode = error.code;
-        let errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
         this.toast(errorMessage);
-        if (errorCode == 'auth/user-disabled') {
-        } else if (errorCode == 'auth/invalid-email') {
-        } else if (errorCode == 'auth/user-not-found') {
-        } else if (errorCode == 'auth/wrong-password') {
+        if (errorCode === 'auth/user-disabled') {
+        } else if (errorCode === 'auth/invalid-email') {
+        } else if (errorCode === 'auth/user-not-found') {
+        } else if (errorCode === 'auth/wrong-password') {
         } else {
-          console.log('An unknown error occured', error);
+          console.log('An unknown error occurred', error);
         }
         resolve(errorCode);
       });
@@ -128,26 +123,26 @@ export class AdminService {
     if (this.loginDialog) {
       this.loginDialog.close('force');
     }
-    //do nothing; handled by auth subscription
+    // do nothing; handled by auth subscription
   }
 
   private showLogin(): void {
-    //close dialog if you get to this point
+    // close dialog if you get to this point
     if (this.loginDialog) {
       this.loginDialog.close('force');
     }
 
     let message: string;
     if (this._admin.getValue().displayName) {
-      message = "Logged in as " + this._admin.getValue().displayName;
+      message = 'Logged in as ' + this._admin.getValue().displayName;
     } else {
-      message = "Logged in as " + this._admin.getValue().email;
+      message = 'Logged in as ' + this._admin.getValue().email;
     }
     this.toastService.loginToast(this._admin.getValue().photoURL, message, this.toastService.toastDuration);
   }
 
   private showLoginFailed() {
-    let message = "Login Failed";
+    const message = 'Login Failed';
     this.toast(message);
   }
 
@@ -162,7 +157,7 @@ export class AdminService {
   }
 
   private showLogout(): void {
-    let message = "Logged out";
+    const message = 'Logged out';
     this.toast(message);
   }
 

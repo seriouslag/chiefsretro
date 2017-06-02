@@ -2,15 +2,6 @@
   width: 100%;
 }
 
-:host(app-navbar) nav.mat-tab-links {
-  width: 100%;
-}
-
-.mat-tab-links {
-  width: 100%;
-  color: whitesmoke;
-}
-
 nav {
   border: 0 !important;
 }

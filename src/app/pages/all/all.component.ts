@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from "@angular/core";
-import {ProductService} from "../../services/product.service";
 import {Product} from "../../interfaces/product";
 import {animate, group, style, transition, trigger} from "@angular/animations";
 import {Observable} from "rxjs/Observable";
+import {Component, OnDestroy, OnInit} from "@angular/core";
+import {ProductService} from "../../services/product.service";
 
 @Component({
   selector: 'app-all',
@@ -31,11 +31,14 @@ import {Observable} from "rxjs/Observable";
     ]),
   ]
 })
+
 export class AllComponent implements OnInit, OnDestroy {
   productList: Observable<Product[]>;
+  failed = false;
+  waiting = true;
 
   /*
-   TODO change product list to groups of small requests
+   TODO change product list to groups of small requests using pagination
    */
 
   ngOnDestroy(): void {
@@ -47,6 +50,10 @@ export class AllComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.productList = this.search();
+    this.productList.subscribe(() => {
+        this.waiting = false;
+      }, (error) => this.failed = true
+    )
   }
 
   constructor(private productService: ProductService) {

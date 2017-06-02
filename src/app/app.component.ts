@@ -16,14 +16,15 @@ import {AdminService} from "./services/admin.service";
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-  showCart: boolean = false;
-  showAdmin: boolean = false;
+  showCart = false;
+  showAdmin = false;
 
   private routerSubscription: Subscription;
   private showCartSubscription: Subscription;
   private showAdminSubscription: Subscription;
 
-  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService, private notificationService: NotificationService, private adminService: AdminService) {
+  constructor(public router: Router, private analyticsService: AnalyticsService, private retroService: RetroService,
+              private notificationService: NotificationService, private adminService: AdminService) {
   }
 
   ngOnInit(): void {
@@ -41,7 +42,8 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
     });
 
-    this.notificationService.setMessage("Chiefsretro.com is in Alpha state and will be experiencing changes to functionality and appearance.");
+    this.notificationService.setMessage(
+      'Chiefsretro.com is in Alpha state and will be experiencing changes to functionality and appearance.');
   };
 
   ngAfterViewChecked(): void {
@@ -49,14 +51,14 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewChecked {
     if (window.performance) {
       // Gets the number of milliseconds since page load
       // (and rounds the result since the value must be an integer).
-      let timeSincePageLoad = Math.round(performance.now());
+      const timeSincePageLoad = Math.round(performance.now());
 
       // Sends the timing hit to Google Analytics.
       this.analyticsService.gaEmitTiming('Home Page load', 'load', timeSincePageLoad);
     }
   }
 
-  ngOnDestroy() : void {
+  ngOnDestroy(): void {
     if (this.showAdmin) {
       this.showAdminSubscription.unsubscribe();
     }

@@ -42,20 +42,21 @@ export class AdminLoginComponent implements OnInit {
   }
 
   firebaseEmailLogin(): void {
-    this.adminService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(), this.loginForm.controls['password'].value).then((response) => {
-      if (response == 'ok') {
-        //should be handled by event listener
+    this.adminService.firebaseEmailLogin(this.loginForm.controls['email'].value.toLowerCase(),
+      this.loginForm.controls['password'].value).then((response) => {
+      if (response === 'ok') {
+        // should be handled by event listener
       } else {
         /*
-        TODO setup attemp limits
+         TODO setup attempt limits
          */
-        if (response == 'auth/user-disabled') {
+        if (response === 'auth/user-disabled') {
           this.toastService.toast('This account is deactivated');
-        } else if (response == 'auth/invalid-email') {
+        } else if (response === 'auth/invalid-email') {
           this.toast('Email is invalid');
-        } else if (response == 'auth/user-not-found') {
+        } else if (response === 'auth/user-not-found') {
           this.toast('This email is not found');
-        } else if (response == 'auth/wrong-password') {
+        } else if (response === 'auth/wrong-password') {
           this.toast('Password is incorrect');
         } else {
           console.log(response);

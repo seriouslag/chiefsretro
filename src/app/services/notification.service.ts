@@ -6,7 +6,7 @@ export class NotificationService {
 
   private _notification = new BehaviorSubject<{ message: string, show: boolean }>({
     message: null,
-    show: (sessionStorage.getItem('notification') != 'false')
+    show: (sessionStorage.getItem('notification') !== 'false')
   });
   public notification = this._notification.asObservable();
 
@@ -15,8 +15,8 @@ export class NotificationService {
 
   public setMessage(message: string) {
 
-    this._notification.next({message: message, show: (sessionStorage.getItem('notification') != 'false')});
-    if ((sessionStorage.getItem('notification') != 'false')) {
+    this._notification.next({message: message, show: (sessionStorage.getItem('notification') !== 'false')});
+    if ((sessionStorage.getItem('notification') !== 'false')) {
       sessionStorage.setItem('notification', 'true');
     } else {
       sessionStorage.setItem('notification', 'false');
@@ -24,14 +24,14 @@ export class NotificationService {
   }
 
   public notify() {
-    let currentState = this._notification.getValue();
+    const currentState = this._notification.getValue();
 
     this._notification.next({message: currentState.message, show: true});
     sessionStorage.seItem('notification', 'true');
   }
 
   public toggle() {
-    let currentState = this._notification.getValue();
+    const currentState = this._notification.getValue();
     this._notification.next({message: currentState.message, show: !currentState.show});
     if (currentState) {
       sessionStorage.setItem('notification', 'false');

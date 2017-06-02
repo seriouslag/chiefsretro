@@ -35,9 +35,3 @@ md-placeholder {
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-
-.search-icon {
-  position: absolute;
-  top: -2px;
-  right: 6px;
-}

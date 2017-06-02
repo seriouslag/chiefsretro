@@ -21,9 +21,9 @@ export class ProductImagesComponent implements OnInit, OnChanges {
   imagesUrl = [] as string[][];
 
   ngOnChanges(changes: SimpleChanges): void {
-    //when the product changes set the selected productOption to default;
-    for (let propName in changes) {
-      if (propName == "product") {
+    // when the product changes set the selected productOption to default;
+    for (const propName in changes) {
+      if (propName === 'product') {
         this.setup();
       }
     }
@@ -33,20 +33,20 @@ export class ProductImagesComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    //this.setup();
+    // this.setup();
   }
 
   setup(): void {
     this.imagesUrl = [] as string[][];
     if (this.product) {
-      let p: number = 0;
+      let p = 0;
       if (this.product.productOptions.length) {
-        for (let productOption of this.product.productOptions) {
+        for (const productOption of this.product.productOptions) {
           this.setupImages(productOption, p++);
         }
       } else {
         this.imagesUrl[0] = [] as string[];
-        this.imagesUrl[0].push("/assets/imageError.jpg");
+        this.imagesUrl[0].push('/assets/imageError.jpg');
         this.imageIndex = 0;
         this.selectedProductOptionNumber = 0;
       }
@@ -54,24 +54,25 @@ export class ProductImagesComponent implements OnInit, OnChanges {
   }
 
   imageError(selectedProductOptionNumber: number, imageIndex: number): void {
-    this.imagesUrl[selectedProductOptionNumber][imageIndex] = "/assets/imageError.jpg";
+    this.imagesUrl[selectedProductOptionNumber][imageIndex] = '/assets/imageError.jpg';
   }
 
   setupImages(productOption: ProductOption, productOptionNumber: number): void {
     if (productOption.productOptionImages.length) {
-      for (let productOptionImages of productOption.productOptionImages) {
+      for (const productOptionImages of productOption.productOptionImages) {
         if (!this.imagesUrl[productOptionNumber]) {
           this.imagesUrl[productOptionNumber] = [] as string[];
         }
         if (productOptionImages.productOptionImageLocation) {
           this.imagesUrl[productOptionNumber].push(productOptionImages.productOptionImageLocation);
         } else {
-          this.imagesUrl[productOptionNumber].push('/assets/sku' + this.product.productId + '/' + productOptionImages.productOptionImageOrder + '.jpg');
+          this.imagesUrl[productOptionNumber].push('/assets/sku' + this.product.productId + '/' +
+            productOptionImages.productOptionImageOrder + '.jpg');
         }
       }
     } else {
       this.imagesUrl[productOptionNumber] = [] as string[];
-      this.imagesUrl[productOptionNumber].push("/assets/imageError.jpg");
+      this.imagesUrl[productOptionNumber].push('/assets/imageError.jpg');
       this.imageIndex = 0;
       this.selectedProductOptionNumber = 0;
     }

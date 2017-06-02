@@ -19,10 +19,10 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   cart: CartItem[] = [];
 
   private cartSubscription: Subscription;
-  public size: number = 2;
+  public size = 2;
   private loginSubscription: Subscription;
-  private warn: boolean = false;
-  private loginStatus: boolean = false;
+  private warn = false;
+  private loginStatus = false;
   private userSubscription: Subscription;
   private user: User;
   private mediaSubscription: Subscription;
@@ -36,10 +36,10 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loginSubscription = this.firebaseService.signedIn.subscribe(status => {
       this.loginStatus = status;
-      if (status == false) {
+      if (status === false) {
         this.warn = false;
       }
-      //check for mobile;
+      // check for mobile;
       this.checkMobile();
     });
 
@@ -59,13 +59,13 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     });
 
     this.cartSubscription = this.firebaseService.cart.subscribe((cart) => {
-      //close checkout because cart changed
+      // close checkout because cart changed
       if (this.handler) {
         this.handler.close();
       }
 
       let items = 0;
-      for (let cartItem of this.cart) {
+      for (const cartItem of this.cart) {
         items++;
       }
       this.itemsInCart = items;
@@ -77,7 +77,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 
       this.cart = cart;
       this.oldCart = [];
-      for (let cartItem of cart) {
+      for (const cartItem of cart) {
         this.oldCart.push({
           product: cartItem.product,
           productOption: cartItem.productOption,
@@ -94,7 +94,7 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
     this.retroService.openCart(false);
   }
 
-  //THIS CANNOT BE IN A SUBSCRIPTION IT KILLS IT
+  // THIS CANNOT BE IN A SUBSCRIPTION IT KILLS IT
   public openStripe(): void {
     if (this.cart != null) {
       let email;
@@ -114,20 +114,23 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
         allowRememberMe: true,
         email: email,
         token: (token: any, args: any) => {
-          console.log("token: ", token);
+          console.log('token: ', token);
           // You can access the token ID with `token.id`.
           // Get the token ID to your server-side code for use.
-          this.firebaseService.saveOrderToDb(this.firebaseService.fromStripeTokenToStripeToken(token), args, this.getCartTotal() * 100, this.cart).then((orderPage: string) => {
-            console.log(orderPage);
-            this.firebaseService.setCart([]);
-            localStorage.setItem('cart', '');
-            this.toastService.toast("Order Completed. Going to order page.");
-            this.router.navigate(["/status/" + orderPage]);
-
-          }, (error) => {
-            alert("Your order could not be processed, please email our sales team.");
-            console.log(error);
-          });
+          this.firebaseService.saveOrderToDb(
+            this.firebaseService.fromStripeTokenToStripeToken(token), args, this.getCartTotal() * 100, this.cart)
+            .then((orderPage: string) => {
+              console.log(orderPage);
+              this.firebaseService.setCart([]);
+              localStorage.setItem('cart', '');
+              this.toastService.toast('Order Completed. Going to order page.');
+              this.router.navigate(['/status/' + orderPage]).then(promise => {
+                // navigating
+              });
+            }, (error) => {
+              alert('Your order could not be processed, please email our sales team.');
+              console.log(error);
+            });
         }
       });
     }
@@ -164,28 +167,28 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   }
 
   updateCart(showToast?: boolean): Promise<boolean> {
-    //setCart in firebaseService checks for zero values before placing in cart
-    //I think this is redundant now;
+    // setCart in firebaseService checks for zero values before placing in cart
+    // I think this is redundant now;
 
     if (showToast == null) {
       showToast = true;
     }
 
     let i = 0;
-    for (let cartItem of this.cart) {
-      if (cartItem.quantity == 0) {
+    for (const cartItem of this.cart) {
+      if (cartItem.quantity === 0) {
         console.log('remove');
         this.cart = this.cart.splice(i, 1);
       }
       i++;
     }
-    //end redundant
+    // end redundant
 
-    if (this.compareCarts() == false) {
+    if (this.compareCarts() === false) {
       this.warn = false;
       this.firebaseService.updateCart(this.cart);
       if (showToast) {
-        this.toastService.toast("Your cart has been updated.");
+        this.toastService.toast('Your cart has been updated.');
       }
     } else {
       if (showToast) {
@@ -199,8 +202,8 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   }
 
   getCartTotal(): number {
-    let total: number = 0;
-    for (let cartItem of this.cart) {
+    let total = 0;
+    for (const cartItem of this.cart) {
       total += (cartItem.productOption.productPrice * 100 * cartItem.quantity) / 100;
     }
     return total;
@@ -222,22 +225,22 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
   }
 
   removeFromCart(index: number): void {
-    let num = this.cart[index].quantity;
+    const num = this.cart[index].quantity;
     if (num > 0) {
       this.cart[index].quantity--;
     }
   }
 
   changeCartItemQuantity(cartItemIndex: number, htmlDomObject: any) {
-    htmlDomObject.value = htmlDomObject.value.trim().replace(/[^0-9]/g, "");
+    htmlDomObject.value = htmlDomObject.value.trim().replace(/[^0-9]/g, '');
 
-    let numMatch = /^[0-9]{1,3}$/;
-    //if(quantity passes as valid number)
+    const numMatch = /^[0-9]{1,3}$/;
+    // if(quantity passes as valid number)
     if (!htmlDomObject.value.trim()) {
-      htmlDomObject.value = "0";
+      htmlDomObject.value = '0';
     }
     if (htmlDomObject.value.match(numMatch)) {
-      this.cart[cartItemIndex].quantity = parseInt(htmlDomObject.value);
+      this.cart[cartItemIndex].quantity = parseInt(htmlDomObject.value, 10);
     } else {
     }
   }
@@ -252,20 +255,20 @@ export class CheckoutPageComponent implements OnInit, OnDestroy {
 
   private compareCarts(): boolean {
     let check = true;
-    if (this.cart.length != this.oldCart.length) {
+    if (this.cart.length !== this.oldCart.length) {
       check = false;
     }
 
-    for (let cartItem of this.cart) {
-      for (let oCartItem of this.oldCart) {
-        if (cartItem.productOption.productOptionId == oCartItem.productOption.productOptionId) {
-          if (cartItem.quantity != oCartItem.quantity) {
+    for (const cartItem of this.cart) {
+      for (const oCartItem of this.oldCart) {
+        if (cartItem.productOption.productOptionId === oCartItem.productOption.productOptionId) {
+          if (cartItem.quantity !== oCartItem.quantity) {
             check = false;
             break;
           }
         }
       }
-      if (check == false) {
+      if (check === false) {
         break;
       }
     }
